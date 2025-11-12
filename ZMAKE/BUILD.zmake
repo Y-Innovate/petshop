@@ -1,0 +1,118 @@
+#* Build petshop repository
+
+#* Variables for ASM source files
+asmdir      := $(gitdir)/ASM
+asmfiles    := ${sh cd $(asmdir); +
+                    find * -prune -type f -name "*.asm" 2>&1 | +
+                    grep -v EDC5129I}
+asmmems     := ${stripext $(asmfiles)}
+asmlib      := $(hlq).ASM
+asmtgts     := ${addpdsname $(asmlib),$(asmmems)}
+
+#* Variables for LKED source files
+lkeddir     := $(gitdir)/LKED
+lkedfiles   := ${sh cd $(lkeddir); +
+                    find * -prune -type f -name "*.lked" 2>&1 | +
+                    grep -v EDC5129I}
+lkedmems    := ${stripext $(lkedfiles)}
+lkedlib     := $(hlq).LKED
+lkedtgts    := ${addpdsname $(lkedlib),$(lkedmems)}
+
+#* Variables for COBOL compile, ASM assembly and link-edit
+tmpasmlib   := ${function TEMPPDS}
+asmlstlib   := $(hlq).ASM.LISTING
+adatalib    := $(hlq).SYSADATA
+langxlib    := $(hlq).EQALANGX
+objlib      := $(hlq).OBJECT
+objasmtgts  := ${addpdsname $(objlib),$(asmmems)}
+lkedlstlib  := $(hlq).LKED.LISTING
+loadlib     := $(hlq).LOAD
+loadtgts    := ${addpdsname $(loadlib),$(asmmems)}
+syslib_asm  := SYS1.MACLIB CEE.SCEEMAC HLA.SASMMAC2+
+               $(cicshlq).CICS.SDFHMAC
+syslib_lked := CEE.SCEELKED $(cicshlq).CICS.SDFHLOAD $(objlib)
+
+#* Group of data set names with specific characteristics
+recfmFB80   := $(asmlib) $(lkedlib) $(objlib)
+recfmFBA133 := $(asmlstlib)
+recfmVBM133 := $(lkedlstlib)
+recfmVB1562 := $(langxlib)
+recfmVB32K  := $(adatalib)
+recfmU      := $(loadlib)
+
+datasets    := $(recfmFB80) $(recfmFBA133) $(recfmVBM133)+
+               $(recfmVB1562) $(recfmVB32K) $(recfmU)
+
+#* Phony target that builds all
+.PHONY BUILD_ALL
+BUILD_ALL : $(datasets) $(asmtgts) $(lkedtgts)+
+            $(loadtgts)
+
+#* Phony target just to get USS copied to PDSE's
+.PHONY SETUP
+SETUP : $(datasets)
+
+#* Write ASM sources from USS to PDS
+$(asmtgts) : $(asmdir)/$%.asm
+- CALL OGETU '$(asmdir)/$%.asm' '$@' ISO88591
+
+#* Write lked sources from USS to PDS
+$(lkedtgts) : $(lkeddir)/$%.lked
+- CALL OGETU '$(lkeddir)/$%.lked' '$@' ISO88591
+
+#* Assemble ASM source
+$(objasmtgts) : $(asmlib)($%)
+- CALL DFHEAP SYSIN($(asmlib)($%)) SYSPUNCH($(tmpasmlib)($%))+
+-             PARM(NOPROLOG,NOEPILOG)
+- CALL ASMA SYSIN($(tmpasmlib)($%)) SYSLIN($(objlib)($%))+
+-           SYSLIB($(syslib_asm)) SYSADATA($(adatalib)($%))+
+-           SYSPRINT($(asmlstlib)($%)) PRINTSUCCESS(NO)+
+-           PARM(ADATA,GOFF,LIST(133),DBCS,CODEPAGE(LOCAL))
+- CALL EQALANGX SYSADATA($(adatalib)($%)) IDILANGX($(langxlib)($%))+
+-               PARM(ASM ERROR)
+- CALL TOUCHMEM DATASET($(objlib)($%))
+- CALL TOUCHMEM DATASET($(asmlstlib)($%))
+
+#* Link-edit COBOL/ASM object if needed
+$(loadtgts) : $(objlib)($%) $(lkedlib)($%)
+- CALL LKED SYSLIN($(lkedlib)($%)) SYSLMOD($(loadlib)($%))+
+-           SYSLIB($(syslib_lked)) SYSPRINT($(lkedlstlib)($%))+
+-           PARM(LIST,XREF,RENT,REUS) PRINTSUCCESS(NO)
+- CALL TOUCHMEM DATASET($(lkedlstlib)($%))
+
+#* Allocate LRECL=80 RECFM=FB data sets
+$(recfmFB80) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(F,B) LRECL(80)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=133 RECFM=FBA data sets
+$(recfmFBA133) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(F,B,A) LRECL(133)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=133 RECFM=VBM data sets
+$(recfmVBM133) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(V,B,M) LRECL(133)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=1562 RECFM=VB data sets
+$(recfmVB1562) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(V,B) LRECL(1562)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=32756 RECFM=VB data sets
+$(recfmVB32K) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(V,B) LRECL(32756)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=0 RECFM=U data sets
+$(recfmU) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(U) LRECL(0)+
+-             BLKSIZE(32760) CYLINDERS SPACE(1,1) DSORG(PO)+
+-             DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
