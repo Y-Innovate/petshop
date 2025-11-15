@@ -21,6 +21,7 @@ version := {{ version }}
 hlq := {{ hlq }}.{{ version }}
 gitdir := {{ gitdir }}
 cicshlq := {{ cicshlq }}
+db2hlq := {{ db2hlq }}
 
 {{ zmake_file }}'''
 
@@ -36,6 +37,7 @@ data = {
     "version": "V1",
     "gitdir": os.getcwd(),
     "cicshlq": "DFH620",
+    "db2hlq": "DSND10",
     "zmake_file": zmake_file
 }
 

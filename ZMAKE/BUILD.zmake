@@ -9,6 +9,28 @@ asmmems     := ${stripext $(asmfiles)}
 asmlib      := $(hlq).ASM
 asmtgts     := ${addpdsname $(asmlib),$(asmmems)}
 
+#* Variables for COPY source files
+cpydir      := $(gitdir)/COPY
+cpyfiles    := ${sh cd $(cpydir); +
+                    find * -prune -type f -name "*.cpy" 2>&1 | +
+                    grep -v EDC5129I}
+cpymems     := ${stripext $(cpyfiles)}
+cpylib      := $(hlq).COPY
+cpytgts     := ${addpdsname $(cpylib),$(cpymems)}
+
+#* Variables for COBOL source files
+cbldir      := $(gitdir)/COBOL
+cblfiles    := ${sh cd $(cbldir); +
+                    find * -prune -type f -name "*.cbl" 2>&1 | +
+                    grep -v EDC5129I}
+cbldb2files := ${sh cd $(cbldir); +
+                    find * -prune -type f -name "PETA*.cbl" 2>&1 | +
+                    grep -v EDC5129I}
+cblmems     := ${stripext $(cblfiles)}
+cbldb2mems  := ${stripext $(cbldb2files)}
+cbllib      := $(hlq).COBOL
+cbltgts     := ${addpdsname $(cbllib),$(cblmems)}
+
 #* Variables for LKED source files
 lkeddir     := $(gitdir)/LKED
 lkedfiles   := ${sh cd $(lkeddir); +
@@ -18,23 +40,39 @@ lkedmems    := ${stripext $(lkedfiles)}
 lkedlib     := $(hlq).LKED
 lkedtgts    := ${addpdsname $(lkedlib),$(lkedmems)}
 
+#* Variables for OPTFILE source files
+optdir      := $(gitdir)/OPTFILE
+optfiles    := ${sh cd $(optdir); +
+                    find * -prune -type f -name "*.opt" 2>&1 | +
+                    grep -v EDC5129I}
+optmems     := ${stripext $(optfiles)}
+optlib      := $(hlq).OPTFILE
+opttgts     := ${addpdsname $(optlib),$(optmems)}
+
 #* Variables for COBOL compile, ASM assembly and link-edit
 tmpasmlib   := ${function TEMPPDS}
 asmlstlib   := $(hlq).ASM.LISTING
 adatalib    := $(hlq).SYSADATA
 langxlib    := $(hlq).EQALANGX
+cbllstlib   := $(hlq).COBOL.LISTING
 objlib      := $(hlq).OBJECT
 objasmtgts  := ${addpdsname $(objlib),$(asmmems)}
+objcbldb2tgts := ${addpdsname $(objlib),$(cbldb2mems)}
+dbrmlib     := $(hlq).DBRM
 lkedlstlib  := $(hlq).LKED.LISTING
 loadlib     := $(hlq).LOAD
-loadtgts    := ${addpdsname $(loadlib),$(asmmems)}
+loadtgts    := ${addpdsname $(loadlib),$(asmmems)}+
+               ${addpdsname $(loadlib),$(cbldb2mems)}
 syslib_asm  := SYS1.MACLIB CEE.SCEEMAC HLA.SASMMAC2+
                $(cicshlq).CICS.SDFHMAC
-syslib_lked := CEE.SCEELKED $(cicshlq).CICS.SDFHLOAD $(objlib)
+syslib_cbl  := $(cicshlq).CICS.SDFHCOB $(cpylib)
+syslib_lked := CEE.SCEELKED $(cicshlq).CICS.SDFHLOAD $(db2hlq).SDSNLOAD+
+               $(objlib)
 
 #* Group of data set names with specific characteristics
-recfmFB80   := $(asmlib) $(lkedlib) $(objlib)
-recfmFBA133 := $(asmlstlib)
+recfmFB80   := $(asmlib) $(cpylib) $(cbllib) $(lkedlib) $(optlib)+
+               $(objlib) $(dbrmlib)
+recfmFBA133 := $(asmlstlib) $(cbllstlib)
 recfmVBM133 := $(lkedlstlib)
 recfmVB1562 := $(langxlib)
 recfmVB32K  := $(adatalib)
@@ -45,8 +83,8 @@ datasets    := $(recfmFB80) $(recfmFBA133) $(recfmVBM133)+
 
 #* Phony target that builds all
 .PHONY BUILD_ALL
-BUILD_ALL : $(datasets) $(asmtgts) $(lkedtgts)+
-            $(loadtgts)
+BUILD_ALL : $(datasets) $(asmtgts) $(cpytgts) $(cbltgts) $(lkedtgts)+
+            $(opttgts) $(loadtgts)
 
 #* Phony target just to get USS copied to PDSE's
 .PHONY SETUP
@@ -56,9 +94,21 @@ SETUP : $(datasets)
 $(asmtgts) : $(asmdir)/$%.asm
 - CALL OGETU '$(asmdir)/$%.asm' '$@' ISO88591
 
-#* Write lked sources from USS to PDS
+#* Write COPY sources from USS to PDS
+$(cpytgts) : $(cpydir)/$%.cpy
+- CALL OGETU '$(cpydir)/$%.cpy' '$@' ISO88591
+
+#* Write COBOL sources from USS to PDS
+$(cbltgts) : $(cbldir)/$%.cbl
+- CALL OGETU '$(cbldir)/$%.cbl' '$@' ISO88591
+
+#* Write LKED sources from USS to PDS
 $(lkedtgts) : $(lkeddir)/$%.lked
 - CALL OGETU '$(lkeddir)/$%.lked' '$@' ISO88591
+
+#* Write OPTFILE sources from USS to PDS
+$(opttgts) : $(optdir)/$%.opt
+- CALL OGETU '$(optdir)/$%.opt' '$@' ISO88591
 
 #* Assemble ASM source
 $(objasmtgts) : $(asmlib)($%)
@@ -72,6 +122,16 @@ $(objasmtgts) : $(asmlib)($%)
 -               PARM(ASM ERROR)
 - CALL TOUCHMEM DATASET($(objlib)($%))
 - CALL TOUCHMEM DATASET($(asmlstlib)($%))
+
+#* Compile COBOL DB2 source
+$(objcbldb2tgts) : $(cbllib)($%)
+- CALL COBOL6 SYSIN($(cbllib)($%)) SYSLIN($(objlib)($%))+
+-             SYSLIB($(syslib_cbl)) SYSPRINT($(cbllstlib)($%))+
+-             SYSOPTF($(optlib)(DB2)) DBRMLIB($(dbrmlib)($%))+
+-             PRINTSUCCESS(NO)
+- CALL TOUCHMEM DATASET($(objlib)($%))
+- CALL TOUCHMEM DATASET($(dbrmlib)($%))
+- CALL TOUCHMEM DATASET($(cbllstlib)($%))
 
 #* Link-edit COBOL/ASM object if needed
 $(loadtgts) : $(objlib)($%) $(lkedlib)($%)
