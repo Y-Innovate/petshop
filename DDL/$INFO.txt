@@ -1,0 +1,18 @@
+Member   Who When YMD Description
+-------- --- -------- --------------------------------------------------
+AA000001 BTK 25-03-29 Grant permission for CREATESG,CREATEDBA, use of
+                      bufferpools and execute on packes.
+AA000002 BTK 25-03-29 Create storage group for petstore database
+AA000003 BTK 25-03-29 Create petstore database
+AA000004 BTK 25-06-19 00 Create reftables          table
+AA000005 BTK 25-06-27 00 Create stores             table
+AA000006 BTK 25-06-27 00 Create suppliers          table
+AA000007 BTK 25-06-28 00 Create products           table
+AA000008 BTK 25-06-28 00 Create inventory          table
+AA000009 BTK 25-06-28 00 Create animals            table
+AA000010 BTK 25-06-28 00 Create pricesAndDiscounts table
+AA000011 BTK 25-06-29 00 Create customers          table
+AA000012 BTK 25-06-29 00 Create purchases          table
+AA000013 BTK 25-06-29 00 Create orders             table
+AA000014 BTK 25-06-29 00 Create addresses          table
+AA000015 BTK 25-06-30 00 Create contactinfos       table

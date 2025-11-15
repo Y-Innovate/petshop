@@ -1,0 +1,33 @@
+#* Deploy petshop repository
+
+#* Other source and target libs
+tgtddllib     := $(tgthlq).DDL
+
+ddldir        := $(gitdir)/DDL
+ddlfiles      := ${sh cd $(gitdir)/DDL; +
+                      find * -prune -type f -name "*.sql" 2>&1 | +
+                      grep -v EDC5129I}
+ddlmems       := ${stripext $(ddlfiles)}
+ddltgts       := ${addpdsname $(tgtddllib),$(ddlmems)}
+
+#* Data sets grouped by characteristics
+recfmFB80     := $(tgtddllib)
+
+datasets      := $(recfmFB80)
+
+#* Combine targets
+.PHONY DEPLOY_ALL
+DEPLOY_ALL : $(datasets) $(ddltgts)
+
+$(ddltgts) : $(gitdir)/DDL/$%.sql
+- CALL UNIXCMD0 $(gitdir)/python/profileDDL.sh $(gitdir)/DDL $%.sql+
+-               $(gitdir)/envs/$(envl).yaml | +
+-               iconv -f 1047 -t 037 -T > /tmp/$%.sql
+- CALL OGETU '/tmp/$%.sql' '$@'
+- CALL UNIXCMD0 rm /tmp/$%.sql
+
+#* Allocate LRECL=80 RECFM=FB data sets
+$(recfmFB80) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(F,B) LRECL(80)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')

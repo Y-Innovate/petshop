@@ -1,0 +1,133 @@
+-- Create pricesAndDiscounts table in petstore database.
+
+-- Set SQLID
+   SET CURRENT SQLID='{{SQLID}}';
+
+-- Create pricesAndDiscounts tablespace
+   CREATE TABLESPACE {{PRICESANDDISCOUNTS_TBSNAME}}
+                       IN {{DBNAME}}
+                       USING STOGROUP {{STOGROUP}}
+                       PRIQTY 40 SECQTY 40
+                       ERASE  NO
+                       FREEPAGE 0 PCTFREE 5 FOR UPDATE 0
+                       GBPCACHE CHANGED
+                       TRACKMOD YES
+                       MAXPARTITIONS 254
+                       LOGGED
+                       DSSIZE 4 G
+                       SEGSIZE 4
+                       BUFFERPOOL BP2
+                       LOCKSIZE ANY
+                       LOCKMAX SYSTEM
+                       CLOSE YES
+                       COMPRESS NO
+                       CCSID      UNICODE
+                       DEFINE YES
+                       MAXROWS 255
+                       INSERT ALGORITHM 0;
+
+-- Create pricesAndDiscounts table
+   CREATE TABLE {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+      (PADID          INTEGER NOT NULL GENERATED ALWAYS
+          AS IDENTITY 
+             (START WITH 1, INCREMENT BY 1, CACHE 20, NO CYCLE,
+              NO ORDER, MAXVALUE 2147483647, MINVALUE 1),
+       STOREID        INTEGER NOT NULL,
+       PRODUCTID      INTEGER,
+       ANIMALID       INTEGER,
+       PRICE          DECIMAL(9,2),
+       DISCOUNT       DECIMAL(9,2),
+       FROMDATE       TIMESTAMP,
+       TODATE         TIMESTAMP,
+       CREATEDBY      GRAPHIC(8) NOT NULL,
+       CREATEDDATE    TIMESTAMP NOT NULL,
+       UPDATEDBY      GRAPHIC(8) NOT NULL,
+       UPDATEDDATE    TIMESTAMP NOT NULL,
+       CONSTRAINT PADIDKEY
+       PRIMARY KEY (PADID))
+      IN {{DBNAME}}.{{PRICESANDDISCOUNTS_TBSNAME}}
+      PARTITION BY SIZE
+      AUDIT NONE
+      DATA CAPTURE NONE
+      CCSID      UNICODE
+      NOT VOLATILE
+      APPEND NO;
+
+-- Create pricesAndDiscounts index for primary key
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{PRICESANDDISCOUNTS_IXNAME1}}
+      ON {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+       (PADID ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create pricesAndDiscounts index for STOREID, PRODUCTID
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{PRICESANDDISCOUNTS_IXNAME2}}
+      ON {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+       (STOREID   ASC,
+        PRODUCTID ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create pricesAndDiscounts index for STOREID, ANIMALID
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{PRICESANDDISCOUNTS_IXNAME3}}
+      ON {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+       (STOREID  ASC,
+        ANIMALID ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create foreign key on STOREID
+   ALTER TABLE {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+     FOREIGN KEY REPAD_STOREID (STOREID)
+     REFERENCES {{SCHEMA}}.{{STORES_TBNAME}} (STOREID)
+     ON DELETE RESTRICT ENFORCED;
+
+-- Create foreign key on PRODUCTID
+   ALTER TABLE {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+     FOREIGN KEY REPAD_PRODUCTID (PRODUCTID)
+     REFERENCES {{SCHEMA}}.{{PRODUCTS_TBNAME}} (PRODUCTID)
+     ON DELETE RESTRICT ENFORCED;
+
+-- Create foreign key on ANIMALID
+   ALTER TABLE {{SCHEMA}}.{{PRICESANDDISCOUNTS_TBNAME}}
+     FOREIGN KEY REPAD_ANIMALID (ANIMALID)
+     REFERENCES {{SCHEMA}}.{{ANIMALS_TBNAME}} (ANIMALID)
+     ON DELETE RESTRICT ENFORCED;
+
+   COMMIT;

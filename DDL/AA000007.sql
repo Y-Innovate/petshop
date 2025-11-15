@@ -1,0 +1,119 @@
+-- Create products table in petstore database.
+
+-- Set SQLID
+   SET CURRENT SQLID='{{SQLID}}';
+
+-- Create products tablespace
+   CREATE TABLESPACE {{PRODUCTS_TBSNAME}}
+                       IN {{DBNAME}}
+                       USING STOGROUP {{STOGROUP}}
+                       PRIQTY 40 SECQTY 40
+                       ERASE  NO
+                       FREEPAGE 0 PCTFREE 5 FOR UPDATE 0
+                       GBPCACHE CHANGED
+                       TRACKMOD YES
+                       MAXPARTITIONS 254
+                       LOGGED
+                       DSSIZE 4 G
+                       SEGSIZE 4
+                       BUFFERPOOL BP2
+                       LOCKSIZE ANY
+                       LOCKMAX SYSTEM
+                       CLOSE YES
+                       COMPRESS NO
+                       CCSID      UNICODE
+                       DEFINE YES
+                       MAXROWS 255
+                       INSERT ALGORITHM 0;
+
+-- Create products table
+   CREATE TABLE {{SCHEMA}}.{{PRODUCTS_TBNAME}}
+      (PRODUCTID      INTEGER NOT NULL GENERATED ALWAYS
+          AS IDENTITY 
+             (START WITH 1, INCREMENT BY 1, CACHE 20, NO CYCLE,
+              NO ORDER, MAXVALUE 2147483647, MINVALUE 1),
+       PRODUCTCODE    GRAPHIC(8) NOT NULL,
+       PRODUCTSTATUS  GRAPHIC(8) NOT NULL,
+       PRODUCTNAME    VARGRAPHIC(255) NOT NULL,
+       PRODUCTNAMEU   VARGRAPHIC(255) NOT NULL,
+       GROUPCODE      GRAPHIC(8) NOT NULL,
+       SUPPLIERID     INTEGER NOT NULL,
+       CREATEDBY      GRAPHIC(8) NOT NULL,
+       CREATEDDATE    TIMESTAMP NOT NULL,
+       UPDATEDBY      GRAPHIC(8) NOT NULL,
+       UPDATEDDATE    TIMESTAMP NOT NULL,
+       CONSTRAINT PRODUCTIDKEY
+       PRIMARY KEY (PRODUCTID))
+      IN {{DBNAME}}.{{PRODUCTS_TBSNAME}}
+      PARTITION BY SIZE
+      AUDIT NONE
+      DATA CAPTURE NONE
+      CCSID      UNICODE
+      NOT VOLATILE
+      APPEND NO;
+
+-- Create products index for primary key
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{PRODUCTS_IXNAME1}}
+      ON {{SCHEMA}}.{{PRODUCTS_TBNAME}}
+       (PRODUCTID ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create products index for PRODUCTCODE
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{PRODUCTS_IXNAME2}}
+      ON {{SCHEMA}}.{{PRODUCTS_TBNAME}}
+       (PRODUCTCODE ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create stores index for PRODUCTNAMEU
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{PRODUCTS_IXNAME3}}
+      ON {{SCHEMA}}.{{PRODUCTS_TBNAME}}
+       (PRODUCTNAMEU ASC,
+        PRODUCTID    ASC)
+     USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create foreign key on supplierid
+   ALTER TABLE {{SCHEMA}}.{{PRODUCTS_TBNAME}}
+     FOREIGN KEY RESUP_SUPPLIERID (SUPPLIERID)
+     REFERENCES {{SCHEMA}}.{{SUPPLIERS_TBNAME}} (SUPPLIERID)
+     ON DELETE RESTRICT ENFORCED;
+
+   COMMIT;

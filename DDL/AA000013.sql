@@ -1,0 +1,144 @@
+-- Create orders table in petstore database.
+
+-- Set SQLID
+   SET CURRENT SQLID='{{SQLID}}';
+
+-- Create orders tablespace
+   CREATE TABLESPACE {{ORDERS_TBSNAME}}
+                       IN {{DBNAME}}
+                       USING STOGROUP {{STOGROUP}}
+                       PRIQTY 40 SECQTY 40
+                       ERASE  NO
+                       FREEPAGE 0 PCTFREE 5 FOR UPDATE 0
+                       GBPCACHE CHANGED
+                       TRACKMOD YES
+                       MAXPARTITIONS 254
+                       LOGGED
+                       DSSIZE 4 G
+                       SEGSIZE 4
+                       BUFFERPOOL BP2
+                       LOCKSIZE ANY
+                       LOCKMAX SYSTEM
+                       CLOSE YES
+                       COMPRESS NO
+                       CCSID      UNICODE
+                       DEFINE YES
+                       MAXROWS 255
+                       INSERT ALGORITHM 0;
+
+-- Create orders table
+   CREATE TABLE {{SCHEMA}}.{{ORDERS_TBNAME}}
+      (ORDERID        INTEGER NOT NULL GENERATED ALWAYS
+          AS IDENTITY 
+             (START WITH 1, INCREMENT BY 1, CACHE 20, NO CYCLE,
+              NO ORDER, MAXVALUE 2147483647, MINVALUE 1),
+       STOREID        INTEGER NOT NULL,
+       PURCHASEID     INTEGER NOT NULL,
+       ORDERDATE      TIMESTAMP NOT NULL,
+       PRODUCTID      INTEGER,
+       ANIMALID       INTEGER,
+       ORDERCOUNT     INTEGER NOT NULL,
+       TYPEOFDISCOUNT GRAPHIC(1) NOT NULL,
+       PRICE          DECIMAL(9,2) NOT NULL,
+       DISCOUNT       DECIMAL(9,2),
+       CREATEDBY      GRAPHIC(8) NOT NULL,
+       CREATEDDATE    TIMESTAMP NOT NULL,
+       UPDATEDBY      GRAPHIC(8) NOT NULL,
+       UPDATEDDATE    TIMESTAMP NOT NULL,
+       CONSTRAINT ORDERIDKEY
+       PRIMARY KEY (ORDERID))
+      IN {{DBNAME}}.{{ORDERS_TBSNAME}}
+      PARTITION BY SIZE
+      AUDIT NONE
+      DATA CAPTURE NONE
+      CCSID      UNICODE
+      NOT VOLATILE
+      APPEND NO;
+
+-- Create orders index for primary key
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{ORDERS_IXNAME1}}
+      ON {{SCHEMA}}.{{ORDERS_TBNAME}}
+       (ORDERID ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create orders index for PURCHASEID, STOREID, ORDERID
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{ORDERS_IXNAME2}}
+      ON {{SCHEMA}}.{{ORDERS_TBNAME}}
+       (PURCHASEID ASC,
+        STOREID    ASC,
+        ORDERID    ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create orders index for ORDERDATE, PURCHASEID, STOREID, ORDERID
+   CREATE UNIQUE INDEX {{SCHEMA}}.{{ORDERS_IXNAME3}}
+      ON {{SCHEMA}}.{{ORDERS_TBNAME}}
+       (ORDERDATE  DESC,
+        PURCHASEID ASC,
+        STOREID    ASC,
+        ORDERID    ASC)
+      USING STOGROUP {{STOGROUP}}
+     PRIQTY -1 SECQTY -1
+     ERASE  NO
+     FREEPAGE 0 PCTFREE 10
+     GBPCACHE CHANGED
+     NOT CLUSTER
+     COMPRESS NO
+     INCLUDE NULL KEYS
+     BUFFERPOOL BP3
+     CLOSE NO
+     COPY NO
+     DEFER NO
+     DEFINE YES
+     PIECESIZE 2 G;
+
+-- Create foreign key on STOREID
+   ALTER TABLE {{SCHEMA}}.{{ORDERS_TBNAME}}
+     FOREIGN KEY REORD_STOREID (STOREID)
+     REFERENCES {{SCHEMA}}.{{STORES_TBNAME}} (STOREID)
+     ON DELETE RESTRICT ENFORCED;
+
+-- Create foreign key on PURCHASEID
+   ALTER TABLE {{SCHEMA}}.{{ORDERS_TBNAME}}
+     FOREIGN KEY REORD_PURCHASEID (PURCHASEID)
+     REFERENCES {{SCHEMA}}.{{PURCHASES_TBNAME}} (PURCHASEID)
+     ON DELETE RESTRICT ENFORCED;
+
+-- Create foreign key on PRODUCTID
+   ALTER TABLE {{SCHEMA}}.{{ORDERS_TBNAME}}
+     FOREIGN KEY REORD_PRODUCTID (PRODUCTID)
+     REFERENCES {{SCHEMA}}.{{PRODUCTS_TBNAME}} (PRODUCTID)
+     ON DELETE RESTRICT ENFORCED;
+
+-- Create foreign key on ANIMALID
+   ALTER TABLE {{SCHEMA}}.{{ORDERS_TBNAME}}
+     FOREIGN KEY REORD_ANIMALID (ANIMALID)
+     REFERENCES {{SCHEMA}}.{{ANIMALS_TBNAME}} (ANIMALID)
+     ON DELETE RESTRICT ENFORCED;
+
+   COMMIT;
