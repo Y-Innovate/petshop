@@ -1,0 +1,2 @@
+PETSHOP_DIR=$(pwd)
+build() { if [ -z "$1" ]; then prm=''; else prm="\$(loadlib)($@)"; fi; ( cd $PETSHOP_DIR; python python/build.py $prm; ) }
