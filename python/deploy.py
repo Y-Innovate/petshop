@@ -22,6 +22,7 @@ env     := {{ env }}
 envl    := {{ envl }}
 srchlq  := {{ srchlq }}.{{ version }}
 tgthlq  := {{ tgthlq }}.{{ env }}
+petdb   := {{ petdb }}
 gitdir  := {{ gitdir }}
 cicshlq := {{ cicshlq }}
 
@@ -36,19 +37,21 @@ data = {
     "target": "DEPLOY_ALL",
     "homedir": Path.home(),
     "srchlq": f"{os.getlogin()}.PETSHOP",
-    "tgthlq": f"{os.getlogin()}.PETSHOP",
+    "tgthlq": "PETSHOP",
     "version": "V1",
-    "env": "DEV2",
-    "envl": "dev2",
+    "env": "DEV1",
+    "envl": "dev1",
+    "petdb": "D1",
     "gitdir": os.getcwd(),
     "cicshlq": "DFH620",
     "zmake_file": zmake_file
 }
 
-if len(sys.argv) == 2:
+if len(sys.argv) > 1:
     data["target"] = sys.argv[1]
-else:
-    data["target"] = "DEPLOY_ALL"
+if len(sys.argv) > 2:
+    data["env"] = sys.argv[2].upper()
+    data["envl"] = sys.argv[2].lower()
 
 jcl = jcl_template.render(data)
 

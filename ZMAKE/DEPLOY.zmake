@@ -16,6 +16,9 @@ tgtcbllib     := $(tgthlq).COBOL
 srccbllstlib  := $(srchlq).COBOL.LISTING
 tgtcbllstlib  := $(tgthlq).COBOL.LISTING
 
+srcdbrmlib    := $(srchlq).DBRM
+tgtdbrmlib    := $(tgthlq).DBRM
+
 srclkedlib    := $(srchlq).LKED
 tgtlkedlib    := $(tgthlq).LKED
 
@@ -54,6 +57,9 @@ cbltgts       := ${addpdsname $(tgtcbllib),$(cblmems)}
 cbllstmems    := ${memberlist $(srccbllstlib)}
 cbllsttgts    := ${addpdsname $(tgtcbllstlib),$(cbllstmems)}
 
+dbrmmems      := ${memberlist $(srcdbrmlib)}
+dbrmtgts      := ${addpdsname $(tgtdbrmlib),$(dbrmmems)}
+
 lkedmems      := ${memberlist $(srclkedlib)}
 lkedtgts      := ${addpdsname $(tgtlkedlib),$(lkedmems)}
 
@@ -61,14 +67,18 @@ lkedlstmems   := ${memberlist $(srclkedlstlib)}
 lkedlsttgts   := ${addpdsname $(tgtlkedlstlib),$(lkedlstmems)}
 
 loadmems      := ${memberlist $(srcloadlib)}
-loadtgts      := ${addpdsname $(tgtloadlib),$(loadmems)}
+loaddb2mems   := ${memberlist $(srcloadlib),PETA}
+loaddb2tgts   := ${addpdsname $(tgtloadlib),$(loaddb2mems)}
+loadothmems   := ${function NOTIN SET1($(loadmems))+
+                                  SET2($(loaddb2mems))}
+loadothtgts   := ${addpdsname $(tgtloadlib),$(loadothmems)}
 
 jclmems       := ${memberlist $(srcjcllib)}
 jcltgts       := ${addpdsname $(tgtjcllib),$(jclmems)}
 
 #* Data sets grouped by characteristics
 recfmFB80     := $(tgtddllib) $(tgtasmlib) $(tgtbmslib) $(tgtcbllib)+
-                 $(tgtlkedlib) $(tgtjcllib)
+                 $(tgtdbrmlib) $(tgtlkedlib) $(tgtjcllib)
 recfmFBA133   := $(tgtasmlstlib) $(tgtcbllstlib)
 recfmVBM133   := $(tgtlkedlstlib)
 recfmU        := $(tgtloadlib)
@@ -78,8 +88,8 @@ datasets      := $(recfmFB80) $(recfmFBA133) $(recfmVBM133) $(recfmU)
 #* Combine targets
 .PHONY DEPLOY_ALL
 DEPLOY_ALL : $(datasets) $(ddltgts) $(asmtgts) $(bmstgts) $(asmlsttgts)+
-             $(cbltgts) $(cbllsttgts) $(lkedtgts) $(lkedlsttgts)+
-             $(loadtgts) $(jcltgts)
+             $(cbltgts) $(cbllsttgts) $(dbrmtgts) $(lkedtgts)+
+             $(lkedlsttgts) $(loaddb2tgts) $(loadothtgts) $(jcltgts)
 
 #* Build targets
 $(asmtgts) : $(srcasmlib)($%)
@@ -102,6 +112,10 @@ $(cbllsttgts) : $(srccbllstlib)($%)
 - CALL IEBCOPY PDSIN($(srccbllstlib)) PDSOUT($(tgtcbllstlib))+
 -              MEMBER($%) PRINTSUCCESS(NO)
 
+$(dbrmtgts) : $(srcdbrmlib)($%)
+- CALL IEBCOPY PDSIN($(srcdbrmlib)) PDSOUT($(tgtdbrmlib))+
+               MEMBER($%) PRINTSUCCESS(NO)
+
 $(lkedtgts) : $(srclkedlib)($%)
 - CALL IEBCOPY PDSIN($(srclkedlib)) PDSOUT($(tgtlkedlib))+
 -              MEMBER($%) PRINTSUCCESS(NO)
@@ -110,9 +124,16 @@ $(lkedlsttgts) : $(srclkedlstlib)($%)
 - CALL IEBCOPY PDSIN($(srclkedlstlib)) PDSOUT($(tgtlkedlstlib))+
 -              MEMBER($%) PRINTSUCCESS(NO)
 
-$(loadtgts) : $(srcloadlib)($%)
+$(loadothtgts) : $(srcloadlib)($%)
 - CALL IEBCOPY PDSIN($(srcloadlib)) PDSOUT($(tgtloadlib))+
 -              MEMBER($%) PRINTSUCCESS(NO)
+
+$(loaddb2tgts) : $(srcloadlib)($%)
+- CALL IEBCOPY PDSIN($(srcloadlib)) PDSOUT($(tgtloadlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+- CALL BIND SYSTEM(DBDG) PACKAGE(PET$(petdb)) MEMBER($%)+
+-           OWNER(PET$(petdb)) QUALIFIER(PET$(petdb))+
+-           LIBRARY('$(tgtdbrmlib)')
 
 $(ddltgts) : $(gitdir)/DDL/$%.sql
 - CALL UNIXCMD0 $(gitdir)/python/profileUSS.sh $(gitdir)/DDL $%.sql+
