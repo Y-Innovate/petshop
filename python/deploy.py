@@ -38,8 +38,8 @@ data = {
     "srchlq": f"{os.getlogin()}.PETSHOP",
     "tgthlq": f"{os.getlogin()}.PETSHOP",
     "version": "V1",
-    "env": "DEV1",
-    "envl": "dev1",
+    "env": "DEV2",
+    "envl": "dev2",
     "gitdir": os.getcwd(),
     "cicshlq": "DFH620",
     "zmake_file": zmake_file

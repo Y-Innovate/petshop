@@ -1,5 +1,33 @@
 #* Deploy petshop repository
 
+#* Source and target libs for COBOL+ASM and related
+srcasmlib     := $(srchlq).ASM
+tgtasmlib     := $(tgthlq).ASM
+
+srcasmlstlib  := $(srchlq).ASM.LISTING
+tgtasmlstlib  := $(tgthlq).ASM.LISTING
+
+srcbmslib     := $(srchlq).BMSMAP
+tgtbmslib     := $(tgthlq).BMSMAP
+
+srccbllib     := $(srchlq).COBOL
+tgtcbllib     := $(tgthlq).COBOL
+
+srccbllstlib  := $(srchlq).COBOL.LISTING
+tgtcbllstlib  := $(tgthlq).COBOL.LISTING
+
+srclkedlib    := $(srchlq).LKED
+tgtlkedlib    := $(tgthlq).LKED
+
+srclkedlstlib := $(srchlq).LKED.LISTING
+tgtlkedlstlib := $(tgthlq).LKED.LISTING
+
+srcloadlib    := $(srchlq).LOAD
+tgtloadlib    := $(tgthlq).LOAD
+
+srcjcllib     := $(srchlq).JCL
+tgtjcllib     := $(tgthlq).JCL
+
 #* Other source and target libs
 tgtddllib     := $(tgthlq).DDL
 
@@ -10,24 +38,114 @@ ddlfiles      := ${sh cd $(gitdir)/DDL; +
 ddlmems       := ${stripext $(ddlfiles)}
 ddltgts       := ${addpdsname $(tgtddllib),$(ddlmems)}
 
-#* Data sets grouped by characteristics
-recfmFB80     := $(tgtddllib)
+#* Build target lists
+asmmems       := ${memberlist $(srcasmlib)}
+asmtgts       := ${addpdsname $(tgtasmlib),$(asmmems)}
 
-datasets      := $(recfmFB80)
+asmlstmems    := ${memberlist $(srcasmlstlib)}
+asmlsttgts    := ${addpdsname $(tgtasmlstlib),$(asmlstmems)}
+
+bmsmems       := ${memberlist $(srcbmslib)}
+bmstgts       := ${addpdsname $(tgtbmslib),$(bmsmems)}
+
+cblmems       := ${memberlist $(srccbllib)}
+cbltgts       := ${addpdsname $(tgtcbllib),$(cblmems)}
+
+cbllstmems    := ${memberlist $(srccbllstlib)}
+cbllsttgts    := ${addpdsname $(tgtcbllstlib),$(cbllstmems)}
+
+lkedmems      := ${memberlist $(srclkedlib)}
+lkedtgts      := ${addpdsname $(tgtlkedlib),$(lkedmems)}
+
+lkedlstmems   := ${memberlist $(srclkedlstlib)}
+lkedlsttgts   := ${addpdsname $(tgtlkedlstlib),$(lkedlstmems)}
+
+loadmems      := ${memberlist $(srcloadlib)}
+loadtgts      := ${addpdsname $(tgtloadlib),$(loadmems)}
+
+jclmems       := ${memberlist $(srcjcllib)}
+jcltgts       := ${addpdsname $(tgtjcllib),$(jclmems)}
+
+#* Data sets grouped by characteristics
+recfmFB80     := $(tgtddllib) $(tgtasmlib) $(tgtbmslib) $(tgtcbllib)+
+                 $(tgtlkedlib) $(tgtjcllib)
+recfmFBA133   := $(tgtasmlstlib) $(tgtcbllstlib)
+recfmVBM133   := $(tgtlkedlstlib)
+recfmU        := $(tgtloadlib)
+
+datasets      := $(recfmFB80) $(recfmFBA133) $(recfmVBM133) $(recfmU)
 
 #* Combine targets
 .PHONY DEPLOY_ALL
-DEPLOY_ALL : $(datasets) $(ddltgts)
+DEPLOY_ALL : $(datasets) $(ddltgts) $(asmtgts) $(bmstgts) $(asmlsttgts)+
+             $(cbltgts) $(cbllsttgts) $(lkedtgts) $(lkedlsttgts)+
+             $(loadtgts) $(jcltgts)
+
+#* Build targets
+$(asmtgts) : $(srcasmlib)($%)
+- CALL IEBCOPY PDSIN($(srcasmlib)) PDSOUT($(tgtasmlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(asmlsttgts) : $(srcasmlstlib)($%)
+- CALL IEBCOPY PDSIN($(srcasmlstlib)) PDSOUT($(tgtasmlstlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(bmstgts) : $(srcbmslib)($%)
+- CALL IEBCOPY PDSIN($(srcbmslib)) PDSOUT($(tgtbmslib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(cbltgts) : $(srccbllib)($%)
+- CALL IEBCOPY PDSIN($(srccbllib)) PDSOUT($(tgtcbllib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(cbllsttgts) : $(srccbllstlib)($%)
+- CALL IEBCOPY PDSIN($(srccbllstlib)) PDSOUT($(tgtcbllstlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(lkedtgts) : $(srclkedlib)($%)
+- CALL IEBCOPY PDSIN($(srclkedlib)) PDSOUT($(tgtlkedlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(lkedlsttgts) : $(srclkedlstlib)($%)
+- CALL IEBCOPY PDSIN($(srclkedlstlib)) PDSOUT($(tgtlkedlstlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
+
+$(loadtgts) : $(srcloadlib)($%)
+- CALL IEBCOPY PDSIN($(srcloadlib)) PDSOUT($(tgtloadlib))+
+-              MEMBER($%) PRINTSUCCESS(NO)
 
 $(ddltgts) : $(gitdir)/DDL/$%.sql
-- CALL UNIXCMD0 $(gitdir)/python/profileDDL.sh $(gitdir)/DDL $%.sql+
+- CALL UNIXCMD0 $(gitdir)/python/profileUSS.sh $(gitdir)/DDL $%.sql+
 -               $(gitdir)/envs/$(envl).yaml | +
 -               iconv -f 1047 -t 037 -T > /tmp/$%.sql
 - CALL OGETU '/tmp/$%.sql' '$@'
 - CALL UNIXCMD0 rm /tmp/$%.sql
+
+$(jcltgts) : $(srcjcllib)($%)
+- CALL UNIXCMD0 $(gitdir)/python/profilePDS.sh $(srcjcllib) +
+-               $(tgtjcllib) $% $(gitdir)/envs/$(envl).yaml
+- CALL TOUCHMEM DATASET($@)
 
 #* Allocate LRECL=80 RECFM=FB data sets
 $(recfmFB80) :
 - CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(F,B) LRECL(80)+
 -             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
 - CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=133 RECFM=FBA data sets
+$(recfmFBA133) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(F,B,A) LRECL(133)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=133 RECFM=VBM data sets
+$(recfmVBM133) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(V,B,M) LRECL(133)+
+-             CYLINDERS SPACE(1,1) DSORG(PO) DSNTYPE(LIBRARY)
+- CALL TSOCMD FREE DATASET('$@')
+
+#* Allocate LRECL=0 RECFM=U data sets
+$(recfmU) :
+- CALL TSOCMD ALLOC DATASET('$@') NEW RECFM(U) LRECL(0)+
+-             BLKSIZE(32760) CYLINDERS SPACE(1,1) DSORG(PO)+
+-             DSNTYPE(LIBRARY)

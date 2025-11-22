@@ -62,6 +62,15 @@ optmems     := ${stripext $(optfiles)}
 optlib      := $(hlq).OPTFILE
 opttgts     := ${addpdsname $(optlib),$(optmems)}
 
+#* Variables for JCL source files
+jcldir      := $(gitdir)/JCL
+jclfiles    := ${sh cd $(jcldir); +
+                    find * -prune -type f -name "*.jcl" 2>&1 |+
+                    grep -v EDC5129I}
+jclmems     := ${stripext $(jclfiles)}
+jcllib      := $(hlq).JCL
+jcltgts     := ${addpdsname $(jcllib),$(jclmems)}
+
 #* Variables for COBOL compile, ASM assembly and link-edit
 tmpasmlib   := ${function TEMPPDS}
 asmlstlib   := $(hlq).ASM.LISTING
@@ -88,7 +97,7 @@ syslib_lked := CEE.SCEELKED $(cicshlq).CICS.SDFHLOAD $(db2hlq).SDSNLOAD+
 
 #* Group of data set names with specific characteristics
 recfmFB80   := $(asmlib) $(bmslib) $(cpylib) $(cbllib) $(lkedlib)+
-               $(optlib) $(objlib) $(dbrmlib)
+               $(optlib) $(objlib) $(dbrmlib) $(jcllib)
 recfmFBA133 := $(asmlstlib) $(cbllstlib)
 recfmVBM133 := $(lkedlstlib)
 recfmVB1562 := $(langxlib)
@@ -101,7 +110,7 @@ datasets    := $(recfmFB80) $(recfmFBA133) $(recfmVBM133)+
 #* Phony target that builds all
 .PHONY BUILD_ALL
 BUILD_ALL : $(datasets) $(asmtgts) $(bmstgts) $(cpytgts) $(cbltgts)+
-            $(lkedtgts) $(opttgts) $(loadtgts)
+            $(lkedtgts) $(opttgts) $(jcltgts) $(loadtgts)
 
 #* Phony target just to get USS copied to PDSE's
 .PHONY SETUP
@@ -131,6 +140,10 @@ $(lkedtgts) : $(lkeddir)/$%.lked
 $(opttgts) : $(optdir)/$%.opt
 - CALL OGETU '$(optdir)/$%.opt' '$@' ISO88591
 
+#* Write JCL sources from USS to PDS
+$(jcltgts) : $(jcldir)/$%.jcl
+- CALL OGETU '$(jcldir)/$%.jcl' '$@' ISO88591
+
 #* Assemble ASM source
 $(objasmtgts) : $(asmlib)($%)
 - CALL DFHEAP SYSIN($(asmlib)($%)) SYSPUNCH($(tmpasmlib)($%))+
@@ -152,7 +165,7 @@ $(objbmstgts) : $(bmslib)($%)
 - CALL TOUCHMEM DATASET($(cpylib)($%))
 - CALL ASMA SYSIN($(bmslib)($%)) SYSLIN($(objlib)($%))+
 -           SYSLIB($(syslib_asm)) PARM(NODECK,OBJECT,SYSPARM(MAP))+
--           PRINTSUCCESS(NO)
+-           SYSPRINT($(asmlstlib)($%)) PRINTSUCCESS(NO)
 - CALL TOUCHMEM DATASET($(objlib)($%))
 - SH cd $(gitdir)/COPY.NOCOMMIT; +
 -    cp "//'$(cpylib)($%)'" /tmp/$%.cpy.037; +

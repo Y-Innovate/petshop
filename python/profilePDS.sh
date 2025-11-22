@@ -17,6 +17,6 @@ cd $thisdir
 cd ..
  
 
-python python/profileDDL.py $1 $2 $3
+python python/profilePDS.py $1 $2 $3 $4
 
 exit 0
