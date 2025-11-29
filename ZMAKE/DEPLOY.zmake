@@ -67,7 +67,7 @@ lkedlstmems   := ${memberlist $(srclkedlstlib)}
 lkedlsttgts   := ${addpdsname $(tgtlkedlstlib),$(lkedlstmems)}
 
 loadmems      := ${memberlist $(srcloadlib)}
-loaddb2mems   := ${memberlist $(srcloadlib),PETA}
+loaddb2mems   := ${memberlist $(srcloadlib),PETM}
 loaddb2tgts   := ${addpdsname $(tgtloadlib),$(loaddb2mems)}
 loadothmems   := ${function NOTIN SET1($(loadmems))+
                                   SET2($(loaddb2mems))}

@@ -84,8 +84,8 @@
        01  W-LPETC900.
            COPY LPETC900.
        
-       01  W-LPETA001.
-           COPY LPETA001.
+       01  W-LPETM001.
+           COPY LPETM001.
 
        COPY DFHAID.
 
@@ -117,8 +117,6 @@
 
            PERFORM R009-FINISH
            .
-       MAIN-END.
-           GOBACK.
 
       *===============================================================*
       * R001-INIT: Program initialisations                            *
@@ -180,8 +178,6 @@
               RETURN
            END-EXEC
            .
-       R009-FINISH-END.
-           EXIT.
 
        R110-INPUT-PROC SECTION.
            EXEC CICS
@@ -389,46 +385,46 @@
            EXIT.
 
        R320-PERFORM-ACTION SECTION.
-           INITIALIZE W-LPETA001
+           INITIALIZE W-LPETM001
 
            MOVE FUNCTION NATIONAL-OF(ACTIONI OF W-PETB01I) TO
-                OPCODE OF W-LPETA001
+                OPCODE OF W-LPETM001
            MOVE FUNCTION NATIONAL-OF(TABIDI OF W-PETB01I) TO
-                TABLEID OF W-LPETA001
+                TABLEID OF W-LPETM001
            MOVE FUNCTION NATIONAL-OF(TABKEYI OF W-PETB01I) TO
-                TABKEY OF W-LPETA001
+                TABKEY OF W-LPETM001
            
-           IF  (OPCODE OF W-LPETA001 = N'C'
-           OR   OPCODE OF W-LPETA001 = N'U')
+           IF  (OPCODE OF W-LPETM001 = N'C'
+           OR   OPCODE OF W-LPETM001 = N'U')
            AND  TABVAL1L OF W-PETB01I NOT = 0
-              MOVE TABVAL1L OF W-PETB01I TO TABVALUE-LEN OF W-LPETA001
+              MOVE TABVAL1L OF W-PETB01I TO TABVALUE-LEN OF W-LPETM001
               MOVE FUNCTION NATIONAL-OF(TABVAL1I OF W-PETB01I) TO
-                   TABVALUE-TEXT OF W-LPETA001
+                   TABVALUE-TEXT OF W-LPETM001
            END-IF
 
-           MOVE 'PETA001' TO W-PGMNAME
+           MOVE 'PETM001' TO W-PGMNAME
 
-           CALL W-PGMNAME USING W-LPETA001
+           CALL W-PGMNAME USING W-LPETM001
 
-           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA001) TO
+           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM001) TO
                 ERRMSGO OF W-PETB01O
            
-           IF  RETURNCODE OF W-LPETA001 = N'00'
-              IF OPCODE OF W-LPETA001 NOT = N'D'
-                 MOVE FUNCTION DISPLAY-OF(TABLEID OF W-LPETA001) TO
+           IF  RETURNCODE OF W-LPETM001 = N'00'
+              IF OPCODE OF W-LPETM001 NOT = N'D'
+                 MOVE FUNCTION DISPLAY-OF(TABLEID OF W-LPETM001) TO
                       TABIDI OF W-PETB01I
-                 MOVE FUNCTION DISPLAY-OF(TABKEY OF W-LPETA001) TO
+                 MOVE FUNCTION DISPLAY-OF(TABKEY OF W-LPETM001) TO
                       TABKEYI OF W-PETB01I
-                 MOVE FUNCTION DISPLAY-OF(TABVALUE-TEXT OF W-LPETA001(1:
-                         TABVALUE-LEN OF W-LPETA001)) TO
+                 MOVE FUNCTION DISPLAY-OF(TABVALUE-TEXT OF W-LPETM001(1:
+                         TABVALUE-LEN OF W-LPETM001)) TO
                       TABVAL1I OF W-PETB01I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETA001) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETM001) TO
                       CREBYI OF W-PETB01I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETA001) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETM001) TO
                       CREDATEI OF W-PETB01I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETA001) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETM001) TO
                       UPDBYI OF W-PETB01I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETA001) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETM001) TO
                       UPDDATEI OF W-PETB01I
               ELSE
                  MOVE LOW-VALUES TO TABIDI   OF W-PETB01I

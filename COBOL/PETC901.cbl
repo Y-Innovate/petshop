@@ -104,8 +104,6 @@
 
            PERFORM R009-FINISH
            .
-       MAIN-END.
-           GOBACK.
 
       *===============================================================*
       * R001-INIT: Program initialisations                            *
@@ -167,8 +165,6 @@
               RETURN
            END-EXEC
            .
-       R009-FINISH-END.
-           EXIT.
 
        R110-INPUT-PROC SECTION.
            EXEC CICS

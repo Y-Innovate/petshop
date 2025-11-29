@@ -86,11 +86,11 @@
        01  W-LPETC900.
            COPY LPETC900.
        
-       01  W-LPETA001.
-           COPY LPETA001.
+       01  W-LPETM001.
+           COPY LPETM001.
        
-       01  W-LPETA004.
-           COPY LPETA004.
+       01  W-LPETM004.
+           COPY LPETM004.
 
        COPY DFHAID.
 
@@ -122,8 +122,6 @@
 
            PERFORM R009-FINISH
            .
-       MAIN-END.
-           GOBACK.
 
       *===============================================================*
       * R001-INIT: Program initialisations                            *
@@ -185,8 +183,6 @@
               RETURN
            END-EXEC
            .
-       R009-FINISH-END.
-           EXIT.
 
        R110-INPUT-PROC SECTION.
            EXEC CICS
@@ -340,40 +336,40 @@
               END-IF
 
               IF SW-INPUT-OK
-                 INITIALIZE W-LPETA001
-                 MOVE N'R' TO OPCODE OF W-LPETA001
-                 MOVE N'PRODSTAT' TO TABLEID OF W-LPETA001
+                 INITIALIZE W-LPETM001
+                 MOVE N'R' TO OPCODE OF W-LPETM001
+                 MOVE N'PRODSTAT' TO TABLEID OF W-LPETM001
                  MOVE FUNCTION NATIONAL-OF(PRODSTI OF W-PETB04I) TO
-                      TABKEY OF W-LPETA001
+                      TABKEY OF W-LPETM001
               
-                 MOVE 'PETA001' TO W-PGMNAME
+                 MOVE 'PETM001' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA001
+                 CALL W-PGMNAME USING W-LPETM001
 
-                 IF RETURNCODE OF W-LPETA001 NOT = N'00'
+                 IF RETURNCODE OF W-LPETM001 NOT = N'00'
                     MOVE C-ATTR-UNPROT-BRT-MDT TO PRODSTF OF W-PETB04I
                     MOVE -1 TO PRODSTL OF W-PETB04I
-                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA001)
+                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM001)
                          TO ERRMSGO OF W-PETB04O
                     SET SW-INPUT-ERROR TO TRUE
                  END-IF
               END-IF
 
               IF SW-INPUT-OK
-                 INITIALIZE W-LPETA001
-                 MOVE N'R' TO OPCODE OF W-LPETA001
-                 MOVE N'PRODGRCD' TO TABLEID OF W-LPETA001
+                 INITIALIZE W-LPETM001
+                 MOVE N'R' TO OPCODE OF W-LPETM001
+                 MOVE N'PRODGRCD' TO TABLEID OF W-LPETM001
                  MOVE FUNCTION NATIONAL-OF(GROUPCDI OF W-PETB04I) TO
-                      TABKEY OF W-LPETA001
+                      TABKEY OF W-LPETM001
                  
-                 MOVE 'PETA001' TO W-PGMNAME
+                 MOVE 'PETM001' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA001
+                 CALL W-PGMNAME USING W-LPETM001
 
-                 IF RETURNCODE OF W-LPETA001 NOT = N'00'
+                 IF RETURNCODE OF W-LPETM001 NOT = N'00'
                     MOVE C-ATTR-UNPROT-BRT-MDT TO GROUPCDF OF W-PETB04I
                     MOVE -1 TO GROUPCDL OF W-PETB04I
-                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA001)
+                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM001)
                          TO ERRMSGO OF W-PETB04O
                     SET SW-INPUT-ERROR TO TRUE
                  END-IF
@@ -456,75 +452,75 @@
            EXIT.
 
        R320-PERFORM-ACTION SECTION.
-           INITIALIZE W-LPETA004
+           INITIALIZE W-LPETM004
 
            MOVE FUNCTION NATIONAL-OF(ACTIONI OF W-PETB04I) TO
-                OPCODE OF W-LPETA004
-           MOVE PRODIDI OF W-PETB04I TO PRODUCTID OF W-LPETA004
+                OPCODE OF W-LPETM004
+           MOVE PRODIDI OF W-PETB04I TO PRODUCTID OF W-LPETM004
            MOVE FUNCTION NATIONAL-OF(PRODCDI OF W-PETB04I) TO
-                PRODUCTCODE OF W-LPETA004
+                PRODUCTCODE OF W-LPETM004
            
-           IF OPCODE OF W-LPETA001 NOT = N'D'
+           IF OPCODE OF W-LPETM001 NOT = N'D'
               MOVE FUNCTION NATIONAL-OF(PRODSTI OF W-PETB04I) TO
-                   PRODUCTSTATUS OF W-LPETA004
+                   PRODUCTSTATUS OF W-LPETM004
            END-IF
 
-           IF OPCODE OF W-LPETA004 = N'C'
-           OR OPCODE OF W-LPETA004 = N'U'
+           IF OPCODE OF W-LPETM004 = N'C'
+           OR OPCODE OF W-LPETM004 = N'U'
               MOVE PRODNML OF W-PETB04I TO
-                   PRODUCTNAME-LEN OF W-LPETA004
+                   PRODUCTNAME-LEN OF W-LPETM004
               MOVE FUNCTION NATIONAL-OF(PRODNMI OF W-PETB04I) TO
-                   PRODUCTNAME-TEXT OF W-LPETA004
+                   PRODUCTNAME-TEXT OF W-LPETM004
               MOVE FUNCTION NATIONAL-OF(GROUPCDI OF W-PETB04I) TO
-                   GROUPCODE OF W-LPETA004
+                   GROUPCODE OF W-LPETM004
               MOVE SUPPLIDI OF W-PETB04I TO W-SUPPLID
-              MOVE W-SUPPLID TO SUPPLIERID OF W-LPETA004
+              MOVE W-SUPPLID TO SUPPLIERID OF W-LPETM004
            END-IF
 
-           MOVE 'PETA004' TO W-PGMNAME
+           MOVE 'PETM004' TO W-PGMNAME
 
-           CALL W-PGMNAME USING W-LPETA004
+           CALL W-PGMNAME USING W-LPETM004
 
-           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA004) TO
+           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM004) TO
                 ERRMSGO OF W-PETB04O
            
-           IF  RETURNCODE OF W-LPETA004 = N'00'
-              IF OPCODE OF W-LPETA004 NOT = N'D'
-                 MOVE PRODUCTID OF W-LPETA004 TO W-PRODID
+           IF  RETURNCODE OF W-LPETM004 = N'00'
+              IF OPCODE OF W-LPETM004 NOT = N'D'
+                 MOVE PRODUCTID OF W-LPETM004 TO W-PRODID
                  MOVE W-PRODID TO PRODIDI OF W-PETB04I
                  MOVE 8        TO PRODIDL OF W-PETB04I
-                 MOVE FUNCTION DISPLAY-OF(PRODUCTCODE OF W-LPETA004) TO
+                 MOVE FUNCTION DISPLAY-OF(PRODUCTCODE OF W-LPETM004) TO
                       PRODCDI OF W-PETB04I
                  MOVE 8 TO PRODCDL OF W-PETB04I
-                 MOVE FUNCTION DISPLAY-OF(PRODUCTSTATUS OF W-LPETA004)
+                 MOVE FUNCTION DISPLAY-OF(PRODUCTSTATUS OF W-LPETM004)
                       TO PRODSTI OF W-PETB04I
                  MOVE 8 TO PRODSTL OF W-PETB04I
                  MOVE FUNCTION DISPLAY-OF(
-                         PRODUCTNAME-TEXT OF W-LPETA004(1:
-                            PRODUCTNAME-LEN OF W-LPETA004)) TO
+                         PRODUCTNAME-TEXT OF W-LPETM004(1:
+                            PRODUCTNAME-LEN OF W-LPETM004)) TO
                       PRODNMI OF W-PETB04I
-                 IF PRODUCTNAME-LEN OF W-LPETA004 >= 58
+                 IF PRODUCTNAME-LEN OF W-LPETM004 >= 58
                     MOVE 58 TO PRODNML OF W-PETB04I
                  ELSE
-                    MOVE PRODUCTNAME-LEN OF W-LPETA004 TO
+                    MOVE PRODUCTNAME-LEN OF W-LPETM004 TO
                          PRODNML OF W-PETB04I
                  END-IF
-                 MOVE FUNCTION DISPLAY-OF(GROUPCODE OF W-LPETA004) TO
+                 MOVE FUNCTION DISPLAY-OF(GROUPCODE OF W-LPETM004) TO
                       GROUPCDI OF W-PETB04I
                  MOVE 8 TO GROUPCDL OF W-PETB04I
-                 MOVE SUPPLIERID OF W-LPETA004 TO W-SUPPLID
+                 MOVE SUPPLIERID OF W-LPETM004 TO W-SUPPLID
                  MOVE W-SUPPLID TO SUPPLIDI OF W-PETB04I
                  MOVE 8         TO SUPPLIDL OF W-PETB04I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETA004) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETM004) TO
                       CREBYI OF W-PETB04I
                  MOVE 8 TO CREBYL OF W-PETB04I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETA004) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETM004) TO
                       CREDATEI OF W-PETB04I
                  MOVE 19 TO CREDATEL OF W-PETB04I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETA004) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETM004) TO
                       UPDBYI OF W-PETB04I
                  MOVE 8 TO UPDBYL OF W-PETB04I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETA004) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETM004) TO
                       UPDDATEI OF W-PETB04I
                  MOVE 19 TO UPDDATEL OF W-PETB04I
               ELSE

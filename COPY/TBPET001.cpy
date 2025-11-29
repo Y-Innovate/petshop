@@ -8,7 +8,7 @@
            EXEC SQL DECLARE TBPET001 TABLE
            (TABLEID                         GRAPHIC(8) NOT NULL,
              TABKEY                         GRAPHIC(8) NOT NULL,
-             TABVALUE                       VARGRAPHIC(255) NOT NULL,
+             TABVALUE                       VARGRAPHIC(255),
              CREATEDBY                      GRAPHIC(8) NOT NULL,
              CREATEDDATE                    TIMESTAMP NOT NULL,
              UPDATEDBY                      GRAPHIC(8) NOT NULL,

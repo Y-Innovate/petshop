@@ -85,11 +85,11 @@
        01  W-LPETC900.
            COPY LPETC900.
        
-       01  W-LPETA001.
-           COPY LPETA001.
+       01  W-LPETM001.
+           COPY LPETM001.
        
-       01  W-LPETA002.
-           COPY LPETA002.
+       01  W-LPETM002.
+           COPY LPETM002.
 
        COPY DFHAID.
 
@@ -121,8 +121,6 @@
 
            PERFORM R009-FINISH
            .
-       MAIN-END.
-           GOBACK.
 
       *===============================================================*
       * R001-INIT: Program initialisations                            *
@@ -184,8 +182,6 @@
               RETURN
            END-EXEC
            .
-       R009-FINISH-END.
-           EXIT.
 
        R110-INPUT-PROC SECTION.
            EXEC CICS
@@ -318,20 +314,20 @@
               END-IF
 
               IF SW-INPUT-OK
-                 INITIALIZE W-LPETA001
-                 MOVE N'R' TO OPCODE OF W-LPETA001
-                 MOVE N'STORSTAT' TO TABLEID OF W-LPETA001
+                 INITIALIZE W-LPETM001
+                 MOVE N'R' TO OPCODE OF W-LPETM001
+                 MOVE N'STORSTAT' TO TABLEID OF W-LPETM001
                  MOVE FUNCTION NATIONAL-OF(STORESTI OF W-PETB02I) TO
-                      TABKEY OF W-LPETA001
+                      TABKEY OF W-LPETM001
               
-                 MOVE 'PETA001' TO W-PGMNAME
+                 MOVE 'PETM001' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA001
+                 CALL W-PGMNAME USING W-LPETM001
 
-                 IF RETURNCODE OF W-LPETA001 NOT = N'00'
+                 IF RETURNCODE OF W-LPETM001 NOT = N'00'
                     MOVE C-ATTR-UNPROT-BRT-MDT TO STORESTF OF W-PETB02I
                     MOVE -1 TO STORESTL OF W-PETB02I
-                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA001)
+                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM001)
                          TO ERRMSGO OF W-PETB02O
                     SET SW-INPUT-ERROR TO TRUE
                  END-IF
@@ -426,64 +422,64 @@
            EXIT.
 
        R320-PERFORM-ACTION SECTION.
-           INITIALIZE W-LPETA002
+           INITIALIZE W-LPETM002
 
            MOVE FUNCTION NATIONAL-OF(ACTIONI OF W-PETB02I) TO
-                OPCODE OF W-LPETA002
-           MOVE STOREIDI OF W-PETB02I TO STOREID OF W-LPETA002
+                OPCODE OF W-LPETM002
+           MOVE STOREIDI OF W-PETB02I TO STOREID OF W-LPETM002
            MOVE FUNCTION NATIONAL-OF(STORECDI OF W-PETB02I) TO
-                STORECODE OF W-LPETA002
+                STORECODE OF W-LPETM002
            
-           IF OPCODE OF W-LPETA001 NOT = N'D'
+           IF OPCODE OF W-LPETM001 NOT = N'D'
               MOVE FUNCTION NATIONAL-OF(STORESTI OF W-PETB02I) TO
-                   STORESTATUS OF W-LPETA002
+                   STORESTATUS OF W-LPETM002
            END-IF
 
-           IF OPCODE OF W-LPETA002 = N'C'
-           OR OPCODE OF W-LPETA002 = N'U'
-              MOVE STORNM1L OF W-PETB02I TO STORENAME-LEN OF W-LPETA002
+           IF OPCODE OF W-LPETM002 = N'C'
+           OR OPCODE OF W-LPETM002 = N'U'
+              MOVE STORNM1L OF W-PETB02I TO STORENAME-LEN OF W-LPETM002
               MOVE FUNCTION NATIONAL-OF(STORNM1I OF W-PETB02I) TO
-                   STORENAME-TEXT OF W-LPETA002
+                   STORENAME-TEXT OF W-LPETM002
            END-IF
 
-           MOVE 'PETA002' TO W-PGMNAME
+           MOVE 'PETM002' TO W-PGMNAME
 
-           CALL W-PGMNAME USING W-LPETA002
+           CALL W-PGMNAME USING W-LPETM002
 
-           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA002) TO
+           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM002) TO
                 ERRMSGO OF W-PETB02O
            
-           IF  RETURNCODE OF W-LPETA002 = N'00'
-              IF OPCODE OF W-LPETA002 NOT = N'D'
-                 MOVE STOREID OF W-LPETA002 TO W-STOREID
+           IF  RETURNCODE OF W-LPETM002 = N'00'
+              IF OPCODE OF W-LPETM002 NOT = N'D'
+                 MOVE STOREID OF W-LPETM002 TO W-STOREID
                  MOVE W-STOREID TO STOREIDI OF W-PETB02I
                  MOVE 8         TO STOREIDL OF W-PETB02I
-                 MOVE FUNCTION DISPLAY-OF(STORECODE OF W-LPETA002) TO
+                 MOVE FUNCTION DISPLAY-OF(STORECODE OF W-LPETM002) TO
                       STORECDI OF W-PETB02I
                  MOVE 8 TO STORECDL OF W-PETB02I
-                 MOVE FUNCTION DISPLAY-OF(STORESTATUS OF W-LPETA002) TO
+                 MOVE FUNCTION DISPLAY-OF(STORESTATUS OF W-LPETM002) TO
                       STORESTI OF W-PETB02I
                  MOVE 8 TO STORESTL OF W-PETB02I
                  MOVE FUNCTION DISPLAY-OF(
-                         STORENAME-TEXT OF W-LPETA002(1:
-                            STORENAME-LEN OF W-LPETA002)) TO
+                         STORENAME-TEXT OF W-LPETM002(1:
+                            STORENAME-LEN OF W-LPETM002)) TO
                       STORNM1I OF W-PETB02I
-                 IF STORENAME-LEN OF W-LPETA002 >= 60
+                 IF STORENAME-LEN OF W-LPETM002 >= 60
                     MOVE 60 TO STORNM1L OF W-PETB02I
                  ELSE
-                    MOVE STORENAME-LEN OF W-LPETA002 TO
+                    MOVE STORENAME-LEN OF W-LPETM002 TO
                          STORNM1L OF W-PETB02I
                  END-IF
-                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETA002) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETM002) TO
                       CREBYI OF W-PETB02I
                  MOVE 8 TO CREBYL OF W-PETB02I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETA002) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETM002) TO
                       CREDATEI OF W-PETB02I
                  MOVE 19 TO CREDATEL OF W-PETB02I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETA002) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETM002) TO
                       UPDBYI OF W-PETB02I
                  MOVE 8 TO UPDBYL OF W-PETB02I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETA002) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETM002) TO
                       UPDDATEI OF W-PETB02I
                  MOVE 19 TO UPDDATEL OF W-PETB02I
               ELSE

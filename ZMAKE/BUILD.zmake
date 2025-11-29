@@ -33,7 +33,7 @@ cblfiles    := ${sh cd $(cbldir); +
                     find * -prune -type f -name "*.cbl" 2>&1 | +
                     grep -v EDC5129I}
 cbldb2files := ${sh cd $(cbldir); +
-                    find * -prune -type f -name "PETA*.cbl" 2>&1 | +
+                    find * -prune -type f -name "PETM*.cbl" 2>&1 | +
                     grep -v EDC5129I}
 cblcicsfiles := ${sh cd $(cbldir); +
                     find * -prune -type f -name "PETC*.cbl" 2>&1 | +

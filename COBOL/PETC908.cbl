@@ -92,17 +92,17 @@
        01  W-LPETC900.
            COPY LPETC900.
        
-       01  W-LPETA002.
-           COPY LPETA002.
+       01  W-LPETM002.
+           COPY LPETM002.
        
-       01  W-LPETA004.
-           COPY LPETA004.
+       01  W-LPETM004.
+           COPY LPETM004.
        
-       01  W-LPETA006.
-           COPY LPETA006.
+       01  W-LPETM006.
+           COPY LPETM006.
        
-       01  W-LPETA007.
-           COPY LPETA007.
+       01  W-LPETM007.
+           COPY LPETM007.
 
        COPY DFHAID.
 
@@ -134,8 +134,6 @@
 
            PERFORM R009-FINISH
            .
-       MAIN-END.
-           GOBACK.
 
       *===============================================================*
       * R001-INIT: Program initialisations                            *
@@ -197,8 +195,6 @@
               RETURN
            END-EXEC
            .
-       R009-FINISH-END.
-           EXIT.
 
        R110-INPUT-PROC SECTION.
            EXEC CICS
@@ -349,19 +345,19 @@
               END-IF
 
               IF SW-INPUT-OK
-                 INITIALIZE W-LPETA002
-                 MOVE N'R' TO OPCODE OF W-LPETA002
+                 INITIALIZE W-LPETM002
+                 MOVE N'R' TO OPCODE OF W-LPETM002
                  MOVE STOREIDI OF W-PETB07I TO W-STOREID
-                 MOVE W-STOREID TO STOREID OF W-LPETA002
+                 MOVE W-STOREID TO STOREID OF W-LPETM002
               
-                 MOVE 'PETA002' TO W-PGMNAME
+                 MOVE 'PETM002' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA002
+                 CALL W-PGMNAME USING W-LPETM002
 
-                 IF RETURNCODE OF W-LPETA002 NOT = N'00'
+                 IF RETURNCODE OF W-LPETM002 NOT = N'00'
                     MOVE C-ATTR-UNPROT-BRT-MDT TO STOREIDF OF W-PETB07I
                     MOVE -1 TO STOREIDL OF W-PETB07I
-                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA002)
+                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM002)
                          TO ERRMSGO OF W-PETB07O
                     SET SW-INPUT-ERROR TO TRUE
                  END-IF
@@ -370,19 +366,19 @@
               IF  SW-INPUT-OK
               AND PRODIDL OF W-PETB07I NOT = 0
               AND PRODIDI OF W-PETB07I NOT = ZEROES
-                 INITIALIZE W-LPETA004
-                 MOVE N'R' TO OPCODE OF W-LPETA004
+                 INITIALIZE W-LPETM004
+                 MOVE N'R' TO OPCODE OF W-LPETM004
                  MOVE PRODIDI OF W-PETB07I TO W-PRODUCTID
-                 MOVE W-PRODUCTID TO PRODUCTID OF W-LPETA004
+                 MOVE W-PRODUCTID TO PRODUCTID OF W-LPETM004
                  
-                 MOVE 'PETA004' TO W-PGMNAME
+                 MOVE 'PETM004' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA004
+                 CALL W-PGMNAME USING W-LPETM004
 
-                 IF RETURNCODE OF W-LPETA004 NOT = N'00'
+                 IF RETURNCODE OF W-LPETM004 NOT = N'00'
                     MOVE C-ATTR-UNPROT-BRT-MDT TO PRODIDF OF W-PETB07I
                     MOVE -1 TO PRODIDL OF W-PETB07I
-                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA004)
+                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM004)
                          TO ERRMSGO OF W-PETB07O
                     SET SW-INPUT-ERROR TO TRUE
                  END-IF
@@ -391,19 +387,19 @@
               IF  SW-INPUT-OK
               AND ANIMLIDL OF W-PETB07I NOT = 0
               AND ANIMLIDI OF W-PETB07I NOT = ZEROES
-                 INITIALIZE W-LPETA006
-                 MOVE N'R' TO OPCODE OF W-LPETA006
+                 INITIALIZE W-LPETM006
+                 MOVE N'R' TO OPCODE OF W-LPETM006
                  MOVE ANIMLIDI OF W-PETB07I TO W-ANIMALID
-                 MOVE W-ANIMALID TO ANIMALID OF W-LPETA006
+                 MOVE W-ANIMALID TO ANIMALID OF W-LPETM006
                  
-                 MOVE 'PETA006' TO W-PGMNAME
+                 MOVE 'PETM006' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA006
+                 CALL W-PGMNAME USING W-LPETM006
 
-                 IF RETURNCODE OF W-LPETA006 NOT = N'00'
+                 IF RETURNCODE OF W-LPETM006 NOT = N'00'
                     MOVE C-ATTR-UNPROT-BRT-MDT TO ANIMLIDF OF W-PETB07I
                     MOVE -1 TO ANIMLIDL OF W-PETB07I
-                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA006)
+                    MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM006)
                          TO ERRMSGO OF W-PETB07O
                     SET SW-INPUT-ERROR TO TRUE
                  END-IF
@@ -536,77 +532,77 @@
            EXIT.
 
        R320-PERFORM-ACTION SECTION.
-           INITIALIZE W-LPETA007
+           INITIALIZE W-LPETM007
 
            MOVE FUNCTION NATIONAL-OF(ACTIONI OF W-PETB07I) TO
-                OPCODE OF W-LPETA007
+                OPCODE OF W-LPETM007
            MOVE PADIDI OF W-PETB07I TO W-PADID
-           MOVE W-PADID TO PADID OF W-LPETA007
+           MOVE W-PADID TO PADID OF W-LPETM007
 
-           IF OPCODE OF W-LPETA007 NOT = N'D'
+           IF OPCODE OF W-LPETM007 NOT = N'D'
               MOVE STOREIDI OF W-PETB07I TO W-STOREID
-              MOVE W-STOREID TO STOREID OF W-LPETA007
+              MOVE W-STOREID TO STOREID OF W-LPETM007
               MOVE PRODIDI OF W-PETB07I TO W-PRODUCTID
-              MOVE W-PRODUCTID TO PRODUCTID OF W-LPETA007
+              MOVE W-PRODUCTID TO PRODUCTID OF W-LPETM007
               MOVE ANIMLIDI OF W-PETB07I TO W-ANIMALID
-              MOVE W-ANIMALID TO ANIMALID OF W-LPETA007
+              MOVE W-ANIMALID TO ANIMALID OF W-LPETM007
            END-IF
 
-           IF OPCODE OF W-LPETA007 = N'C'
-           OR OPCODE OF W-LPETA007 = N'U'
+           IF OPCODE OF W-LPETM007 = N'C'
+           OR OPCODE OF W-LPETM007 = N'U'
               MOVE PRICEI OF W-PETB07I TO W-PRICE-R
-              MOVE W-PRICE TO PRICE OF W-LPETA007
+              MOVE W-PRICE TO PRICE OF W-LPETM007
               MOVE DISCNTI OF W-PETB07I TO W-DISCOUNT-R
-              MOVE W-DISCOUNT TO DISCOUNT OF W-LPETA007
+              MOVE W-DISCOUNT TO DISCOUNT OF W-LPETM007
               MOVE FUNCTION NATIONAL-OF(FROMDTI OF W-PETB07I) TO
-                   FROMDATE OF W-LPETA007
+                   FROMDATE OF W-LPETM007
               MOVE FUNCTION NATIONAL-OF(TODTI OF W-PETB07I) TO
-                   TODATE OF W-LPETA007
+                   TODATE OF W-LPETM007
            END-IF
 
-           MOVE 'PETA007' TO W-PGMNAME
+           MOVE 'PETM007' TO W-PGMNAME
 
-           CALL W-PGMNAME USING W-LPETA007
+           CALL W-PGMNAME USING W-LPETM007
 
-           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETA007) TO
+           MOVE FUNCTION DISPLAY-OF(INFOMESSAGE OF W-LPETM007) TO
                 ERRMSGO OF W-PETB07O
            
-           IF  RETURNCODE OF W-LPETA007 = N'00'
-              IF OPCODE OF W-LPETA007 NOT = N'D'
-                 MOVE PADID OF W-LPETA007 TO W-PADID
+           IF  RETURNCODE OF W-LPETM007 = N'00'
+              IF OPCODE OF W-LPETM007 NOT = N'D'
+                 MOVE PADID OF W-LPETM007 TO W-PADID
                  MOVE W-PADID TO PADIDI OF W-PETB07I
                  MOVE 8       TO PADIDL OF W-PETB07I
-                 MOVE STOREID OF W-LPETA007 TO W-STOREID
+                 MOVE STOREID OF W-LPETM007 TO W-STOREID
                  MOVE W-STOREID TO STOREIDI OF W-PETB07I
                  MOVE 8         TO STOREIDL OF W-PETB07I
-                 MOVE PRODUCTID OF W-LPETA007 TO W-PRODUCTID
+                 MOVE PRODUCTID OF W-LPETM007 TO W-PRODUCTID
                  MOVE W-PRODUCTID TO PRODIDI OF W-PETB07I
                  MOVE 8           TO PRODIDL OF W-PETB07I
-                 MOVE ANIMALID OF W-LPETA007 TO W-ANIMALID
+                 MOVE ANIMALID OF W-LPETM007 TO W-ANIMALID
                  MOVE W-ANIMALID TO ANIMLIDI OF W-PETB07I
                  MOVE 8          TO ANIMLIDL OF W-PETB07I
-                 MOVE PRICE OF W-LPETA007 TO W-PRICE
+                 MOVE PRICE OF W-LPETM007 TO W-PRICE
                  MOVE W-PRICE-R TO PRICEI OF W-PETB07I
                  MOVE 9         TO PRICEL OF W-PETB07I
-                 MOVE DISCOUNT OF W-LPETA007 TO W-DISCOUNT
+                 MOVE DISCOUNT OF W-LPETM007 TO W-DISCOUNT
                  MOVE W-DISCOUNT-R TO DISCNTI OF W-PETB07I
                  MOVE 9            TO DISCNTL OF W-PETB07I
-                 MOVE FUNCTION DISPLAY-OF(FROMDATE OF W-LPETA007) TO
+                 MOVE FUNCTION DISPLAY-OF(FROMDATE OF W-LPETM007) TO
                       FROMDTI OF W-PETB07I
                  MOVE 26 TO FROMDTL OF W-PETB07I
-                 MOVE FUNCTION DISPLAY-OF(TODATE OF W-LPETA007) TO
+                 MOVE FUNCTION DISPLAY-OF(TODATE OF W-LPETM007) TO
                       TODTI OF W-PETB07I
                  MOVE 26 TO TODTL OF W-PETB07I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETA007) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDBY OF W-LPETM007) TO
                       CREBYI OF W-PETB07I
                  MOVE 8 TO CREBYL OF W-PETB07I
-                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETA007) TO
+                 MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETM007) TO
                       CREDATEI OF W-PETB07I
                  MOVE 19 TO CREDATEL OF W-PETB07I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETA007) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDBY OF W-LPETM007) TO
                       UPDBYI OF W-PETB07I
                  MOVE 8 TO UPDBYL OF W-PETB07I
-                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETA007) TO
+                 MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETM007) TO
                       UPDDATEI OF W-PETB07I
                  MOVE 19 TO UPDDATEL OF W-PETB07I
               ELSE
