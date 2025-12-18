@@ -30,9 +30,9 @@
               49 STORENAMEU-LEN    PIC S9(4) USAGE COMP-5.
               49 STORENAMEU-TEXT   PIC N(255).
            10 CREATEDBY            PIC N(8).
-           10 CREATEDDATE          PIC X(26).
+           10 CREATEDDATE          PIC N(26).
            10 UPDATEDBY            PIC N(8).
-           10 UPDATEDDATE          PIC X(26).
+           10 UPDATEDDATE          PIC N(26).
       ******************************************************************
       * THE NUMBER OF COLUMNS DESCRIBED BY THIS DECLARATION IS 9       *
       ******************************************************************

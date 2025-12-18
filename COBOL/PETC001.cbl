@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. PETC201.
+       PROGRAM-ID. PETC001.
       *===============================================================*
       * This program is a REST program for the PET store sample app.  *
       * ------------------------------------------------------------- *
@@ -50,8 +50,8 @@
                    15  Facility-ID     PIC XXX.
                10  I-S-Info            PIC S9(9) BINARY.
        
-       01  W-LPETM201.
-           COPY LPETM201.
+       01  W-LPETM001.
+           COPY LPETM001.
 
        LINKAGE SECTION.
        01  P-CHAR                    PIC X.
@@ -60,7 +60,7 @@
        MAIN SECTION.
            PERFORM R001-INIT
 
-           PERFORM R005-CALL-PETM201
+           PERFORM R005-CALL-PETM001
 
            PERFORM R009-FINISH
            .
@@ -76,21 +76,21 @@
 
            IF SW-CONT-FOUND
               SET ADDRESS OF P-CHAR TO W-CONT-POINTER
-              MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LPETM201
+              MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LPETM001
            END-IF
            .
        R001-INIT-END.
            EXIT.
 
       *===============================================================*
-      * R005-CALL-PETM201: Call PETM201                               *
+      * R005-CALL-PETM001: Call PETM001                               *
       *===============================================================*
-       R005-CALL-PETM201 SECTION.
-           MOVE 'PETM201' TO W-PGMNAME
+       R005-CALL-PETM001 SECTION.
+           MOVE 'PETM001' TO W-PGMNAME
 
-           CALL W-PGMNAME USING W-LPETM201
+           CALL W-PGMNAME USING W-LPETM001
            .
-       R005-CALL-PETM201-END.
+       R005-CALL-PETM001-END.
            EXIT.
 
       *===============================================================*
@@ -99,12 +99,9 @@
        R009-FINISH SECTION.
            MOVE C-CHNL-NAME-LWW TO W-CHNL-NAME 
            MOVE C-CONT-NAME-LWW TO W-CONT-NAME
-           SET W-CONT-POINTER TO ADDRESS OF W-LPETM201
+           SET W-CONT-POINTER TO ADDRESS OF W-LPETM001
 
            PERFORM R920-PUT-CONTAINER
-
-      *    IF  RETURNCODE OF W-LPETM201 = N'04'
-      *    AND REASONCODE OF W-LPETM201 = N'01'       
 
            EXEC CICS
               RETURN
@@ -173,4 +170,4 @@
            .
        R930-PUT-CONTAINER-END.
            EXIT.
-       END PROGRAM PETC201.
+       END PROGRAM PETC001.
