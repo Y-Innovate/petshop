@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID. PETC002.
+       PROGRAM-ID. PETC203.
       *===============================================================*
       * This program is a REST program for the PET store sample app.  *
       * ------------------------------------------------------------- *
@@ -51,8 +51,8 @@
                    15  Facility-ID     PIC XXX.
                10  I-S-Info            PIC S9(9) BINARY.
        
-       01  W-LPETM002.
-           COPY LPETM002.
+       01  W-LPETM203.
+           COPY LPETM203.
        01  W-LINKPAR.
            COPY LINKPAR.
 
@@ -63,7 +63,7 @@
        MAIN SECTION.
            PERFORM R001-INIT
 
-           PERFORM R005-CALL-PETM002
+           PERFORM R005-CALL-PETM203
 
            PERFORM R009-FINISH
            .
@@ -79,7 +79,7 @@
 
            IF SW-CONT-FOUND
               SET ADDRESS OF P-CHAR TO W-CONT-POINTER
-              MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LPETM002
+              MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LPETM203
            END-IF
 
            MOVE C-CHNL-NAME-LWW    TO W-CHNL-NAME 
@@ -96,30 +96,15 @@
            EXIT.
 
       *===============================================================*
-      * R005-CALL-PETM002: Call PETM002                               *
+      * R005-CALL-PETM203: Call PETM203                               *
       *===============================================================*
-       R005-CALL-PETM002 SECTION.
-           MOVE 'PETM002' TO W-PGMNAME
+       R005-CALL-PETM203 SECTION.
+           MOVE 'PETM203' TO W-PGMNAME
 
-           CALL W-PGMNAME USING W-LPETM002
+           CALL W-PGMNAME USING W-LPETM203
 
-           IF RETURNCODE OF W-LPETM002 = N'00'
-              EVALUATE OPCODE OF W-LPETM002
-              WHEN N'C'
-                 MOVE 201 TO STSCODE OF W-LINKPAR
-                 MOVE 7   TO STSTXTL OF W-LINKPAR
-                 MOVE 'Created' TO STSTXTT OF W-LINKPAR
-              WHEN N'U'
-                 MOVE 201 TO STSCODE OF W-LINKPAR
-                 MOVE 7   TO STSTXTL OF W-LINKPAR
-                 MOVE 'Updated' TO STSTXTT OF W-LINKPAR
-              WHEN N'D'
-                 MOVE 201 TO STSCODE OF W-LINKPAR
-                 MOVE 7   TO STSTXTL OF W-LINKPAR
-                 MOVE 'Deleted' TO STSTXTT OF W-LINKPAR
-              END-EVALUATE
-           ELSE
-              IF RETURNCODE OF W-LPETM002 = N'04'
+           IF RETURNCODE OF W-LPETM203 NOT = N'00'
+              IF RETURNCODE OF W-LPETM203 = N'04'
                  MOVE 404 TO STSCODE OF W-LINKPAR
                  MOVE 9   TO STSTXTL OF W-LINKPAR
                  MOVE 'Not Found' TO STSTXTT OF W-LINKPAR
@@ -130,21 +115,21 @@
               END-IF
            END-IF
            .
-       R005-CALL-PETM002-END.
+       R005-CALL-PETM203-END.
            EXIT.
 
       *===============================================================*
       * R009-FINISH: Program finalisations                            *
       *===============================================================*
        R009-FINISH SECTION.
-           MOVE C-CHNL-NAME-LWW      TO W-CHNL-NAME
+           MOVE C-CHNL-NAME-LWW      TO W-CHNL-NAME 
            MOVE C-CONT-NAME-LWW-03   TO W-CONT-NAME
-           MOVE LENGTH OF W-LPETM002 TO W-CONT-LENGTH
-           SET W-CONT-POINTER TO ADDRESS OF W-LPETM002
+           MOVE LENGTH OF W-LPETM203 TO W-CONT-LENGTH
+           SET W-CONT-POINTER TO ADDRESS OF W-LPETM203
 
            PERFORM R920-PUT-CONTAINER
 
-           MOVE C-CHNL-NAME-LWW     TO W-CHNL-NAME
+           MOVE C-CHNL-NAME-LWW     TO W-CHNL-NAME 
            MOVE C-CONT-NAME-LWW-00  TO W-CONT-NAME
            MOVE LENGTH OF W-LINKPAR TO W-CONT-LENGTH
            SET W-CONT-POINTER TO ADDRESS OF W-LINKPAR
@@ -218,4 +203,4 @@
            .
        R930-PUT-CONTAINER-END.
            EXIT.
-       END PROGRAM PETC002.
+       END PROGRAM PETC203.

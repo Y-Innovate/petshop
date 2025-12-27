@@ -14,7 +14,8 @@
        WORKING-STORAGE SECTION.
        01  WORK.
            05  C-CHNL-NAME-LWW       PIC X(16) VALUE 'LWW-LINK-CHL-00'.
-           05  C-CONT-NAME-LWW       PIC X(16) VALUE 'LWW-LINK-PAR-03'.
+           05  C-CONT-NAME-LWW-00    PIC X(16) VALUE 'LWW-LINK-PAR-00'.
+           05  C-CONT-NAME-LWW-03    PIC X(16) VALUE 'LWW-LINK-PAR-03'.
            05  W-CHNL-NAME           PIC X(16).
            05  W-CONT-NAME           PIC X(16).
            05  W-CONT-POINTER        POINTER.
@@ -52,6 +53,8 @@
        
        01  W-LPETM201.
            COPY LPETM201.
+       01  W-LINKPAR.
+           COPY LINKPAR.
 
        LINKAGE SECTION.
        01  P-CHAR                    PIC X.
@@ -69,14 +72,24 @@
       * R001-INIT: Program initialisations                            *
       *===============================================================*
        R001-INIT SECTION.
-           MOVE C-CHNL-NAME-LWW TO W-CHNL-NAME 
-           MOVE C-CONT-NAME-LWW TO W-CONT-NAME
+           MOVE C-CHNL-NAME-LWW    TO W-CHNL-NAME 
+           MOVE C-CONT-NAME-LWW-03 TO W-CONT-NAME
 
            PERFORM R910-GET-CONTAINER
 
            IF SW-CONT-FOUND
               SET ADDRESS OF P-CHAR TO W-CONT-POINTER
               MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LPETM201
+           END-IF
+
+           MOVE C-CHNL-NAME-LWW    TO W-CHNL-NAME 
+           MOVE C-CONT-NAME-LWW-00 TO W-CONT-NAME
+
+           PERFORM R910-GET-CONTAINER
+
+           IF SW-CONT-FOUND
+              SET ADDRESS OF P-CHAR TO W-CONT-POINTER
+              MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LINKPAR
            END-IF
            .
        R001-INIT-END.
@@ -89,6 +102,18 @@
            MOVE 'PETM201' TO W-PGMNAME
 
            CALL W-PGMNAME USING W-LPETM201
+
+           IF RETURNCODE OF W-LPETM201 NOT = N'00'
+              IF RETURNCODE OF W-LPETM201 = N'04'
+                 MOVE 404 TO STSCODE OF W-LINKPAR
+                 MOVE 9   TO STSTXTL OF W-LINKPAR
+                 MOVE 'Not Found' TO STSTXTT OF W-LINKPAR
+              ELSE
+                 MOVE 500 TO STSCODE OF W-LINKPAR
+                 MOVE 21  TO STSTXTL OF W-LINKPAR
+                 MOVE 'Internal Server Error' TO STSTXTT OF W-LINKPAR
+              END-IF
+           END-IF
            .
        R005-CALL-PETM201-END.
            EXIT.
@@ -97,14 +122,19 @@
       * R009-FINISH: Program finalisations                            *
       *===============================================================*
        R009-FINISH SECTION.
-           MOVE C-CHNL-NAME-LWW TO W-CHNL-NAME 
-           MOVE C-CONT-NAME-LWW TO W-CONT-NAME
+           MOVE C-CHNL-NAME-LWW      TO W-CHNL-NAME 
+           MOVE C-CONT-NAME-LWW-03   TO W-CONT-NAME
+           MOVE LENGTH OF W-LPETM201 TO W-CONT-LENGTH
            SET W-CONT-POINTER TO ADDRESS OF W-LPETM201
 
            PERFORM R920-PUT-CONTAINER
 
-      *    IF  RETURNCODE OF W-LPETM201 = N'04'
-      *    AND REASONCODE OF W-LPETM201 = N'01'       
+           MOVE C-CHNL-NAME-LWW     TO W-CHNL-NAME 
+           MOVE C-CONT-NAME-LWW-00  TO W-CONT-NAME
+           MOVE LENGTH OF W-LINKPAR TO W-CONT-LENGTH
+           SET W-CONT-POINTER TO ADDRESS OF W-LINKPAR
+
+           PERFORM R920-PUT-CONTAINER
 
            EXEC CICS
               RETURN
