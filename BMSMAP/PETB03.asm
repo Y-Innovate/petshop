@@ -49,7 +49,7 @@ SUPPLST  DFHMDF POS=(7,19),LENGTH=8,INITIAL='________',                *
 SUPPLNM  DFHMDF POS=(8,19),LENGTH=58,INITIAL='_________________________*
                _________________________________',                     *
                ATTRB=(UNPROT,NORM)
-         DFHMDF POS=(8,77),LENGTH=1,INITIAL=' ',                       *
+         DFHMDF POS=(8,78),LENGTH=1,INITIAL=' ',                       *
                ATTRB=(PROT,BRT,ASKIP)
          DFHMDF POS=(9,3),LENGTH=15,INITIAL='CRE BY:        ',         *
                ATTRB=(PROT,BRT)

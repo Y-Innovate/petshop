@@ -61,7 +61,7 @@ GROUPCD  DFHMDF POS=(9,18),LENGTH=8,INITIAL='________',                *
                ATTRB=(PROT,BRT)
 SUPPLID  DFHMDF POS=(10,18),LENGTH=8,INITIAL='________',               *
                ATTRB=(UNPROT,NORM)
-         DFHMDF POS=(10,27),LENGTH=1,INITIAL=' '                       *
+         DFHMDF POS=(10,27),LENGTH=1,INITIAL=' ',                      *
                ATTRB=(UNPROT,BRT,ASKIP)
          DFHMDF POS=(11,3),LENGTH=14,INITIAL='CRE BY:       ',         *
                ATTRB=(PROT,BRT)

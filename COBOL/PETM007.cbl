@@ -24,7 +24,7 @@
       *     08 32 = Error: SQL error in UPDATE                        *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
-      *     08 90 = Error: PETA900 returned non-zero                  *
+      *     08 90 = Error: PETA990 returned non-zero                  *
       * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
@@ -54,8 +54,8 @@
        01 W-LPETM007.
            COPY LPETM007.
 
-       01 W-LPETA900.
-           COPY LPETA900.
+       01 W-LPETA990.
+           COPY LPETA990.
 
        LINKAGE SECTION.
        01 P-LPETM007.
@@ -167,26 +167,26 @@
               OR CREATEDBY OF W-LPETM007 = LOW-VALUES
               OR UPDATEDBY OF W-LPETM007 = SPACES
               OR UPDATEDBY OF W-LPETM007 = LOW-VALUES
-                 MOVE 'PETA900' TO W-PGMNAME
+                 MOVE 'PETA990' TO W-PGMNAME
 
-                 CALL W-PGMNAME USING W-LPETA900
+                 CALL W-PGMNAME USING W-LPETA990
 
-                 IF RETURNCODE OF W-LPETA900 = N'00'
+                 IF RETURNCODE OF W-LPETA990 = N'00'
                     IF CREATEDBY OF W-LPETM007 = SPACES
                     OR CREATEDBY OF W-LPETM007 = LOW-VALUES
-                       MOVE USERID OF W-LPETA900 TO
+                       MOVE USERID OF W-LPETA990 TO
                             CREATEDBY OF W-LPETM007
                     END-IF
 
                     IF UPDATEDBY OF W-LPETM007 = SPACES
                     OR UPDATEDBY OF W-LPETM007 = LOW-VALUES
-                       MOVE USERID OF W-LPETA900 TO
+                       MOVE USERID OF W-LPETA990 TO
                             UPDATEDBY OF W-LPETM007
                     END-IF
                  ELSE
                     MOVE N'08' TO RETURNCODE OF W-LPETM007
                     MOVE N'90' TO REASONCODE OF W-LPETM007
-                    MOVE INFOMESSAGE OF W-LPETA900 TO
+                    MOVE INFOMESSAGE OF W-LPETA990 TO
                          INFOMESSAGE OF W-LPETM007
                  END-IF
               END-IF

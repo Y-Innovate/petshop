@@ -25,7 +25,7 @@
       *     08 32 = Error: SQL error in UPDATE                        *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
-      *     08 90 = Error: PETA900 returned non-zero                  *
+      *     08 90 = Error: PETA990 returned non-zero                  *
       * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
@@ -55,8 +55,8 @@
        01 W-LPETM005.
            COPY LPETM005.
 
-       01 W-LPETA900.
-           COPY LPETA900.
+       01 W-LPETA990.
+           COPY LPETA990.
 
        LINKAGE SECTION.
        01 P-LPETM005.
@@ -175,26 +175,26 @@
               OR CREATEDBY OF W-LPETM005 = LOW-VALUES
               OR UPDATEDBY OF W-LPETM005 = SPACES
               OR UPDATEDBY OF W-LPETM005 = LOW-VALUES
-                 MOVE 'PETA900' TO W-PGMNAME
-                 
-                 CALL W-PGMNAME USING W-LPETA900
+                 MOVE 'PETA990' TO W-PGMNAME
 
-                 IF RETURNCODE OF W-LPETA900 = N'00'
+                 CALL W-PGMNAME USING W-LPETA990
+
+                 IF RETURNCODE OF W-LPETA990 = N'00'
                     IF CREATEDBY OF W-LPETM005 = SPACES
                     OR CREATEDBY OF W-LPETM005 = LOW-VALUES
-                       MOVE USERID OF W-LPETA900 TO
+                       MOVE USERID OF W-LPETA990 TO
                             CREATEDBY OF W-LPETM005
                     END-IF
 
                     IF UPDATEDBY OF W-LPETM005 = SPACES
                     OR UPDATEDBY OF W-LPETM005 = LOW-VALUES
-                       MOVE USERID OF W-LPETA900 TO
+                       MOVE USERID OF W-LPETA990 TO
                             UPDATEDBY OF W-LPETM005
                     END-IF
                  ELSE
                     MOVE N'08' TO RETURNCODE OF W-LPETM005
                     MOVE N'90' TO REASONCODE OF W-LPETM005
-                    MOVE INFOMESSAGE OF W-LPETA900 TO
+                    MOVE INFOMESSAGE OF W-LPETA990 TO
                          INFOMESSAGE OF W-LPETM005
                  END-IF
               END-IF
@@ -349,7 +349,7 @@
                 PERFORM R900-DSNTIAR
            END-EVALUATE
            .
-       R120-SELECT-END. 
+       R120-SELECT-END.
            EXIT.
 
       *===============================================================*
@@ -388,7 +388,7 @@
               MOVE N'08' TO RETURNCODE OF W-LPETM005
               MOVE N'31' TO REASONCODE OF W-LPETM005
               MOVE N'TBPET005 entry not found' TO
-                   INFOMESSAGE OF W-LPETM005 
+                   INFOMESSAGE OF W-LPETM005
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM005
               MOVE N'32' TO REASONCODE OF W-LPETM005
@@ -399,7 +399,7 @@
               PERFORM R900-DSNTIAR
            END-EVALUATE
            .
-       R130-UPDATE-END. 
+       R130-UPDATE-END.
            EXIT.
 
       *===============================================================*
@@ -434,7 +434,7 @@
               PERFORM R900-DSNTIAR
            END-EVALUATE
            .
-       R140-DELETE-END. 
+       R140-DELETE-END.
            EXIT.
 
       *===============================================================*
@@ -454,7 +454,7 @@
            MOVE FUNCTION DISPLAY-OF(UPDATEDDATE OF W-LPETM005) TO
               UPDATEDDATE OF DCLTBPET005
            .
-       R210-COPY-TO-DCL-END. 
+       R210-COPY-TO-DCL-END.
            EXIT.
 
       *===============================================================*
@@ -468,7 +468,7 @@
                    DISPLAY ERROR-TEXT(ERROR-INDEX)
            END-PERFORM
            .
-       R900-DSNTIAR-END. 
+       R900-DSNTIAR-END.
            EXIT.
 
        END PROGRAM PETM005.

@@ -1,4 +1,4 @@
-          05 LPETA900.
+          05 LPETA990.
              10 RETURNCODE         PIC N(02).
              10 REASONCODE         PIC N(02).
              10 INFOMESSAGE        PIC N(72).
