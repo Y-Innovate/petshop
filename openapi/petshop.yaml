@@ -1,0 +1,3914 @@
+openapi: 3.0.0
+info:
+  version: "1"
+  title: Pet Shop API
+  description: API for managing a pet shop
+  x-apiname: PETSHOP
+servers:
+  - url: https://mainframeyin:8091/petshop/API/v1
+  - url: https://mainframeyin:8092/petshop/API/v1
+paths:
+  /refTables:
+    summary: Manage reference tables
+    get:
+      summary: Retrieve reference tables
+      operationId: listRefTables
+      tags:
+        - list
+      parameters:
+        - name: tableID_filter
+          in: query
+          description: Filter reference table ID
+          required: false
+          schema:
+            type: string
+        - name: tableID_since
+          in: query
+          description: Pagination reference table ID
+          required: false
+          schema:
+            type: string
+        - name: tabKey_since
+          in: query
+          description: Pagination reference table key
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of reference tables
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1refTables/get/parameters"
+        - AllocateIOArea:
+            name: LPETM201
+            initWith: 0x00
+            size: 13842
+            fields:
+              $ref: "#/components/x-ioareas/LPETM201/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: tableID_filter
+                toName: TABLEID-FILTER
+              - type: singleFields
+                fromName: tableID_since
+                toName: TABLEID-SINCE
+              - type: singleFields
+                fromName: tabKey_since
+                toName: TABKEY-SINCE
+        - Link:
+            program: PETC201
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM201_OK
+            source:
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC201_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: groupToArray
+                      fromGroupName: REFTABLE-ENTRY
+                      toArrayName: refTables
+                      itemMappings:
+                        - type: singleFields
+                          fromName: TABLEID
+                          toName: tableID
+                        - type: singleFields
+                          fromName: TABKEY
+                          toName: tableKey
+                        - type: singleFields
+                          fromName: TABVALUE
+                          toName: tableValue
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC201_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new reference table entry
+      operationId: newRefTableEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM001
+            initWith: 0x00
+            size: 834
+            fields:
+              $ref: "#/components/x-ioareas/LPETM001/fields"
+        - ParseRequestJSON:
+            name: PETM001_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: tableID
+                toName: TABLEID
+              - type: singleFields
+                fromName: tableKey
+                toName: TABKEY
+              - type: singleFields
+                fromName: tableValue
+                toName: TABVALUE
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC001
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM001_C_OK
+            source:
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC001_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: TABLEID
+                      toName: tableID
+                    - type: singleFields
+                      fromName: TABKEY
+                      toName: tableKey
+                    - type: singleFields
+                      fromName: TABVALUE
+                      toName: tableValue
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC001_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /refTables/{tableKey}:
+    summary: Manage reference tables
+    get:
+      summary: Get existing reference table entry details
+      operationId: getRefTableEntry
+      tags:
+        - get
+      parameters:
+        - name: tableKey
+          in: path
+          description: Table key that together with table ID is unique
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of reference table entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM001
+            initWith: 0x00
+            size: 834
+            fields:
+              $ref: "#/components/x-ioareas/LPETM001/fields"
+        - ExtractIdFromPath:
+            name: PETM001_R_TABLEID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: TABLEID
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/parameters"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: tableKey
+                toName: TABKEY
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC001
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM001_R_OK
+            source:
+              $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC001_R_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: TABLEID
+                      toName: tableID
+                    - type: singleFields
+                      fromName: TABKEY
+                      toName: tableKey
+                    - type: singleFields
+                      fromName: TABVALUE
+                      toName: tableValue
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC001_R_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      summary: Update existing reference table entry
+      operationId: updateRefTableEntry
+      tags:
+        - update
+      parameters:
+        - name: tableKey
+          in: path
+          description: Table key that together with table ID is unique
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM001
+            initWith: 0x00
+            size: 834
+            fields:
+              $ref: "#/components/x-ioareas/LPETM001/fields"
+        - ExtractIdFromPath:
+            name: PETM001_U_TABLEID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: TABLEID
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/parameters"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: tableKey
+                toName: TABKEY
+        - ParseRequestJSON:
+            name: PETM001_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/5/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: tableValue
+                toName: TABVALUE
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC001
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM001_C_OK
+            source:
+              $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC001_U_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: TABLEID
+                      toName: tableID
+                    - type: singleFields
+                      fromName: TABKEY
+                      toName: tableKey
+                    - type: singleFields
+                      fromName: TABVALUE
+                      toName: tableValue
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC001_U_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/RefTablesResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      summary: Delete existing reference table entry
+      operationId: deleteRefTableEntry
+      tags:
+        - delete
+      parameters:
+        - name: tableKey
+          in: path
+          description: Table key that together with table ID is unique
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM001
+            initWith: 0x00
+            size: 834
+            fields:
+              $ref: "#/components/x-ioareas/LPETM001/fields"
+        - ExtractIdFromPath:
+            name: PETM001_U_TABLEID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: TABLEID
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/parameters"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: tableKey
+                toName: TABKEY
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC001
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC001_D_RET
+            properties:
+              $ref: "#/components/schemas/RefTablesResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/6/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps/6/CreateObject"
+  /stores:
+    summary: Manage petshop stores
+    get:
+      summary: Retrieve stores
+      operationId: listStores
+      tags:
+        - list
+      parameters:
+        - name: storeName_filter
+          in: query
+          description: Filter store name
+          required: false
+          schema:
+            type: string
+        - name: storeID_since
+          in: query
+          description: Pagination store ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of stores
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1stores/get/parameters"
+        - AllocateIOArea:
+            name: LPETM202
+            initWith: 0x00
+            size: 24672
+            fields:
+              $ref: "#/components/x-ioareas/LPETM202/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeName_filter
+                toName: STORENAME-FILTER
+              - type: singleFields
+                fromName: storeID_since
+                toName: STOREID-SINCE
+        - Link:
+            program: PETC202
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM202_OK
+            source:
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC202_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: groupToArray
+                      fromGroupName: STORE-ENTRY
+                      toArrayName: stores
+                      itemMappings:
+                        - type: singleFields
+                          fromName: STOREID
+                          toName: storeID
+                        - type: singleFields
+                          fromName: STORENAME
+                          toName: storeName
+                        - type: singleFields
+                          fromName: STORENAMEU
+                          toName: storeNameU
+                        - type: singleFields
+                          fromName: STORECODE
+                          toName: storeCode
+                        - type: singleFields
+                          fromName: STORESTATUS
+                          toName: storeStatus
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC202_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new store entry
+      operationId: newStoreEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM002
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM002/fields"
+        - ParseRequestJSON:
+            name: PETM002_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeCode
+                toName: STORECODE
+              - type: singleFields
+                fromName: storeStatus
+                toName: STORESTATUS
+              - type: singleFields
+                fromName: storeName
+                toName: STORENAME
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC002
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM002_C_OK
+            source:
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC002_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: STORECODE
+                      toName: storeCode
+                    - type: singleFields
+                      fromName: STORESTATUS
+                      toName: storeStatus
+                    - type: singleFields
+                      fromName: STORENAME
+                      toName: storeName
+                    - type: singleFields
+                      fromName: STORENAMEU
+                      toName: storeNameU
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC002_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /stores/{storeID}:
+    summary: Manage petshop stores
+    get:
+      summary: Get existing store entry details
+      operationId: getStoreEntry
+      tags:
+        - get
+      parameters:
+        - name: storeID
+          in: path
+          description: Unique ID of a store
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of stores entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM002
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM002/fields"
+        - ExtractIdFromPath:
+            name: PETM002_R_STOREID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: STOREID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC002
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM002_C_OK
+            source:
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC002_R_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: STORECODE
+                      toName: storeCode
+                    - type: singleFields
+                      fromName: STORESTATUS
+                      toName: storeStatus
+                    - type: singleFields
+                      fromName: STORENAME
+                      toName: storeName
+                    - type: singleFields
+                      fromName: STORENAMEU
+                      toName: storeNameU
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC002_R_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      summary: Update existing stores entry
+      operationId: updateStoresEntry
+      tags:
+        - update
+      parameters:
+        - name: storeID
+          in: path
+          description: Unique ID of a store
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM002
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM002/fields"
+        - ExtractIdFromPath:
+            name: PETM002_U_STOREID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: STOREID
+        - ParseRequestJSON:
+            name: PETM002_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeName
+                toName: STORENAME
+              - type: singleFields
+                fromName: storeCode
+                toName: STORECODE
+              - type: singleFields
+                fromName: storeStatus
+                toName: STORESTATUS
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC002
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM002_U_OK
+            source:
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC002_U_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: STORECODE
+                      toName: storeCode
+                    - type: singleFields
+                      fromName: STORESTATUS
+                      toName: storeStatus
+                    - type: singleFields
+                      fromName: STORENAME
+                      toName: storeName
+                    - type: singleFields
+                      fromName: STORENAMEU
+                      toName: storeNameU
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC002_U_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/StoresResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      summary: Delete existing stores entry
+      operationId: deleteStoresEntry
+      tags:
+        - delete
+      parameters:
+        - name: storeID
+          in: path
+          description: Unique ID of a store
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM002
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM002/fields"
+        - ExtractIdFromPath:
+            name: PETM002_D_STOREID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: STOREID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC002
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC002_D_RET
+            properties:
+              $ref: "#/components/schemas/StoresResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/4/CreateObject"
+  /suppliers:
+    summary: Manage petshop suppliers
+    get:
+      summary: Retrieve suppliers
+      operationId: listSuppliers
+      tags:
+        - list
+      parameters:
+        - name: supplierName_filter
+          in: query
+          description: Filter supplier name
+          required: false
+          schema:
+            type: string
+        - name: supplierID_since
+          in: query
+          description: Pagination supplier ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of suppliers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1suppliers/get/parameters"
+        - AllocateIOArea:
+            name: LPETM203
+            initWith: 0x00
+            size: 24672
+            fields:
+              $ref: "#/components/x-ioareas/LPETM203/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: supplierName_filter
+                toName: SUPPLIERNAME-FILTER
+              - type: singleFields
+                fromName: supplierID_since
+                toName: SUPPLIERID-SINCE
+        - Link:
+            program: PETC203
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM203_OK
+            source:
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC203_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: groupToArray
+                      fromGroupName: SUPPLIER-ENTRY
+                      toArrayName: suppliers
+                      itemMappings:
+                        - type: singleFields
+                          fromName: SUPPLIERID
+                          toName: supplierID
+                        - type: singleFields
+                          fromName: SUPPLIERNAME
+                          toName: supplierName
+                        - type: singleFields
+                          fromName: SUPPLIERNAMEU
+                          toName: supplierNameU
+                        - type: singleFields
+                          fromName: SUPPLIERCODE
+                          toName: supplierCode
+                        - type: singleFields
+                          fromName: SUPPLIERSTATUS
+                          toName: supplierStatus
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC203_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new supplier entry
+      operationId: newSupplierEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM003
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM003/fields"
+        - ParseRequestJSON:
+            name: PETM003_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: supplierCode
+                toName: SUPPLIERCODE
+              - type: singleFields
+                fromName: supplierStatus
+                toName: SUPPLIERSTATUS
+              - type: singleFields
+                fromName: supplierName
+                toName: SUPPLIERNAME
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC003
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM003_C_OK
+            source:
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC003_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: SUPPLIERCODE
+                      toName: supplierCode
+                    - type: singleFields
+                      fromName: SUPPLIERSTATUS
+                      toName: supplierStatus
+                    - type: singleFields
+                      fromName: SUPPLIERNAME
+                      toName: supplierName
+                    - type: singleFields
+                      fromName: SUPPLIERNAMEU
+                      toName: supplierNameU
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC003_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /suppliers/{supplierID}:
+    summary: Manage petshop suppliers
+    get:
+      summary: Get existing supplier entry details
+      operationId: getSupplierEntry
+      tags:
+        - get
+      parameters:
+        - name: supplierID
+          in: path
+          description: Unique ID of a supplier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of suppliers entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM003
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM003/fields"
+        - ExtractIdFromPath:
+            name: PETM003_R_SUPPLIERID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: SUPPLIERID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC003
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM003_C_OK
+            source:
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC003_R_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: SUPPLIERCODE
+                      toName: supplierCode
+                    - type: singleFields
+                      fromName: SUPPLIERSTATUS
+                      toName: supplierStatus
+                    - type: singleFields
+                      fromName: SUPPLIERNAME
+                      toName: supplierName
+                    - type: singleFields
+                      fromName: SUPPLIERNAMEU
+                      toName: supplierNameU
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC003_R_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      summary: Update existing suppliers entry
+      operationId: updateSuppliersEntry
+      tags:
+        - update
+      parameters:
+        - name: supplierID
+          in: path
+          description: Unique ID of a supplier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM003
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM003/fields"
+        - ExtractIdFromPath:
+            name: PETM003_U_SUPPLIERID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: SUPPLIERID
+        - ParseRequestJSON:
+            name: PETM003_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: supplierName
+                toName: SUPPLIERNAME
+              - type: singleFields
+                fromName: supplierCode
+                toName: SUPPLIERCODE
+              - type: singleFields
+                fromName: supplierStatus
+                toName: SUPPLIERSTATUS
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC003
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM003_U_OK
+            source:
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC003_U_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: SUPPLIERCODE
+                      toName: supplierCode
+                    - type: singleFields
+                      fromName: SUPPLIERSTATUS
+                      toName: supplierStatus
+                    - type: singleFields
+                      fromName: SUPPLIERNAME
+                      toName: supplierName
+                    - type: singleFields
+                      fromName: SUPPLIERNAMEU
+                      toName: supplierNameU
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC003_U_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/SuppliersResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      summary: Delete existing suppliers entry
+      operationId: deleteSuppliersEntry
+      tags:
+        - delete
+      parameters:
+        - name: supplierID
+          in: path
+          description: Unique ID of a supplier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM003
+            initWith: 0x00
+            size: 1350
+            fields:
+              $ref: "#/components/x-ioareas/LPETM003/fields"
+        - ExtractIdFromPath:
+            name: PETM003_D_SUPPLIERID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: SUPPLIERID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC003
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC003_D_RET
+            properties:
+              $ref: "#/components/schemas/SuppliersResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/4/CreateObject"
+  /products:
+    summary: Manage petshop products
+    get:
+      summary: Retrieve products
+      operationId: listProducts
+      tags:
+        - list
+      parameters:
+        - name: productName_filter
+          in: query
+          description: Filter product name
+          required: false
+          schema:
+            type: string
+        - name: productID_since
+          in: query
+          description: Pagination product ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of products
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1products/get/parameters"
+        - AllocateIOArea:
+            name: LPETM204
+            initWith: 0x00
+            size: 25072
+            fields:
+              $ref: "#/components/x-ioareas/LPETM204/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: productName_filter
+                toName: PRODUCTNAME-FILTER
+              - type: singleFields
+                fromName: productID_since
+                toName: PRODUCTID-SINCE
+        - Link:
+            program: PETC204
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM204_OK
+            source:
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC204_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: groupToArray
+                      fromGroupName: PRODUCT-ENTRY
+                      toArrayName: products
+                      itemMappings:
+                        - type: singleFields
+                          fromName: PRODUCTID
+                          toName: productID
+                        - type: singleFields
+                          fromName: PRODUCTNAME
+                          toName: productName
+                        - type: singleFields
+                          fromName: PRODUCTNAMEU
+                          toName: productNameU
+                        - type: singleFields
+                          fromName: PRODUCTCODE
+                          toName: productCode
+                        - type: singleFields
+                          fromName: PRODUCTSTATUS
+                          toName: productStatus
+                        - type: singleFields
+                          fromName: GROUPCODE
+                          toName: groupCode
+                        - type: singleFields
+                          fromName: SUPPLIERID
+                          toName: supplierID
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC204_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new product entry
+      operationId: newProductEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM004
+            initWith: 0x00
+            size: 1370
+            fields:
+              $ref: "#/components/x-ioareas/LPETM004/fields"
+        - ParseRequestJSON:
+            name: PETM004_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: productCode
+                toName: PRODUCTCODE
+              - type: singleFields
+                fromName: productStatus
+                toName: PRODUCTSTATUS
+              - type: singleFields
+                fromName: productName
+                toName: PRODUCTNAME
+              - type: singleFields
+                fromName: groupCode
+                toName: GROUPCODE
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC004
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM003_C_OK
+            source:
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC004_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: PRODUCTCODE
+                      toName: productCode
+                    - type: singleFields
+                      fromName: PRODUCTSTATUS
+                      toName: productStatus
+                    - type: singleFields
+                      fromName: PRODUCTNAME
+                      toName: productName
+                    - type: singleFields
+                      fromName: PRODUCTNAMEU
+                      toName: productNameU
+                    - type: singleFields
+                      fromName: GROUPCODE
+                      toName: groupCode
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC004_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /products/{productID}:
+    summary: Manage petshop products
+    get:
+      summary: Get existing product entry details
+      operationId: getProductEntry
+      tags:
+        - get
+      parameters:
+        - name: productID
+          in: path
+          description: Unique ID of a product
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of products entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM004
+            initWith: 0x00
+            size: 1370
+            fields:
+              $ref: "#/components/x-ioareas/LPETM004/fields"
+        - ExtractIdFromPath:
+            name: PETM004_R_PRODUCTID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: PRODUCTID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC004
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM004_C_OK
+            source:
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC004_R_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: PRODUCTCODE
+                      toName: productCode
+                    - type: singleFields
+                      fromName: PRODUCTSTATUS
+                      toName: productStatus
+                    - type: singleFields
+                      fromName: PRODUCTNAME
+                      toName: productName
+                    - type: singleFields
+                      fromName: PRODUCTNAMEU
+                      toName: productNameU
+                    - type: singleFields
+                      fromName: GROUPCODE
+                      toName: groupCode
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC004_R_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      summary: Update existing products entry
+      operationId: updateProductsEntry
+      tags:
+        - update
+      parameters:
+        - name: productID
+          in: path
+          description: Unique ID of a product
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM004
+            initWith: 0x00
+            size: 1370
+            fields:
+              $ref: "#/components/x-ioareas/LPETM004/fields"
+        - ExtractIdFromPath:
+            name: PETM004_U_PRODUCTID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: PRODUCTID
+        - ParseRequestJSON:
+            name: PETM004_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: productName
+                toName: PRODUCTNAME
+              - type: singleFields
+                fromName: productCode
+                toName: PRODUCTCODE
+              - type: singleFields
+                fromName: productStatus
+                toName: PRODUCTSTATUS
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC004
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM004_U_OK
+            source:
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC004_U_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: PRODUCTCODE
+                      toName: productCode
+                    - type: singleFields
+                      fromName: PRODUCTSTATUS
+                      toName: productStatus
+                    - type: singleFields
+                      fromName: PRODUCTNAME
+                      toName: productName
+                    - type: singleFields
+                      fromName: PRODUCTNAMEU
+                      toName: productNameU
+                    - type: singleFields
+                      fromName: GROUPCODE
+                      toName: groupCode
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC004_U_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/ProductsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      summary: Delete existing products entry
+      operationId: deleteProductsEntry
+      tags:
+        - delete
+      parameters:
+        - name: productID
+          in: path
+          description: Unique ID of a product
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM004
+            initWith: 0x00
+            size: 1370
+            fields:
+              $ref: "#/components/x-ioareas/LPETM004/fields"
+        - ExtractIdFromPath:
+            name: PETM004_D_PRODUCTID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: PRODUCTID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC004
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC004_D_RET
+            properties:
+              $ref: "#/components/schemas/ProductsResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/4/CreateObject"
+  /inventory:
+    summary: Manage petshop inventory
+    get:
+      summary: Retrieve inventory
+      operationId: listInventory
+      tags:
+        - list
+      parameters:
+        - name: storeID_filter
+          in: query
+          description: Filter store ID
+          required: false
+          schema:
+            type: integer
+        - name: productID_since
+          in: query
+          description: Pagination product ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of inventory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1inventory/get/parameters"
+        - AllocateIOArea:
+            name: LPETM205
+            initWith: 0x00
+            size: 4242
+            fields:
+              $ref: "#/components/x-ioareas/LPETM205/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID_filter
+                toName: STOREID-FILTER
+              - type: singleFields
+                fromName: productID_since
+                toName: PRODUCTID-SINCE
+        - Link:
+            program: PETC205
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM204_OK
+            source:
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC204_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: groupToArray
+                      fromGroupName: INVENTORY-ENTRY
+                      toArrayName: inventory
+                      itemMappings:
+                        - type: singleFields
+                          fromName: INVENTORYID
+                          toName: inventoryID
+                        - type: singleFields
+                          fromName: STOREID
+                          toName: storeID
+                        - type: singleFields
+                          fromName: PRODUCTID
+                          toName: productID
+                        - type: singleFields
+                          fromName: SELLBYDATE
+                          toName: sellByDate
+                        - type: singleFields
+                          fromName: INSTOCK
+                          toName: inStock
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC205_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /token:
+    summary: Retrieve access token
+    post:
+      summary: Retrieve access token
+      operationId: newAccessToken
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LWWADPLI
+            initWith: 0x00
+            size: 1136
+            fields:
+              $ref: "#/components/x-ioareas/LWWADPLI/fields"
+        - ParseRequestJSON:
+            name: LWWADPLI_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: username
+                toName: USERNAME
+              - type: singleFields
+                fromName: password
+                toName: PASSWORD
+        - Link:
+            program: LWWADPLI
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: LWWADPLI_RET
+            properties:
+              $ref: "#/components/schemas/TokenResponse/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: TOKEN
+                toName: token
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject"
+components:
+  schemas:
+    RefTablesResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        refTables:
+          type: array
+          items:
+            type: object
+            properties:
+              tableID:
+                type: string
+              tableKey:
+                type: string
+              tableValue:
+                type: string
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string
+    RefTablesResponseListShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    RefTablesResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        tableID:
+          type: string
+        tableKey:
+          type: string
+        tableValue:
+          type: string
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    RefTablesResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    StoresResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        stores:
+          type: array
+          items:
+            type: object
+            properties:
+              storeID:
+                type: integer
+              storeName:
+                type: string
+              storeNameU:
+                type: string
+              storeCode:
+                type: string
+              storeStatus:
+                type: string
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string
+    StoresResponseListShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    StoresResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        storeID:
+          type: integer
+        storeCode:
+          type: string
+        storeStatus:
+          type: string
+        storeName:
+          type: string
+        storeNameU:
+          type: string
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    StoresResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    SuppliersResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        suppliers:
+          type: array
+          items:
+            type: object
+            properties:
+              supplierID:
+                type: integer
+              supplierName:
+                type: string
+              supplierNameU:
+                type: string
+              supplierCode:
+                type: string
+              supplierStatus:
+                type: string
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string
+    SuppliersResponseListShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    SuppliersResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        supplierID:
+          type: integer
+        supplierCode:
+          type: string
+        supplierStatus:
+          type: string
+        supplierName:
+          type: string
+        supplierNameU:
+          type: string
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    SuppliersResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    ProductsResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+            properties:
+              productID:
+                type: integer
+              productName:
+                type: string
+              productNameU:
+                type: string
+              productCode:
+                type: string
+              productStatus:
+                type: string
+              groupCode:
+                type: string
+              supplierID:
+                type: integer
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string
+    ProductsResponseListShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    ProductsResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        productID:
+          type: integer
+        productCode:
+          type: string
+        productStatus:
+          type: string
+        productName:
+          type: string
+        productNameU:
+          type: string
+        groupCode:
+          type: string
+        supplierID:
+          type: integer
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    ProductsResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    InventoryResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        inventory:
+          type: array
+          items:
+            type: object
+            properties:
+              inventoryID:
+                type: integer
+              storeID:
+                type: integer
+              productID:
+                type: integer
+              sellByDate:
+                type: string
+              inStock:
+                type: integer
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string
+    InventoryResponseListShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    TokenResponse:
+      type: object
+      properties:
+        token:
+          type: string
+  x-ioareas:
+    LPETM001:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: TABLEID
+          type: CHARARRAY1200
+          length: 8
+        - name: TABKEY
+          type: CHARARRAY1200
+          length: 8
+        - name: TABVALUE
+          type: VARCHAR1200
+          length: 255
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM001
+        source: |
+          05 LPETM001.
+             10 OPCODE            PIC N.
+             10 RETURNCODE        PIC N(02).
+             10 REASONCODE        PIC N(02).
+             10 INFOMESSAGE       PIC N(72).
+             10 TABLEID           PIC N(08).
+             10 TABKEY            PIC N(08).
+             10 TABVALUE.
+                49 TABVALUE-LEN   PIC S9(4) USAGE COMP-5.
+                49 TABVALUE-TEXT  PIC N(255).
+             10 CREATEDBY         PIC N(08).
+             10 CREATEDDATE       PIC N(26).
+             10 UPDATEDBY         PIC N(08).
+             10 UPDATEDDATE       PIC N(26).
+    LPETM002:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STOREID
+          type: UI4
+          length: 4
+        - name: STORECODE
+          type: CHARARRAY1200
+          length: 8
+        - name: STORESTATUS
+          type: CHARARRAY1200
+          length: 8
+        - name: STORENAME
+          type: VARCHAR1200
+          length: 255
+        - name: STORENAMEU
+          type: VARCHAR1200
+          length: 255
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM002
+        source: |
+          05 LPETM002.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 STORECODE          PIC N(08).
+             10 STORESTATUS        PIC N(08).
+             10 STORENAME.
+                49 STORENAME-LEN   PIC S9(4) USAGE COMP-5.
+                49 STORENAME-TEXT  PIC N(255).
+             10 STORENAMEU.
+                49 STORENAMEU-LEN  PIC S9(4) USAGE COMP-5.
+                49 STORENAMEU-TEXT PIC N(255).
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM003:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: SUPPLIERID
+          type: UI4
+          length: 4
+        - name: SUPPLIERCODE
+          type: CHARARRAY1200
+          length: 8
+        - name: SUPPLIERSTATUS
+          type: CHARARRAY1200
+          length: 8
+        - name: SUPPLIERNAME
+          type: VARCHAR1200
+          length: 255
+        - name: SUPPLIERNAMEU
+          type: VARCHAR1200
+          length: 255
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM003
+        source: |
+          05 LPETM003.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 SUPPLIERID         PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERCODE       PIC N(08).
+             10 SUPPLIERSTATUS     PIC N(08).
+             10 SUPPLIERNAME.
+                 49 SUPPLIERNAME-LEN  PIC S9(4) USAGE COMP-5.
+                 49 SUPPLIERNAME-TEXT PIC N(255).
+             10 SUPPLIERNAMEU.
+                 49 SUPPLIERNAMEU-LEN  PIC S9(4) USAGE COMP-5.
+                 49 SUPPLIERNAMEU-TEXT PIC N(255).
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM004:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: PRODUCTID
+          type: UI4
+          length: 4
+        - name: PRODUCTCODE
+          type: CHARARRAY1200
+          length: 8
+        - name: PRODUCTSTATUS
+          type: CHARARRAY1200
+          length: 8
+        - name: PRODUCTNAME
+          type: VARCHAR1200
+          length: 255
+        - name: PRODUCTNAMEU
+          type: VARCHAR1200
+          length: 255
+        - name: GROUPCODE
+          type: CHARARRAY1200
+          length: 8
+        - name: SUPPLIERID
+          type: UI4
+          length: 4
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 8
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM004
+        source: |
+          05 LPETM004.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 PRODUCTID          PIC S9(9) USAGE COMP-5.
+             10 PRODUCTCODE        PIC N(08).
+             10 PRODUCTSTATUS      PIC N(08).
+             10 PRODUCTNAME.
+                49 PRODUCTNAME-LEN  PIC S9(4) USAGE COMP-5.
+                49 PRODUCTNAME-TEXT PIC N(255).
+             10 PRODUCTNAMEU.
+                49 PRODUCTNAMEU-LEN  PIC S9(4) USAGE COMP-5.
+                49 PRODUCTNAMEU-TEXT PIC N(255).
+             10 GROUPCODE          PIC N(08).
+             10 SUPPLIERID         PIC S9(9) USAGE COMP-5.
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM201:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: TABLEID-FILTER
+          type: CHARARRAY1200
+          length: 8
+        - name: TABLEID-SINCE
+          type: CHARARRAY1200
+          length: 8
+        - name: TABKEY-SINCE
+          type: CHARARRAY1200
+          length: 8
+        - name: REFTABLE-COUNT
+          type: UI2
+          length: 2
+        - name: REFTABLE-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: REFTABLE-COUNT
+          fields:
+            - name: TABLEID
+              type: CHARARRAY1200
+              length: 8
+            - name: TABKEY
+              type: CHARARRAY1200
+              length: 8
+            - name: TABVALUE
+              type: VARCHAR1200
+              length: 256
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM201
+        source: |
+          05 LPETM201.
+             10 RETURNCODE        PIC N(02).
+             10 REASONCODE        PIC N(02).
+             10 INFOMESSAGE       PIC N(72).
+             10 TABLEID_FILTER    PIC N(08).
+             10 TABLEID_SINCE     PIC N(08).
+             10 TABKEY_SINCE      PIC N(08).
+             10 REFTABLE_COUNT    PIC S9(4) USAGE COMP-5.
+             10 REFTABLE_ENTRY OCCURS 20 TIMES
+                  DEPENDING ON REFTABLE_COUNT.
+                15 TABLEID        PIC N(08).
+                15 TABKEY         PIC N(08).
+                15 TABVALUE.
+                   20 TABVALUE_LEN   PIC S9(4) USAGE COMP-5.
+                   20 TABVALUE_TEXT  PIC N(256).
+                15 CREATEDBY         PIC N(08).
+                15 CREATEDDATE       PIC N(26).
+                15 UPDATEDBY         PIC N(08).
+                15 UPDATEDDATE       PIC N(26).
+    LPETM202:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STORENAME-FILTER
+          type: VARCHAR1200
+          length: 256
+        - name: STOREID-SINCE
+          type: UI4
+          length: 4
+        - name: STORE-COUNT
+          type: UI2
+          length: 2
+        - name: STORE-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: STORE-COUNT
+          fields:
+            - name: STOREID
+              type: UI4
+              length: 4
+            - name: STORENAME
+              type: VARCHAR1200
+              length: 256
+            - name: STORENAMEU
+              type: VARCHAR1200
+              length: 256
+            - name: STORECODE
+              type: CHARARRAY1200
+              length: 8
+            - name: STORESTATUS
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM202
+        source: |
+          05 LPETM202.
+             10 RETURNCODE               PIC N(02).
+             10 REASONCODE               PIC N(02).
+             10 INFOMESSAGE              PIC N(72).
+             10 STORENAME-FILTER.
+                15 STORENAME-FILTER-LEN  PIC S9(4) COMP-5.
+                15 STORENAME-FILTER-TEXT PIC N(256).
+             10 STOREID-SINCE            PIC S9(9) USAGE COMP-5.
+             10 STORE-COUNT              PIC S9(4) USAGE COMP-5.
+             10 STORE-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON STORE-COUNT.
+                15 STOREID               PIC S9(9) USAGE COMP-5.
+                15 STORENAME.
+                   20 STORENAME-LEN      PIC S9(4) USAGE COMP-5.
+                   20 STORENAME-TEXT     PIC N(256).
+                15 STORENAMEU.
+                   20 STORENAMEU-LEN     PIC S9(4) USAGE COMP-5.
+                   20 STORENAMEU-TEXT    PIC N(256).
+                15 STORECODE             PIC N(08).
+                15 STORESTATUS           PIC N(08).
+                15 CREATEDBY             PIC N(08).
+                15 CREATEDDATE           PIC N(26).
+                15 UPDATEDBY             PIC N(08).
+                15 UPDATEDDATE           PIC N(26).
+    LPETM203:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: SUPPLIERNAME-FILTER
+          type: VARCHAR1200
+          length: 256
+        - name: SUPPLIERID-SINCE
+          type: UI4
+          length: 4
+        - name: SUPPLIER-COUNT
+          type: UI2
+          length: 2
+        - name: SUPPLIER-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: SUPPLIER-COUNT
+          fields:
+            - name: SUPPLIERID
+              type: UI4
+              length: 4
+            - name: SUPPLIERNAME
+              type: VARCHAR1200
+              length: 256
+            - name: SUPPLIERNAMEU
+              type: VARCHAR1200
+              length: 256
+            - name: SUPPLIERCODE
+              type: CHARARRAY1200
+              length: 8
+            - name: SUPPLIERSTATUS
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM203
+        source: |
+          05 LPETM203.
+             10 RETURNCODE                  PIC N(02).
+             10 REASONCODE                  PIC N(02).
+             10 INFOMESSAGE                 PIC N(72).
+             10  SUPPLIERNAME-FILTER.
+                15 SUPPLIERNAME-FILTER-LEN  PIC S9(4) COMP-5.
+                15 SUPPLIERNAME-FILTER-TEXT PIC N(256).
+             10 SUPPLIERID-SINCE            PIC S9(9) USAGE COMP-5.
+             10 SUPPLIER-COUNT              PIC S9(4) USAGE COMP-5.
+             10 SUPPLIER-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON SUPPLIER-COUNT.
+                15 SUPPLIERID               PIC S9(9) USAGE COMP-5.
+                15 SUPPLIERNAME.
+                   20 SUPPLIERNAME-LEN      PIC S9(4) USAGE COMP-5.
+                   20 SUPPLIERNAME-TEXT     PIC N(256).
+                15 SUPPLIERNAMEU.
+                   20 SUPPLIERNAMEU-LEN     PIC S9(4) USAGE COMP-5.
+                   20 SUPPLIERNAMEU-TEXT    PIC N(256).
+                15 SUPPLIERCODE             PIC N(08).
+                15 SUPPLIERSTATUS           PIC N(08).
+                15 CREATEDBY                PIC N(08).
+                15 CREATEDDATE              PIC N(26).
+                15 UPDATEDBY                PIC N(08).
+                15 UPDATEDDATE              PIC N(26).
+    LPETM204:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: PRODUCTNAME-FILTER
+          type: VARCHAR1200
+          length: 256
+        - name: PRODUCTID-SINCE
+          type: UI4
+          length: 4
+        - name: PRODUCT-COUNT
+          type: UI2
+          length: 2
+        - name: PRODUCT-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: PRODUCT-COUNT
+          fields:
+            - name: PRODUCTID
+              type: UI4
+              length: 4
+            - name: PRODUCTNAME
+              type: VARCHAR1200
+              length: 256
+            - name: PRODUCTNAMEU
+              type: VARCHAR1200
+              length: 256
+            - name: PRODUCTCODE
+              type: CHARARRAY1200
+              length: 8
+            - name: PRODUCTSTATUS
+              type: CHARARRAY1200
+              length: 8
+            - name: GROUPCODE
+              type: CHARARRAY1200
+              length: 8
+            - name: SUPPLIERID
+              type: UI4
+              length: 4
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM204
+        source: |
+          05 LPETM204.
+             10 RETURNCODE                 PIC N(02).
+             10 REASONCODE                 PIC N(02).
+             10 INFOMESSAGE                PIC N(72).
+             10 PRODUCTNAME-FILTER.
+                15 PRODUCTNAME-FILTER-LEN  PIC S9(4) COMP-5.
+                15 PRODUCTNAME-FILTER-TEXT PIC N(256).
+             10 PRODUCTID-SINCE            PIC S9(9) USAGE COMP-5.
+             10 PRODUCT-COUNT              PIC S9(4) USAGE COMP-5.
+             10 PRODUCT-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON PRODUCT-COUNT.
+                15 PRODUCTID               PIC S9(9) USAGE COMP-5.
+                15 PRODUCTNAME.
+                   20 PRODUCTNAME-LEN      PIC S9(4) USAGE COMP-5.
+                   20 PRODUCTNAME-TEXT     PIC N(256).
+                15 PRODUCTNAMEU.
+                   20 PRODUCTNAMEU-LEN     PIC S9(4) USAGE COMP-5.
+                   20 PRODUCTNAMEU-TEXT    PIC N(256).
+                15 PRODUCTCODE             PIC N(08).
+                15 PRODUCTSTATUS           PIC N(08).
+                15 GROUPCODE               PIC N(08).
+                15 SUPPLIERID              PIC S9(9) USAGE COMP-5.
+                15 CREATEDBY               PIC N(08).
+                15 CREATEDDATE             PIC N(26).
+                15 UPDATEDBY               PIC N(08).
+                15 UPDATEDDATE             PIC N(26).
+    LPETM205:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STOREID-FILTER
+          type: UI4
+          length: 4
+        - name: PRODUCTID-SINCE
+          type: UI4
+          length: 4
+        - name: INVENTORY-COUNT
+          type: UI2
+          length: 2
+        - name: INVENTORY-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: INVENTORY-COUNT
+          fields:
+            - name: INVENTORYID
+              type: UI4
+              length: 4
+            - name: STOREID
+              type: UI4
+              length: 4
+            - name: PRODUCTID
+              type: UI4
+              length: 4
+            - name: SELLBYDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: INSTOCK
+              type: UI4
+              length: 4
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 8
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM205
+        source: |
+          05 LPETM205.
+             10 RETURNCODE                 PIC N(02).
+             10 REASONCODE                 PIC N(02).
+             10 INFOMESSAGE                PIC N(72).
+             10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
+             10 PRODUCTID-SINCE            PIC S9(9) USAGE COMP-5.
+             10 INVENTORY-COUNT            PIC S9(4) USAGE COMP-5.
+             10 INVENTORY-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON INVENTORY-COUNT.
+                15 INVENTORYID             PIC S9(9) USAGE COMP-5.
+                15 STOREID                 PIC S9(9) USAGE COMP-5.
+                15 PRODUCTID               PIC S9(9) USAGE COMP-5.
+                15 SELLBYDATE              PIC N(26).
+                15 INSTOCK                 PIC S9(9) USAGE COMP-5.
+                15 CREATEDBY               PIC N(08).
+                15 CREATEDDATE             PIC N(26).
+                15 UPDATEDBY               PIC N(08).
+                15 UPDATEDDATE             PIC N(26).
+    LWWADPLI:
+      fields:
+        - name: USERNAME
+          type: CHARARRAY037
+          length: 8
+        - name: PASSWORD
+          type: VARCHAR037
+          length: 100
+        - name: TOKEN
+          type: VARCHAR037
+          length: 1024

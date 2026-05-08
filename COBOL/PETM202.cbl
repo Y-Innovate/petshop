@@ -82,7 +82,7 @@
                            STORENAME-FILTER-TEXT OF P-LPETM202(1:
                               STORENAME-FILTER-LEN OF P-LPETM202))
                         N'%'
-                        DELIMITED BY SPACE
+                        DELIMITED BY SIZE
                    INTO W-STORENAME-FILTER-TEXT
                    WITH POINTER W-STORENAME-FILTER-LEN
                  SUBTRACT 1 FROM W-STORENAME-FILTER-LEN

@@ -36,8 +36,8 @@ data = {
     "hlq": f"{os.getlogin()}.PETSHOP",
     "version": "V1",
     "gitdir": os.getcwd(),
-    "cicshlq": "DFH620",
-    "db2hlq": "DSND10",
+    "cicshlq": "CICS62",
+    "db2hlq": "DB2V13.DB2",
     "zmake_file": zmake_file
 }
 

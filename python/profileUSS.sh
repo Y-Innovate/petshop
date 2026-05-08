@@ -11,11 +11,15 @@ export _TAG_REDIR_ERR=txt
 export _TAG_REDIR_IN=txt
 export _TAG_REDIR_OUT=txt
 
+export _BPX_SHAREAS=YES
+export _BPX_SPAWN_SCRIPT=YES
+
 thisdir=$(dirname $0)
 
 cd $thisdir
 cd ..
- 
+
+. /u/ybtks/venv/bin/activate
 
 python python/profileUSS.py $1 $2 $3
 

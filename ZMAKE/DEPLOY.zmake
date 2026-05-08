@@ -131,7 +131,7 @@ $(loadothtgts) : $(srcloadlib)($%)
 $(loaddb2tgts) : $(srcloadlib)($%)
 - CALL IEBCOPY PDSIN($(srcloadlib)) PDSOUT($(tgtloadlib))+
 -              MEMBER($%) PRINTSUCCESS(NO)
-- CALL BIND SYSTEM(DBDG) PACKAGE(PET$(petdb)) MEMBER($%)+
+- CALL BIND SYSTEM(DBY1) PACKAGE(PET$(petdb)) MEMBER($%)+
 -           OWNER(PET$(petdb)) QUALIFIER(PET$(petdb))+
 -           LIBRARY('$(tgtdbrmlib)')
 

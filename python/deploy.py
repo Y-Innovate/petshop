@@ -37,13 +37,13 @@ data = {
     "target": "DEPLOY_ALL",
     "homedir": Path.home(),
     "srchlq": f"{os.getlogin()}.PETSHOP",
-    "tgthlq": "PETSHOP",
+    "tgthlq": "YINCIC.CPSM.CIC3WB01.PET",
     "version": "V1",
     "env": "DEV1",
     "envl": "dev1",
     "petdb": "D1",
     "gitdir": os.getcwd(),
-    "cicshlq": "DFH620",
+    "cicshlq": "CICS62",
     "zmake_file": zmake_file
 }
 

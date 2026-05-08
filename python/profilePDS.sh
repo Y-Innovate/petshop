@@ -15,7 +15,8 @@ thisdir=$(dirname $0)
 
 cd $thisdir
 cd ..
- 
+
+. /u/ybtks/venv/bin/activate 
 
 python python/profilePDS.py $1 $2 $3 $4
 

@@ -89,11 +89,11 @@ loadtgts    := ${addpdsname $(loadlib),$(bmsmems)}+
                ${addpdsname $(loadlib),$(asmmems)}+
                ${addpdsname $(loadlib),$(cbldb2mems)}+
                ${addpdsname $(loadlib),$(cblcicsmems)}
-syslib_asm  := SYS1.MACLIB CEE.SCEEMAC HLA.SASMMAC2+
+syslib_asm  := SYS1.MACLIB SYS1.CEE.SCEEMAC SYS1.ASM.SASMMAC2+
                $(cicshlq).CICS.SDFHMAC
-syslib_cbl  := CEE.SCEESAMP $(cicshlq).CICS.SDFHCOB $(cpylib)
-syslib_lked := CEE.SCEELKED $(cicshlq).CICS.SDFHLOAD $(db2hlq).SDSNLOAD+
-               $(objlib)
+syslib_cbl  := SYS1.CEE.SCEESAMP $(cicshlq).CICS.SDFHCOB $(cpylib)
+syslib_lked := SYS1.CEE.SCEELKED $(cicshlq).CICS.SDFHLOAD+
+               $(db2hlq).SDSNLOAD $(objlib)
 
 #* Group of data set names with specific characteristics
 recfmFB80   := $(asmlib) $(bmslib) $(cpylib) $(cbllib) $(lkedlib)+

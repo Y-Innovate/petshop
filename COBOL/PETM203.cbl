@@ -2,7 +2,7 @@
        PROGRAM-ID.  PETM203
       *===============================================================*
       * This program is a list module for the PET store database's    *
-      * TBPET002 SUPPLIERS table.                                     *
+      * TBPET003 SUPPLIERS table.                                     *
       * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
@@ -82,7 +82,7 @@
                            SUPPLIERNAME-FILTER-TEXT OF P-LPETM203(1:
                               SUPPLIERNAME-FILTER-LEN OF P-LPETM203))
                         N'%'
-                        DELIMITED BY SPACE
+                        DELIMITED BY SIZE
                    INTO W-SUPPLIERNAME-FILTER-TEXT
                    WITH POINTER W-SUPPLIERNAME-FILTER-LEN
                  SUBTRACT 1 FROM W-SUPPLIERNAME-FILTER-LEN

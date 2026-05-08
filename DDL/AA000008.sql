@@ -16,7 +16,7 @@
                        LOGGED
                        DSSIZE 4 G
                        SEGSIZE 4
-                       BUFFERPOOL BP2
+                       BUFFERPOOL BP0
                        LOCKSIZE ANY
                        LOCKMAX SYSTEM
                        CLOSE YES
@@ -62,7 +62,7 @@
      NOT CLUSTER
      COMPRESS NO
      INCLUDE NULL KEYS
-     BUFFERPOOL BP3
+     BUFFERPOOL BP0
      CLOSE NO
      COPY NO
      DEFER NO
@@ -83,7 +83,7 @@
      NOT CLUSTER
      COMPRESS NO
      INCLUDE NULL KEYS
-     BUFFERPOOL BP3
+     BUFFERPOOL BP0
      CLOSE NO
      COPY NO
      DEFER NO
