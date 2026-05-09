@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID.     PETM205
+       PROGRAM-ID. PETM205
       *===============================================================*
       * This program is a list module for the PET store database's    *
       * TBPET005 INVENTORY table.                                     *

@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID.  PETM201
+       PROGRAM-ID. PETM201
       *===============================================================*
       * This program is a list module for the PET store database's    *
       * TBPET001 REFTABLES table.                                     *

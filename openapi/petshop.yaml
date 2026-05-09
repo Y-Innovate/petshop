@@ -2231,7 +2231,7 @@ paths:
             ioArea:
               $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM003_C_OK
+            name: LPETM004_C_OK
             source:
               $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -2845,6 +2845,534 @@ paths:
               - JSONWriter:
                   responseObject:
                     $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new inventory entry
+      operationId: newInventoryEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM005
+            initWith: 0x00
+            size: 358
+            fields:
+              $ref: "#/components/x-ioareas/LPETM005/fields"
+        - ParseRequestJSON:
+            name: PETM005_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: productID
+                toName: PRODUCTID
+              - type: singleFields
+                fromName: sellByDate
+                toName: SELLBYDATE
+              - type: singleFields
+                fromName: inStock
+                toName: INSTOCK
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC005
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM005_C_OK
+            source:
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC005_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: OPCODE
+                      toName: opCode
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: INVENTORYID
+                      toName: inventoryID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: SELLBYDATE
+                      toName: sellByDate
+                    - type: singleFields
+                      fromName: INSTOCK
+                      toName: inStock
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC005_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /inventory/{inventoryID}:
+    summary: Manage petshop inventory
+    get:
+      summary: Get existing inventory entry details
+      operationId: getInventoryEntry
+      tags:
+        - get
+      parameters:
+        - name: inventoryID
+          in: path
+          description: Unique ID of a inventory
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of inventory entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM005
+            initWith: 0x00
+            size: 358
+            fields:
+              $ref: "#/components/x-ioareas/LPETM005/fields"
+        - ExtractIdFromPath:
+            name: PETM005_R_INVENTORYID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: INVENTORYID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC005
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM005_C_OK
+            source:
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC005_R_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: OPCODE
+                      toName: opCode
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: INVENTORYID
+                      toName: inventoryID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: SELLBYDATE
+                      toName: sellByDate
+                    - type: singleFields
+                      fromName: INSTOCK
+                      toName: inStock
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC005_R_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      summary: Update existing inventory entry
+      operationId: updateInventoryEntry
+      tags:
+        - update
+      parameters:
+        - name: inventoryID
+          in: path
+          description: Unique ID of a inventory
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM005
+            initWith: 0x00
+            size: 358
+            fields:
+              $ref: "#/components/x-ioareas/LPETM005/fields"
+        - ExtractIdFromPath:
+            name: PETM005_U_INVENTORYID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: INVENTORYID
+        - ParseRequestJSON:
+            name: PETM005_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: productID
+                toName: PRODUCTID
+              - type: singleFields
+                fromName: sellByDate
+                toName: SELLBYDATE
+              - type: singleFields
+                fromName: inStock
+                toName: INSTOCK
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC005
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM005_U_OK
+            source:
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC005_U_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: OPCODE
+                      toName: opCode
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: INVENTORYID
+                      toName: inventoryID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: SELLBYDATE
+                      toName: sellByDate
+                    - type: singleFields
+                      fromName: INSTOCK
+                      toName: inStock
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC005_U_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/InventoryResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      summary: Delete existing inventory entry
+      operationId: deleteInventoryEntry
+      tags:
+        - delete
+      parameters:
+        - name: inventoryID
+          in: path
+          description: Unique ID of a inventory
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM005
+            initWith: 0x00
+            size: 358
+            fields:
+              $ref: "#/components/x-ioareas/LPETM005/fields"
+        - ExtractIdFromPath:
+            name: PETM005_D_INVENTORYID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: INVENTORYID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC005
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC005_D_RET
+            properties:
+              $ref: "#/components/schemas/InventoryResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /token:
     summary: Retrieve access token
     post:
@@ -3260,6 +3788,44 @@ components:
           type: string
         infoMessage:
           type: string
+    InventoryResponseCRUDLong:
+      type: object
+      properties:
+        opCode:
+          type: string
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        inventoryID:
+          type: integer
+        storeID:
+          type: integer
+        productID:
+          type: integer
+        sellByDate:
+          type: string
+        inStock:
+          type: integer
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    InventoryResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
     TokenResponse:
       type: object
       properties:
@@ -3508,6 +4074,64 @@ components:
                 49 PRODUCTNAMEU-TEXT PIC N(255).
              10 GROUPCODE          PIC N(08).
              10 SUPPLIERID         PIC S9(9) USAGE COMP-5.
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM005:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: INVENTORYID
+          type: UI4
+          length: 4
+        - name: STOREID
+          type: UI4
+          length: 4
+        - name: PRODUCTID
+          type: UI4
+          length: 4
+        - name: SELLBYDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: INSTOCK
+          type: UI4
+          length: 4
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM005
+        source: |
+          05 LPETM005.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 INVENTORYID        PIC S9(9) USAGE COMP-5.
+             10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 PRODUCTID          PIC S9(9) USAGE COMP-5.
+             10 SELLBYDATE         PIC N(26).
+             10 INSTOCK            PIC S9(9) USAGE COMP-5.
              10 CREATEDBY          PIC N(08).
              10 CREATEDDATE        PIC N(26).
              10 UPDATEDBY          PIC N(08).

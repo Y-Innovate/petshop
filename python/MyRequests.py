@@ -37,20 +37,20 @@ class MyRequests:
             headers = {'Authorization': f"Bearer {Globals.myBearer}"}
 
             if data != None:
-                resp = Globals.s.request(method, requrl, headers=headers, data=datajson, verify="testAPI_truststore.crt")
+                resp = Globals.s.request(method, requrl, headers=headers, data=datajson)
             else:
                 if files != None:
-                    resp = Globals.s.request(method, requrl, headers=headers, files=files, verify="testAPI_truststore.crt")
+                    resp = Globals.s.request(method, requrl, headers=headers, files=files)
                 else:
-                    resp = Globals.s.request(method, requrl, headers=headers, verify="testAPI_truststore.crt")
+                    resp = Globals.s.request(method, requrl, headers=headers)
         else:
             if data != None:
-                resp = Globals.s.request(method, requrl, auth=Globals.myCreds, data=datajson, verify="testAPI_truststore.crt")
+                resp = Globals.s.request(method, requrl, auth=Globals.myCreds, data=datajson)
             else:
                 if files != None:
-                    resp = Globals.s.request(method, requrl, auth=Globals.myCreds, files=files, verify="testAPI_truststore.crt")
+                    resp = Globals.s.request(method, requrl, auth=Globals.myCreds, files=files)
                 else:
-                    resp = Globals.s.request(method, requrl, auth=Globals.myCreds, verify="testAPI_truststore.crt")
+                    resp = Globals.s.request(method, requrl, auth=Globals.myCreds)
         
         return resp
 

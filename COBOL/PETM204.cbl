@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID.     PETM204
+       PROGRAM-ID. PETM204
       *===============================================================*
       * This program is a list module for the PET store database's    *
       * TBPET004 PRODUCTS table.                                      *

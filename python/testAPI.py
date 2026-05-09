@@ -23,83 +23,99 @@ print("Getting bearer token")
 
 MyRequests.getBearerToken("/petshop/API/v1/token")
 
-respget = MyRequests.get("/petshop/API/v1/refTables/STORSTAT?tableKey=ACTIVE")
+def doStuff():
+    respget = MyRequests.get("/petshop/API/v1/refTables/STORSTAT?tableKey=ACTIVE")
 
-if (respget.status_code == 200):
-    print(f"{respget.status_code} {respget.text}")
-else:
-    if (respget.status_code == 404):
-        newRefTable = {}
-        newRefTable["tableID"] = "STORSTAT"
-        newRefTable["tableKey"] = "ACTIVE"
-        newRefTable["tableValue"] = "Store is active"
-
-        resppost = MyRequests.post("/petshop/API/v1/refTables", newRefTable)
-
-        if (resppost.status_code != 201):
-            raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+    if (respget.status_code == 200):
+        print(f"{respget.status_code} {respget.text}")
     else:
-        raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+        if (respget.status_code == 404):
+            newRefTable = {}
+            newRefTable["tableID"] = "STORSTAT"
+            newRefTable["tableKey"] = "ACTIVE"
+            newRefTable["tableValue"] = "Store is active"
 
-respget = MyRequests.get("/petshop/API/v1/stores?storeName_filter=Pet%20store%201&storeID_since=0")
+            resppost = MyRequests.post("/petshop/API/v1/refTables", newRefTable)
 
-if (respget.status_code == 200):
-    print(f"{respget.status_code} {respget.text}")
-else:
-    if (respget.status_code == 404):
-        newStore = {}
-        newStore["storeCode"] = "PS000001"
-        newStore["storeStatus"] = "ACTIVE"
-        newStore["storeName"] = "Pet store 1"
+            if (resppost.status_code != 201):
+                raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+        else:
+            raise Exception(f'status code {str(respget.status_code)} {respget.text}')
 
-        resppost = MyRequests.post("/petshop/API/v1/stores", newStore)
+    respget = MyRequests.get("/petshop/API/v1/stores?storeName_filter=Pet%20store%201&storeID_since=0")
 
-        if (resppost.status_code != 201):
-            raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+    if (respget.status_code == 200):
+        print(f"{respget.status_code} {respget.text}")
     else:
-        raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+        if (respget.status_code == 404):
+            newStore = {}
+            newStore["storeCode"] = "PS000001"
+            newStore["storeStatus"] = "ACTIVE"
+            newStore["storeName"] = "Pet store 1"
 
-respget = MyRequests.get("/petshop/API/v1/suppliers?supplierName_filter=Pet%20food%20supplier%201")
+            resppost = MyRequests.post("/petshop/API/v1/stores", newStore)
 
-if (respget.status_code == 200):
-    print(f"{respget.status_code} {respget.text}")
-else:
-    if (respget.status_code == 404):
-        newSupplier = {}
-        newSupplier["supplierCode"] = "SU000001"
-        newSupplier["supplierStatus"] = "ACTIVE"
-        newSupplier["supplierName"] = "Pet food supplier 1"
+            if (resppost.status_code != 201):
+                raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+        else:
+            raise Exception(f'status code {str(respget.status_code)} {respget.text}')
 
-        resppost = MyRequests.post("/petshop/API/v1/suppliers", newSupplier)
+    respget = MyRequests.get("/petshop/API/v1/suppliers?supplierName_filter=Pet%20food%20supplier%201")
 
-        if (resppost.status_code != 201):
-            raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+    if (respget.status_code == 200):
+        print(f"{respget.status_code} {respget.text}")
     else:
-        raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+        if (respget.status_code == 404):
+            newSupplier = {}
+            newSupplier["supplierCode"] = "SU000001"
+            newSupplier["supplierStatus"] = "ACTIVE"
+            newSupplier["supplierName"] = "Pet food supplier 1"
 
-respget = MyRequests.get("/petshop/API/v1/products")
+            resppost = MyRequests.post("/petshop/API/v1/suppliers", newSupplier)
 
-if (respget.status_code == 200):
-    print(f"{respget.status_code} {respget.text}")
-else:
-    if (respget.status_code == 404):
-        newProduct = {}
-        newProduct["productCode"] = "PR000001"
-        newProduct["productStatus"] = "ACTIVE"
-        newProduct["productName"] = "Deadbeef Dog Food"
-        newProduct["groupCode"] = "PEDFCN01"
-        newProduct["supplierID"] = 1
+            if (resppost.status_code != 201):
+                raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+        else:
+            raise Exception(f'status code {str(respget.status_code)} {respget.text}')
 
-        resppost = MyRequests.post("/petshop/API/v1/products", newProduct)
+    respget = MyRequests.get("/petshop/API/v1/products")
 
-        if (resppost.status_code != 201):
-            raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+    if (respget.status_code == 200):
+        print(f"{respget.status_code} {respget.text}")
     else:
-        raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+        if (respget.status_code == 404):
+            newProduct = {}
+            newProduct["productCode"] = "PR000001"
+            newProduct["productStatus"] = "ACTIVE"
+            newProduct["productName"] = "Deadbeef Dog Food"
+            newProduct["groupCode"] = "PEDFCN01"
+            newProduct["supplierID"] = 1
 
-respget = MyRequests.get("/petshop/API/v1/inventory")
+            resppost = MyRequests.post("/petshop/API/v1/products", newProduct)
 
-if (respget.status_code == 200):
-    print(f"{respget.status_code} {respget.text}")
-else:
-    raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+            if (resppost.status_code != 201):
+                raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+        else:
+            raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+
+    respget = MyRequests.get("/petshop/API/v1/inventory?storeID_filter=1")
+
+    if (respget.status_code == 200):
+        print(f"{respget.status_code} {respget.text}")
+    else:
+        if (respget.status_code == 404):
+            newInventory = {}
+            newInventory["storeID"] = 1
+            newInventory["productID"] = 1
+            newInventory["sellByDate"] = "1900-01-01-00:00:00.000000"
+            newInventory["inStock"] = 100
+
+            resppost = MyRequests.post("/petshop/API/v1/inventory?lww_debug=2", newInventory)
+
+            if (resppost.status_code != 201):
+                raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
+        else:
+            raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+
+#for i in range(0, 100):
+doStuff()

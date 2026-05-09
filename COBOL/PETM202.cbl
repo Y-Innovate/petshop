@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID.  PETM202
+       PROGRAM-ID. PETM202
       *===============================================================*
       * This program is a list module for the PET store database's    *
       * TBPET002 STORES table.                                        *

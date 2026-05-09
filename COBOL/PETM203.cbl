@@ -1,5 +1,5 @@
        IDENTIFICATION DIVISION.
-       PROGRAM-ID.  PETM203
+       PROGRAM-ID. PETM203
       *===============================================================*
       * This program is a list module for the PET store database's    *
       * TBPET003 SUPPLIERS table.                                     *
