@@ -3377,7 +3377,7 @@ paths:
           description: Filter store ID
           required: false
           schema:
-            type: number
+            type: integer
         - name: animalType_filter
           in: query
           description: Filter animal type
@@ -4106,6 +4106,184 @@ paths:
         - JSONWriter:
             responseObject:
               $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject"
+  /pricesAndDiscounts:
+    summary: Manage petshop prices and discounts
+    get:
+      summary: Retrieve prices and discounts
+      operationId: listPricesAndDiscounts
+      tags:
+        - list
+      parameters:
+        - name: storeID_filter
+          in: query
+          description: Filter store ID
+          required: false
+          schema:
+            type: integer
+        - name: productID_filter
+          in: query
+          description: Filter product ID
+          required: false
+          schema:
+            type: integer
+        - name: animalID_filter
+          in: query
+          description: Filter animal ID
+          required: false
+          schema:
+            type: integer
+        - name: padID_since
+          in: query
+          description: Pagination pricesAndDiscounts ID
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful retrieval of prices and discounts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1pricesAndDiscounts/get/parameters"
+        - AllocateIOArea:
+            name: LPETM207
+            initWith: 0x00
+            size: 5490
+            fields:
+              $ref: "#/components/x-ioareas/LPETM207/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID_filter
+                toName: STOREID-FILTER
+              - type: singleFields
+                fromName: productID_filter
+                toName: PRODUCTID-FILTER
+              - type: singleFields
+                fromName: animalID_filter
+                toName: ANIMALID-FILTER
+              - type: singleFields
+                fromName: padID_since
+                toName: PADID-SINCE
+        - Link:
+            program: PETC207
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM207_OK
+            source:
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC204_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/PricesAndDiscountsResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PAD-COUNT
+                      toName: padCount
+                    - type: groupToArray
+                      fromGroupName: PAD-ENTRY
+                      toArrayName: priceAndDiscount
+                      itemMappings:
+                        - type: singleFields
+                          fromName: PADID
+                          toName: padID
+                        - type: singleFields
+                          fromName: STOREID
+                          toName: storeID
+                        - type: singleFields
+                          fromName: PRODUCTID
+                          toName: productID
+                        - type: singleFields
+                          fromName: ANIMALID
+                          toName: animalID
+                        - type: singleFields
+                          fromName: PRICE
+                          toName: price
+                        - type: singleFields
+                          fromName: DISCOUNT
+                          toName: discount
+                        - type: singleFields
+                          fromName: FROMDATE
+                          toName: fromDate
+                        - type: singleFields
+                          fromName: TODATE
+                          toName: toDate
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC207_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/PricesAndDiscountsResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /token:
     summary: Retrieve access token
     post:
@@ -4642,6 +4820,63 @@ components:
         updatedDate:
           type: string
     AnimalsResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    PricesAndDiscountsResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        storeID_filter:
+          type: integer
+        productID_filter:
+          type: integer
+        animalID_filter:
+          type: integer
+        padID_since:
+          type: integer
+        padCount:
+          type: integer
+        priceAndDiscount:
+          type: array
+          items:
+            type: object
+            properties:
+              padID:
+                type: integer
+              storeID:
+                type: integer
+              productID:
+                type: integer
+              animalID:
+                type: integer
+              price:
+                type: number
+              discount:
+                type: number
+              fromDate:
+                type: string
+              toDate:
+                type: string
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string
+    PricesAndDiscountsResponseListShort:
       type: object
       properties:
         retCode:
@@ -5488,6 +5723,101 @@ components:
             - name: UPDATEDDATE
               type: CHARARRAY1200
               length: 26
+    LPETM207:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STOREID-FILTER
+          type: UI4
+          length: 4
+        - name: PRODUCTID-FILTER
+          type: UI4
+          length: 4
+        - name: ANIMALID-FILTER
+          type: UI4
+          length: 4
+        - name: PADID-SINCE
+          type: UI4
+          length: 4
+        - name: PAD-COUNT
+          type: UI2
+          length: 2
+        - name: PAD-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: PAD-COUNT
+          fields:
+            - name: PADID
+              type: UI4
+              length: 4
+            - name: STOREID
+              type: UI4
+              length: 4
+            - name: PRODUCTID
+              type: UI4
+              length: 4
+            - name: ANIMALID
+              type: UI4
+              length: 4
+            - name: PRICE
+              type: SPD
+              length: 9
+              precision: 2
+            - name: DISCOUNT
+              type: SPD
+              length: 9
+              precision: 2
+            - name: FROMDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: TODATE
+              type: CHARARRAY1200
+              length: 26
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 08
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 08
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM207
+        source: |
+          05 LPETM207.
+             10 RETURNCODE                 PIC N(02).
+             10 REASONCODE                 PIC N(02).
+             10 INFOMESSAGE                PIC N(72).
+             10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
+             10 PRODUCTID-FILTER           PIC S9(9) USAGE COMP-5.
+             10 ANIMALID-FILTER            PIC S9(9) USAGE COMP-5.
+             10 PADID-SINCE                PIC S9(9) USAGE COMP-5.
+             10 PAD-COUNT                  PIC S9(4) USAGE COMP-5.
+             10 PAD-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON PAD-COUNT.
+                15 PADID                   PIC S9(9) USAGE COMP-5.
+                15 STOREID                 PIC S9(9) USAGE COMP-5.
+                15 PRODUCTID               PIC S9(9) USAGE COMP-5.
+                15 ANIMALID                PIC S9(9) USAGE COMP-5.
+                15 PRICE                   PIC S9(7)V9(2) USAGE COMP-3.
+                15 DISCOUNT                PIC S9(7)V9(2) USAGE COMP-3.
+                15 FROMDATE                PIC N(26).
+                15 TODATE                  PIC N(26).
+                15 CREATEDBY               PIC N(08).
+                15 CREATEDDATE             PIC N(26).
+                15 UPDATEDBY               PIC N(08).
+                15 UPDATEDDATE             PIC N(26).
     LWWADPLI:
       fields:
         - name: USERNAME
