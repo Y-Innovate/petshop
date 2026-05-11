@@ -2933,9 +2933,6 @@ paths:
                     $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
-                      fromName: OPCODE
-                      toName: opCode
-                    - type: singleFields
                       fromName: RETURNCODE
                       toName: retCode
                     - type: singleFields
@@ -3071,9 +3068,6 @@ paths:
                   to:
                     $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
-                    - type: singleFields
-                      fromName: OPCODE
-                      toName: opCode
                     - type: singleFields
                       fromName: RETURNCODE
                       toName: retCode
@@ -3235,9 +3229,6 @@ paths:
                     $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
-                      fromName: OPCODE
-                      toName: opCode
-                    - type: singleFields
                       fromName: RETURNCODE
                       toName: retCode
                     - type: singleFields
@@ -3373,6 +3364,748 @@ paths:
         - JSONWriter:
             responseObject:
               $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject"
+  /animals:
+    summary: Manage petshop animals
+    get:
+      summary: Retrieve animals
+      operationId: listAnimals
+      tags:
+        - list
+      parameters:
+        - name: storeID_filter
+          in: query
+          description: Filter store ID
+          required: false
+          schema:
+            type: number
+        - name: animalType_filter
+          in: query
+          description: Filter animal type
+          required: false
+          schema:
+            type: string
+        - name: animalRace_filter
+          in: query
+          description: Filter animal race
+          required: false
+          schema:
+            type: string
+        - name: animalID_since
+          in: query
+          description: Pagination animal ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of animals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseListLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "#/paths/~1animals/get/parameters"
+        - AllocateIOArea:
+            name: LPETM206
+            initWith: 0x00
+            size: 14194
+            fields:
+              $ref: "#/components/x-ioareas/LPETM206/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID_filter
+                toName: STOREID-FILTER
+              - type: singleFields
+                fromName: animalType_filter
+                toName: ANIMALTYPE-FILTER
+              - type: singleFields
+                fromName: animalRace_filter
+                toName: ANIMALRACE-FILTER
+              - type: singleFields
+                fromName: animalID_since
+                toName: ANIMALID-SINCE
+        - Link:
+            program: PETC206
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM206_OK
+            source:
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC204_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: ANIMAL-ENTRY-COUNT
+                      toName: animalEntryCount
+                    - type: groupToArray
+                      fromGroupName: ANIMAL-ENTRY
+                      toArrayName: animalEntry
+                      itemMappings:
+                        - type: singleFields
+                          fromName: ANIMALID
+                          toName: animalID
+                        - type: singleFields
+                          fromName: STOREID
+                          toName: storeID
+                        - type: singleFields
+                          fromName: ANIMALTYPE
+                          toName: animalType
+                        - type: singleFields
+                          fromName: ANIMALRACE
+                          toName: animalRace
+                        - type: singleFields
+                          fromName: ANIMALNAME
+                          toName: animalName
+                        - type: singleFields
+                          fromName: ANIMALGENDER
+                          toName: animalGender
+                        - type: singleFields
+                          fromName: ANIMALAGE
+                          toName: animalAge
+                        - type: singleFields
+                          fromName: ANIMALCOUNT
+                          toName: animalCount
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC206_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new animal entry
+      operationId: newAnimalEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM006
+            initWith: 0x00
+            size: 852
+            fields:
+              $ref: "#/components/x-ioareas/LPETM006/fields"
+        - ParseRequestJSON:
+            name: PETM006_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: animalType
+                toName: ANIMALTYPE
+              - type: singleFields
+                fromName: animalRace
+                toName: ANIMALRACE
+              - type: singleFields
+                fromName: animalName
+                toName: ANIMALNAME
+              - type: singleFields
+                fromName: animalGender
+                toName: ANIMALGENDER
+              - type: singleFields
+                fromName: animalAge
+                toName: ANIMALAGE
+              - type: singleFields
+                fromName: animalCount
+                toName: ANIMALCOUNT
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC006
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM006_C_OK
+            source:
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC006_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: ANIMALID
+                      toName: animalID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: ANIMALTYPE
+                      toName: animalType
+                    - type: singleFields
+                      fromName: ANIMALRACE
+                      toName: animalRace
+                    - type: singleFields
+                      fromName: ANIMALNAME
+                      toName: animalName
+                    - type: singleFields
+                      fromName: ANIMALGENDER
+                      toName: animalGender
+                    - type: singleFields
+                      fromName: ANIMALAGE
+                      toName: animalAge
+                    - type: singleFields
+                      fromName: ANIMALCOUNT
+                      toName: animalCount
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC006_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /animals/{animalID}:
+    summary: Manage petshop animals
+    get:
+      summary: Get existing animal entry details
+      operationId: getAnimalEntry
+      tags:
+        - get
+      parameters:
+        - name: animalID
+          in: path
+          description: Unique ID of a animal
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful retrieval of animals entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM006
+            initWith: 0x00
+            size: 852
+            fields:
+              $ref: "#/components/x-ioareas/LPETM006/fields"
+        - ExtractIdFromPath:
+            name: PETM006_R_ANIMALID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: ANIMALID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC006
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM006_C_OK
+            source:
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC006_R_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: ANIMALID
+                      toName: animalID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: ANIMALTYPE
+                      toName: animalType
+                    - type: singleFields
+                      fromName: ANIMALRACE
+                      toName: animalRace
+                    - type: singleFields
+                      fromName: ANIMALNAME
+                      toName: animalName
+                    - type: singleFields
+                      fromName: ANIMALGENDER
+                      toName: animalGender
+                    - type: singleFields
+                      fromName: ANIMALAGE
+                      toName: animalAge
+                    - type: singleFields
+                      fromName: ANIMALCOUNT
+                      toName: animalCount
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC006_R_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      summary: Update existing animals entry
+      operationId: updateAnimalsEntry
+      tags:
+        - update
+      parameters:
+        - name: animalID
+          in: path
+          description: Unique ID of a animal
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM006
+            initWith: 0x00
+            size: 852
+            fields:
+              $ref: "#/components/x-ioareas/LPETM006/fields"
+        - ExtractIdFromPath:
+            name: PETM006_U_ANIMALID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: ANIMALID
+        - ParseRequestJSON:
+            name: PETM006_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: animalType
+                toName: ANIMALTYPE
+              - type: singleFields
+                fromName: animalRace
+                toName: ANIMALRACE
+              - type: singleFields
+                fromName: animalName
+                toName: ANIMALNAME
+              - type: singleFields
+                fromName: animalGender
+                toName: ANIMALGENDER
+              - type: singleFields
+                fromName: animalAge
+                toName: ANIMALAGE
+              - type: singleFields
+                fromName: animalCount
+                toName: ANIMALCOUNT
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC006
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM006_U_OK
+            source:
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC006_U_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: ANIMALID
+                      toName: animalID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: ANIMALTYPE
+                      toName: animalType
+                    - type: singleFields
+                      fromName: ANIMALRACE
+                      toName: animalRace
+                    - type: singleFields
+                      fromName: ANIMALNAME
+                      toName: animalName
+                    - type: singleFields
+                      fromName: ANIMALGENDER
+                      toName: animalGender
+                    - type: singleFields
+                      fromName: ANIMALAGE
+                      toName: animalAge
+                    - type: singleFields
+                      fromName: ANIMALCOUNT
+                      toName: animalCount
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC006_U_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/AnimalsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      summary: Delete existing animals entry
+      operationId: deleteAnimalsEntry
+      tags:
+        - delete
+      parameters:
+        - name: animalID
+          in: path
+          description: Unique ID of a animal
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM006
+            initWith: 0x00
+            size: 852
+            fields:
+              $ref: "#/components/x-ioareas/LPETM006/fields"
+        - ExtractIdFromPath:
+            name: PETM006_D_ANIMALID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: ANIMALID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC006
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC006_D_RET
+            properties:
+              $ref: "#/components/schemas/AnimalsResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /token:
     summary: Retrieve access token
     post:
@@ -3791,8 +4524,6 @@ components:
     InventoryResponseCRUDLong:
       type: object
       properties:
-        opCode:
-          type: string
         retCode:
           type: string
         reasonCode:
@@ -3818,6 +4549,99 @@ components:
         updatedDate:
           type: string
     InventoryResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    AnimalsResponseListLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        animalEntryCount:
+          type: integer
+        animalEntry:
+          type: array
+          items:
+            type: object
+            properties:
+              animalID:
+                type: integer
+              storeID:
+                type: integer
+              animalType:
+                type: string
+              animalRace:
+                type: string
+              animalName:
+                type: string
+              animalGender:
+                type: string
+              animalAge:
+                type: integer
+              animalCount:
+                type: integer
+              createdBy:
+                type: string
+              createdDate:
+                type: string
+              updatedBy:
+                type: string
+              updatedDate:
+                type: string    
+    AnimalsResponseListShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+    AnimalsResponseCRUDLong:
+      type: object
+      properties:
+        opCode:
+          type: string
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        animalID:
+          type: integer
+        storeID:
+          type: integer
+        animalType:
+          type: string
+        animalRace:
+          type: string
+        animalName:
+          type: string
+        animalGender:
+          type: string
+        animalAge:
+          type: integer
+        animalCount:
+          type: integer
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    AnimalsResponseCRUDShort:
       type: object
       properties:
         retCode:
@@ -4132,6 +4956,78 @@ components:
              10 PRODUCTID          PIC S9(9) USAGE COMP-5.
              10 SELLBYDATE         PIC N(26).
              10 INSTOCK            PIC S9(9) USAGE COMP-5.
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM006:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: ANIMALID
+          type: UI4
+          length: 4
+        - name: STOREID
+          type: UI4
+          length: 4
+        - name: ANIMALTYPE
+          type: CHARARRAY1200
+          length: 08
+        - name: ANIMALRACE
+          type: CHARARRAY1200
+          length: 08
+        - name: ANIMALNAME
+          type: VARCHAR1200
+          length: 255
+        - name: ANIMALGENDER
+          type: CHARARRAY1200
+          length: 01
+        - name: ANIMALAGE
+          type: UI4
+          length: 4
+        - name: ANIMALCOUNT
+          type: UI4
+          length: 4
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM006
+        source: |
+          05 LPETM006.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 ANIMALID           PIC S9(9) USAGE COMP-5.
+             10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 ANIMALTYPE         PIC N(08).
+             10 ANIMALRACE         PIC N(08).
+             10 ANIMALNAME.
+                49 ANIMALNAME-LEN  PIC S9(4) USAGE COMP-5.
+                49 ANIMALNAME-TEXT PIC N(255).
+             10 ANIMALGENDER       PIC N(01).
+             10 ANIMALAGE          PIC S9(9) USAGE COMP-5.
+             10 ANIMALCOUNT        PIC S9(9) USAGE COMP-5.
              10 CREATEDBY          PIC N(08).
              10 CREATEDDATE        PIC N(26).
              10 UPDATEDBY          PIC N(08).
@@ -4525,6 +5421,73 @@ components:
                 15 CREATEDDATE             PIC N(26).
                 15 UPDATEDBY               PIC N(08).
                 15 UPDATEDDATE             PIC N(26).
+    LPETM206:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STOREID-FILTER
+          type: UI4
+          length: 4
+        - name: ANIMALTYPE-FILTER
+          type: CHARARRAY1200
+          length: 08
+        - name: ANIMALRACE-FILTER
+          type: CHARARRAY1200
+          length: 08
+        - name: ANIMALID-SINCE
+          type: UI4
+          length: 4
+        - name: ANIMAL-ENTRY-COUNT
+          type: UI2
+          length: 2
+        - name: ANIMAL-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: ANIMAL-ENTRY-COUNT
+          fields:
+            - name: ANIMALID
+              type: UI4
+              length: 4
+            - name: STOREID
+              type: UI4
+              length: 4
+            - name: ANIMALTYPE
+              type: CHARARRAY1200
+              length: 08
+            - name: ANIMALRACE
+              type: CHARARRAY1200
+              length: 08
+            - name: ANIMALNAME
+              type: VARCHAR1200
+              length: 256
+            - name: ANIMALGENDER
+              type: CHARARRAY1200
+              length: 1
+            - name: ANIMALAGE
+              type: UI4
+              length: 4
+            - name: ANIMALCOUNT
+              type: UI4
+              length: 4
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 08
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 08
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
     LWWADPLI:
       fields:
         - name: USERNAME
