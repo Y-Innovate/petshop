@@ -6,7 +6,8 @@ from getpass import getpass
 from Globals import Globals
 from MyRequests import MyRequests
 
-Globals.myHost = "https://yinhdisv:8081"
+#Globals.myHost = "https://yinhdisv:8081"
+Globals.myHost = "https://mainframeyin:8092"
 Globals.myBasepath = ""
 Globals.myCreds = ('YBTKS','')
 Globals.pathPrefix = "/petshop/API/v1"
@@ -36,7 +37,8 @@ def doStuff():
             newRefTable["tableKey"] = "ACTIVE"
             newRefTable["tableValue"] = "Store is active"
 
-            resppost = MyRequests.post(f"{Globals.pathPrefix}/refTables", newRefTable)
+            X=input('touch')
+            resppost = MyRequests.post(f"{Globals.pathPrefix}/refTables?lww_debug=2", newRefTable)
 
             if (resppost.status_code != 201):
                 raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
@@ -90,7 +92,7 @@ def doStuff():
             newProduct["productStatus"] = "ACTIVE"
             newProduct["productName"] = "Deadbeef Dog Food"
             newProduct["groupCode"] = "PEDFCN01"
-            newProduct["supplierID"] = 1
+            newProduct["supplierID"] = 41
 
             resppost = MyRequests.post(f"{Globals.pathPrefix}/products", newProduct)
 
@@ -99,15 +101,15 @@ def doStuff():
         else:
             raise Exception(f'status code {str(respget.status_code)} {respget.text}')
 
-    respget = MyRequests.get(f"{Globals.pathPrefix}/inventory?storeID_filter=1")
+    respget = MyRequests.get(f"{Globals.pathPrefix}/inventory?storeID_filter=41")
 
     if (respget.status_code == 200):
         print(f"{respget.status_code} {respget.text}")
     else:
         if (respget.status_code == 404):
             newInventory = {}
-            newInventory["storeID"] = 1
-            newInventory["productID"] = 1
+            newInventory["storeID"] = 41
+            newInventory["productID"] = 3
             newInventory["sellByDate"] = "1900-01-01-00:00:00.000000"
             newInventory["inStock"] = 100
 
@@ -118,14 +120,14 @@ def doStuff():
         else:
             raise Exception(f'status code {str(respget.status_code)} {respget.text}')
     
-    respget = MyRequests.get(f"{Globals.pathPrefix}/animals?storeID_filter=1")
+    respget = MyRequests.get(f"{Globals.pathPrefix}/animals?storeID_filter=41")
 
     if (respget.status_code == 200):
         print(f"{respget.status_code} {respget.text}")
     else:
         if (respget.status_code == 404):
             newAnimal = {}
-            newAnimal["storeID"] = 1
+            newAnimal["storeID"] = 41
             newAnimal["animalType"] = "AT000001"
             newAnimal["animalRace"] = "AR000001"
             newAnimal["animalName"] = "Bob"
@@ -140,5 +142,14 @@ def doStuff():
         else:
             raise Exception(f'status code {str(respget.status_code)} {respget.text}')
 
+
+def doStuff2():
+    respget = MyRequests.get(f"{Globals.pathPrefix}/pricesAndDiscounts?lww_debug=2")
+
+    if (respget.status_code == 200):
+        print(f"{respget.status_code} {respget.text}")
+    else:
+        raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+
 #for i in range(0, 100):
-doStuff()
+doStuff2()
