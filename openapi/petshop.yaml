@@ -4284,6 +4284,173 @@ paths:
               - JSONWriter:
                   responseObject:
                     $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      summary: Insert new prices and discounts entry
+      operationId: newPricesAndDiscountsEntry
+      tags:
+        - insert
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM007
+            initWith: 0x00
+            size: 420
+            fields:
+              $ref: "#/components/x-ioareas/LPETM007/fields"
+        - ParseRequestJSON:
+            name: PETM007_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: productID
+                toName: PRODUCTID
+              - type: singleFields
+                fromName: animalID
+                toName: ANIMALID
+              - type: singleFields
+                fromName: price
+                toName: PRICE
+              - type: singleFields
+                fromName: discount
+                toName: DISCOUNT
+              - type: singleFields
+                fromName: fromDate
+                toName: FROMDATE
+              - type: singleFields
+                fromName: toDate
+                toName: TODATE
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC007
+            passDataWith: container
+            ioArea:
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM007_C_OK
+            source:
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC007_C_RET_OK
+                  properties:
+                    $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PADID
+                      toName: padID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: ANIMALID
+                      toName: animalID
+                    - type: singleFields
+                      fromName: PRICE
+                      toName: price
+                    - type: singleFields
+                      fromName: DISCOUNT
+                      toName: discount
+                    - type: singleFields
+                      fromName: FROMDATE
+                      toName: fromDate
+                    - type: singleFields
+                      fromName: TODATE
+                      toName: toDate
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC007_C_RET_ERR
+                  properties:
+                    $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /token:
     summary: Retrieve access token
     post:
@@ -4877,6 +5044,48 @@ components:
           type: string
         infoMessage:
           type: string
+    PricesAndDiscountsResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
+        padID:
+          type: integer
+        storeID:
+          type: integer
+        productID:
+          type: integer
+        animalID:
+          type: integer
+        price:
+          type: number
+        discount:
+          type: number
+        fromDate:
+          type: string
+        toDate:
+          type: string
+        createdBy:
+          type: string
+        createdDate:
+          type: string
+        updatedBy:
+          type: string
+        updatedDate:
+          type: string
+    PricesAndDiscountsResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          type: string
+        reasonCode:
+          type: string
+        infoMessage:
+          type: string
     TokenResponse:
       type: object
       properties:
@@ -5255,6 +5464,78 @@ components:
              10 ANIMALGENDER       PIC N(01).
              10 ANIMALAGE          PIC S9(9) USAGE COMP-5.
              10 ANIMALCOUNT        PIC S9(9) USAGE COMP-5.
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM007:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: PADID
+          type: UI4
+          length: 4
+        - name: STOREID
+          type: UI4
+          length: 4
+        - name: PRODUCTID
+          type: UI4
+          length: 4
+        - name: ANIMALID
+          type: UI4
+          length: 4
+        - name: PRICE
+          type: SPD
+          length: 9
+          precision: 2
+        - name: DISCOUNT
+          type: SPD
+          length: 9
+          precision: 2
+        - name: FROMDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: TODATE
+          type: CHARARRAY1200
+          length: 26
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM007
+        source: |
+          05 LPETM007.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 PADID              PIC S9(9) USAGE COMP-5.
+             10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 PRODUCTID          PIC S9(9) USAGE COMP-5.
+             10 ANIMALID           PIC S9(9) USAGE COMP-5.
+             10 PRICE              PIC S9(7)V9(2) USAGE COMP-3.
+             10 DISCOUNT           PIC S9(7)V9(2) USAGE COMP-3.
+             10 FROMDATE           PIC N(26).
+             10 TODATE             PIC N(26).
              10 CREATEDBY          PIC N(08).
              10 CREATEDDATE        PIC N(26).
              10 UPDATEDBY          PIC N(08).
