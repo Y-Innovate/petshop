@@ -4837,14 +4837,6 @@ components:
           type: string
         infoMessage:
           type: string
-        storeID_filter:
-          type: integer
-        productID_filter:
-          type: integer
-        animalID_filter:
-          type: integer
-        padID_since:
-          type: integer
         padCount:
           type: integer
         priceAndDiscount:
