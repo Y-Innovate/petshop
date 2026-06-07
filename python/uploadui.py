@@ -16,6 +16,7 @@ Globals.myHost = "https://yinhdisv:8081"
 #Globals.myHost = "https://mainframeyin:8092"
 Globals.myBasepath = ""
 Globals.myCreds = ('','')
+Globals.myDebug = 0
 Globals.s = requests.sessions.Session()
 
 if Globals.myCreds[0] == '':
