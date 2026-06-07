@@ -181,7 +181,7 @@ def doStuff():
             newPAD['storeID'] = storeID
             newPAD['productID'] = productID
             newPAD['animalID'] = animalID
-            newPAD['price'] = 219.99
+            newPAD['price'] = 219.9
             newPAD['discount'] = -10
             newPAD['fromDate'] = "1900-01-01-00:00:00.000000"
             newPAD['toDate'] = "1900-01-01-00:00:00.000000"

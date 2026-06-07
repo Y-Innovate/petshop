@@ -5,8 +5,8 @@ info:
   description: API for managing a pet shop
   x-apiname: PETSHOP
 servers:
-  - url: https://mainframeyin:8091/petshop/API/v1
-  - url: https://mainframeyin:8092/petshop/API/v1
+- url: https://mainframeyin:8091/petshop/API/v1
+- url: https://mainframeyin:8092/petshop/API/v1
 paths:
   /refTables:
     summary: Manage reference tables
