@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.2.0
 info:
   version: 1.0.0
   title: Pet Shop API
@@ -20,19 +20,19 @@ paths:
           description: Filter reference table ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/refTables_tableID"
         - name: tableID_since
           in: query
           description: Pagination reference table ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/refTables_tableID"
         - name: tabKey_since
           in: query
           description: Pagination reference table key
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/refTables_tableKey"
       responses:
         '200':
           description: Successful retrieval of reference tables
@@ -43,8 +43,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/RefTablesResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/RefTablesResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -55,6 +57,11 @@ paths:
       operationId: newRefTableEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefTablesRequestPost"
       responses:
         '201':
           description: Created
@@ -65,14 +72,16 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
         $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps"
-  /refTables/{tableKey}:
+  /refTables/{tableID}:
     summary: Manage reference tables
     get:
       summary: Get existing reference table entry details
@@ -80,12 +89,18 @@ paths:
       tags:
         - get
       parameters:
-        - name: tableKey
+        - name: tableID
           in: path
+          description: Table ID that together with table key is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/refTables_tableID"
+        - name: tableKey
+          in: query
           description: Table key that together with table ID is unique
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/refTables_tableKey"
       responses:
         '200':
           description: Successful retrieval of reference table entry
@@ -96,25 +111,38 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
-        $ref: "petshop_2.yaml/paths/~1refTables~1{tableKey}/get/x-LWWProcessingSteps"
+        $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps"
     put:
       summary: Update existing reference table entry
       operationId: updateRefTableEntry
       tags:
         - update
       parameters:
-        - name: tableKey
+        - name: tableID
           in: path
+          description: Table ID that together with table key is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/refTables_tableID"
+        - name: tableKey
+          in: query
           description: Table key that together with table ID is unique
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/refTables_tableKey"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefTablesRequestPut"
       responses:
         '200':
           description: Updated
@@ -125,25 +153,33 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
-        $ref: "petshop_2.yaml/paths/~1refTables~1{tableKey}/put/x-LWWProcessingSteps"
+        $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps"
     delete:
       summary: Delete existing reference table entry
       operationId: deleteRefTableEntry
       tags:
         - delete
       parameters:
-        - name: tableKey
+        - name: tableID
           in: path
+          description: Table ID that together with table key is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/refTables_tableID"
+        - name: tableKey
+          in: query
           description: Table key that together with table ID is unique
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/refTables_tableKey"
       responses:
         '200':
           description: Deleted
@@ -154,13 +190,15 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
-        $ref: "petshop_2.yaml/paths/~1refTables~1{tableKey}/delete/x-LWWProcessingSteps"
+        $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps"
   /stores:
     summary: Manage petshop stores
     get:
@@ -174,13 +212,13 @@ paths:
           description: Filter store name
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/stores_storeName"
         - name: storeID_since
           in: query
           description: Pagination store ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/stores_storeID"
       responses:
         '200':
           description: Successful retrieval of stores
@@ -191,8 +229,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/StoresResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/StoresResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -203,6 +243,11 @@ paths:
       operationId: newStoreEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoresRequestPost"
       responses:
         '201':
           description: Created
@@ -213,8 +258,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -233,7 +280,7 @@ paths:
           description: Unique ID of a store
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/stores_storeID"
       responses:
         '200':
           description: Successful retrieval of stores entry
@@ -244,8 +291,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -262,7 +311,12 @@ paths:
           description: Unique ID of a store
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/stores_storeID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoresRequestPut"
       responses:
         '200':
           description: Updated
@@ -273,8 +327,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -291,7 +347,7 @@ paths:
           description: Unique ID of a store
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/stores_storeID"
       responses:
         '200':
           description: Deleted
@@ -302,8 +358,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -322,13 +380,13 @@ paths:
           description: Filter supplier name
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/suppliers_supplierName"
         - name: supplierID_since
           in: query
           description: Pagination supplier ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/suppliers_supplierID"
       responses:
         '200':
           description: Successful retrieval of suppliers
@@ -339,8 +397,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/SuppliersResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/SuppliersResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -351,6 +411,11 @@ paths:
       operationId: newSupplierEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SuppliersRequestPost"
       responses:
         '201':
           description: Created
@@ -361,8 +426,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not Found
         '500':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal Server Error
         default:
           description: Unexpected error
@@ -381,7 +448,7 @@ paths:
           description: Unique ID of a supplier
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/suppliers_supplierID"
       responses:
         '200':
           description: Successful retrieval of suppliers entry
@@ -392,8 +459,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -410,7 +479,12 @@ paths:
           description: Unique ID of a supplier
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/suppliers_supplierID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SuppliersRequestPut"
       responses:
         '200':
           description: Updated
@@ -421,8 +495,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -439,7 +515,7 @@ paths:
           description: Unique ID of a supplier
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/suppliers_supplierID"
       responses:
         '200':
           description: Deleted
@@ -450,8 +526,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -470,13 +548,13 @@ paths:
           description: Filter product name
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/products_productName"
         - name: productID_since
           in: query
           description: Pagination product ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/products_productID"
       responses:
         '200':
           description: Successful retrieval of products
@@ -487,8 +565,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/ProductsResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/ProductsResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -499,6 +579,11 @@ paths:
       operationId: newProductEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductsRequestPost"
       responses:
         '201':
           description: Created
@@ -509,8 +594,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not Found
         '500':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal Server Error
         default:
           description: Unexpected error
@@ -529,7 +616,7 @@ paths:
           description: Unique ID of a product
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/products_productID"
       responses:
         '200':
           description: Successful retrieval of products entry
@@ -540,8 +627,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -558,7 +647,12 @@ paths:
           description: Unique ID of a product
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/products_productID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductsRequestPut"
       responses:
         '200':
           description: Updated
@@ -569,8 +663,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -587,7 +683,7 @@ paths:
           description: Unique ID of a product
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/products_productID"
       responses:
         '200':
           description: Deleted
@@ -598,8 +694,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -618,13 +716,13 @@ paths:
           description: Filter store ID
           required: false
           schema:
-            type: integer
+            $ref: "#/components/schemas/inventory_inventoryID"
         - name: productID_since
           in: query
           description: Pagination product ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/inventory_productID"
       responses:
         '200':
           description: Successful retrieval of inventory
@@ -635,8 +733,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/InventoryResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/InventoryResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -647,6 +747,11 @@ paths:
       operationId: newInventoryEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryRequestPost"
       responses:
         '201':
           description: Created
@@ -657,8 +762,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not Found
         '500':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal Server Error
         default:
           description: Unexpected error
@@ -677,7 +784,7 @@ paths:
           description: Unique ID of a inventory
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/inventory_inventoryID"
       responses:
         '200':
           description: Successful retrieval of inventory entry
@@ -688,8 +795,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -706,7 +815,12 @@ paths:
           description: Unique ID of a inventory
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/inventory_inventoryID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InventoryRequestPut"
       responses:
         '200':
           description: Updated
@@ -717,8 +831,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -735,7 +851,7 @@ paths:
           description: Unique ID of a inventory
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/inventory_inventoryID"
       responses:
         '200':
           description: Deleted
@@ -746,8 +862,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -766,25 +884,25 @@ paths:
           description: Filter store ID
           required: false
           schema:
-            type: integer
+            $ref: "#/components/schemas/animals_storeID"
         - name: animalType_filter
           in: query
           description: Filter animal type
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/animals_animalType"
         - name: animalRace_filter
           in: query
           description: Filter animal race
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/animals_animalRace"
         - name: animalID_since
           in: query
           description: Pagination animal ID
           required: false
           schema:
-            type: string
+            $ref: "#/components/schemas/animals_animalID"
       responses:
         '200':
           description: Successful retrieval of animals
@@ -795,8 +913,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/AnimalsResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/AnimalsResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -807,6 +927,11 @@ paths:
       operationId: newAnimalEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalsRequestPost"
       responses:
         '201':
           description: Created
@@ -817,8 +942,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not Found
         '500':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal Server Error
         default:
           description: Unexpected error
@@ -837,7 +964,7 @@ paths:
           description: Unique ID of a animal
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/animals_animalID"
       responses:
         '200':
           description: Successful retrieval of animals entry
@@ -848,8 +975,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -866,7 +995,12 @@ paths:
           description: Unique ID of a animal
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/animals_animalID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnimalsRequestPut"
       responses:
         '200':
           description: Updated
@@ -877,8 +1011,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -895,7 +1031,7 @@ paths:
           description: Unique ID of a animal
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/animals_animalID"
       responses:
         '200':
           description: Deleted
@@ -906,8 +1042,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -926,25 +1064,25 @@ paths:
           description: Filter store ID
           required: false
           schema:
-            type: integer
+            $ref: "#/components/schemas/pricesAndDiscounts_storeID"
         - name: productID_filter
           in: query
           description: Filter product ID
           required: false
           schema:
-            type: integer
+            $ref: "#/components/schemas/pricesAndDiscounts_productID"
         - name: animalID_filter
           in: query
           description: Filter animal ID
           required: false
           schema:
-            type: integer
+            $ref: "#/components/schemas/pricesAndDiscounts_animalID"
         - name: padID_since
           in: query
           description: Pagination pricesAndDiscounts ID
           required: false
           schema:
-            type: integer
+            $ref: "#/components/schemas/pricesAndDiscounts_padID"
       responses:
         '200':
           description: Successful retrieval of prices and discounts
@@ -955,8 +1093,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/PricesAndDiscountsResponseListShort"
           description: Not found
         '500':
+          $ref: "#/components/schemas/PricesAndDiscountsResponseListShort"
           description: Internal server error
         default:
           description: Unexpected error
@@ -967,6 +1107,11 @@ paths:
       operationId: newPricesAndDiscountsEntry
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PricesAndDiscountsRequestPost"
       responses:
         '201':
           description: Created
@@ -977,8 +1122,10 @@ paths:
         '401':
           description: Unauthorized
         '404':
+          $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
           description: Not Found
         '500':
+          $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
           description: Internal Server Error
         default:
           description: Unexpected error
@@ -1010,577 +1157,963 @@ paths:
         $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps"
 components:
   schemas:
+    RefTablesRequestPost:
+      type: object
+      properties:
+        tableID:
+          $ref: "#/components/schemas/refTables_tableID"
+        tableKey:
+          $ref: "#/components/schemas/refTables_tableKey"
+        tableValue:
+          $ref: "#/components/schemas/refTables_tableValue"
+    RefTablesRequestPut:
+      type: object
+      properties:
+        tableValue:
+          $ref: "#/components/schemas/refTables_tableValue"
     RefTablesResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         refTables:
           type: array
           items:
             type: object
             properties:
               tableID:
-                type: string
+                $ref: "#/components/schemas/refTables_tableID"
               tableKey:
-                type: string
+                $ref: "#/components/schemas/refTables_tableKey"
               tableValue:
-                type: string
+                $ref: "#/components/schemas/refTables_tableValue"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string
+                $ref: "#/components/schemas/updatedDate"
     RefTablesResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     RefTablesResponseCRUDLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         tableID:
-          type: string
+          $ref: "#/components/schemas/refTables_tableID"
         tableKey:
-          type: string
+          $ref: "#/components/schemas/refTables_tableKey"
         tableValue:
-          type: string
+          $ref: "#/components/schemas/refTables_tableValue"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     RefTablesResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
+    StoresRequestPost:
+      type: object
+      properties:
+        storeCode:
+          $ref: "#/components/schemas/stores_storeCode"
+        storeStatus:
+          $ref: "#/components/schemas/stores_storeStatus"
+        storeName:
+          $ref: "#/components/schemas/stores_storeName"
+    StoresRequestPut:
+      type: object
+      properties:
+        storeCode:
+          $ref: "#/components/schemas/stores_storeCode"
+        storeStatus:
+          $ref: "#/components/schemas/stores_storeStatus"
+        storeName:
+          $ref: "#/components/schemas/stores_storeName"
     StoresResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         stores:
           type: array
           items:
             type: object
             properties:
               storeID:
-                type: integer
+                $ref: "#/components/schemas/stores_storeID"
               storeName:
-                type: string
+                $ref: "#/components/schemas/stores_storeName"
               storeNameU:
-                type: string
+                $ref: "#/components/schemas/stores_storeNameU"
               storeCode:
-                type: string
+                $ref: "#/components/schemas/stores_storeCode"
               storeStatus:
-                type: string
+                $ref: "#/components/schemas/stores_storeStatus"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string
+                $ref: "#/components/schemas/updatedDate"
     StoresResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     StoresResponseCRUDLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         storeID:
-          type: integer
+          $ref: "#/components/schemas/stores_storeID"
         storeCode:
-          type: string
+          $ref: "#/components/schemas/stores_storeCode"
         storeStatus:
-          type: string
+          $ref: "#/components/schemas/stores_storeStatus"
         storeName:
-          type: string
+          $ref: "#/components/schemas/stores_storeName"
         storeNameU:
-          type: string
+          $ref: "#/components/schemas/stores_storeNameU"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     StoresResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
+    SuppliersRequestPost:
+      type: object
+      properties:
+        supplierCode:
+          $ref: "#/components/schemas/suppliers_supplierCode"
+        supplierStatus:
+          $ref: "#/components/schemas/suppliers_supplierStatus"
+        supplierName:
+          $ref: "#/components/schemas/suppliers_supplierName"
+    SuppliersRequestPut:
+      type: object
+      properties:
+        supplierCode:
+          $ref: "#/components/schemas/suppliers_supplierCode"
+        supplierStatus:
+          $ref: "#/components/schemas/suppliers_supplierStatus"
+        supplierName:
+          $ref: "#/components/schemas/suppliers_supplierName"
     SuppliersResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         suppliers:
           type: array
           items:
             type: object
             properties:
               supplierID:
-                type: integer
+                $ref: "#/components/schemas/suppliers_supplierID"
               supplierName:
-                type: string
+                $ref: "#/components/schemas/suppliers_supplierName"
               supplierNameU:
-                type: string
+                $ref: "#/components/schemas/suppliers_supplierNameU"
               supplierCode:
-                type: string
+                $ref: "#/components/schemas/suppliers_supplierCode"
               supplierStatus:
-                type: string
+                $ref: "#/components/schemas/suppliers_supplierStatus"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string
+                $ref: "#/components/schemas/updatedDate"
     SuppliersResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     SuppliersResponseCRUDLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         supplierID:
-          type: integer
+          $ref: "#/components/schemas/suppliers_supplierID"
         supplierCode:
-          type: string
+          $ref: "#/components/schemas/suppliers_supplierCode"
         supplierStatus:
-          type: string
+          $ref: "#/components/schemas/suppliers_supplierStatus"
         supplierName:
-          type: string
+          $ref: "#/components/schemas/suppliers_supplierName"
         supplierNameU:
-          type: string
+          $ref: "#/components/schemas/suppliers_supplierNameU"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     SuppliersResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
+    ProductsRequestPost:
+      type: object
+      properties:
+        productCode:
+          $ref: "#/components/schemas/products_productCode"
+        productStatus:
+          $ref: "#/components/schemas/products_productStatus"
+        productName:
+          $ref: "#/components/schemas/products_productName"
+        groupCode:
+          $ref: "#/components/schemas/products_groupCode"
+        supplierID:
+          $ref: "#/components/schemas/products_supplierID"
+    ProductsRequestPut:
+      type: object
+      properties:
+        productCode:
+          $ref: "#/components/schemas/products_productCode"
+        productStatus:
+          $ref: "#/components/schemas/products_productStatus"
+        productName:
+          $ref: "#/components/schemas/products_productName"
+        groupCode:
+          $ref: "#/components/schemas/products_groupCode"
+        supplierID:
+          $ref: "#/components/schemas/products_supplierID"
     ProductsResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         products:
           type: array
           items:
             type: object
             properties:
               productID:
-                type: integer
+                $ref: "#/components/schemas/products_productID"
               productName:
-                type: string
+                $ref: "#/components/schemas/products_productName"
               productNameU:
-                type: string
+                $ref: "#/components/schemas/products_productNameU"
               productCode:
-                type: string
+                $ref: "#/components/schemas/products_productCode"
               productStatus:
-                type: string
+                $ref: "#/components/schemas/products_productStatus"
               groupCode:
-                type: string
+                $ref: "#/components/schemas/products_groupCode"
               supplierID:
-                type: integer
+                $ref: "#/components/schemas/products_supplierID"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string
+                $ref: "#/components/schemas/updatedDate"
     ProductsResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     ProductsResponseCRUDLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         productID:
-          type: integer
-        productCode:
-          type: string
-        productStatus:
-          type: string
+          $ref: "#/components/schemas/products_productID"
         productName:
-          type: string
+          $ref: "#/components/schemas/products_productName"
         productNameU:
-          type: string
+          $ref: "#/components/schemas/products_productNameU"
+        productCode:
+          $ref: "#/components/schemas/products_productCode"
+        productStatus:
+          $ref: "#/components/schemas/products_productStatus"
         groupCode:
-          type: string
+          $ref: "#/components/schemas/products_groupCode"
         supplierID:
-          type: integer
+          $ref: "#/components/schemas/products_supplierID"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     ProductsResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
+    InventoryRequestPost:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/inventory_storeID"
+        productID:
+          $ref: "#/components/schemas/inventory_productID"
+        sellByDate:
+          $ref: "#/components/schemas/inventory_sellByDate"
+        inStock:
+          $ref: "#/components/schemas/inventory_inStock"
+    InventoryRequestPut:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/inventory_storeID"
+        productID:
+          $ref: "#/components/schemas/inventory_productID"
+        sellByDate:
+          $ref: "#/components/schemas/inventory_sellByDate"
+        inStock:
+          $ref: "#/components/schemas/inventory_inStock"
     InventoryResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         inventory:
           type: array
           items:
             type: object
             properties:
               inventoryID:
-                type: integer
+                $ref: "#/components/schemas/inventory_inventoryID"
               storeID:
-                type: integer
+                $ref: "#/components/schemas/inventory_storeID"
               productID:
-                type: integer
+                $ref: "#/components/schemas/inventory_productID"
               sellByDate:
-                type: string
+                $ref: "#/components/schemas/inventory_sellByDate"
               inStock:
-                type: integer
+                $ref: "#/components/schemas/inventory_inStock"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string
+                $ref: "#/components/schemas/updatedDate"
     InventoryResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     InventoryResponseCRUDLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         inventoryID:
-          type: integer
+          $ref: "#/components/schemas/inventory_inventoryID"
         storeID:
-          type: integer
+          $ref: "#/components/schemas/inventory_storeID"
         productID:
-          type: integer
+          $ref: "#/components/schemas/inventory_productID"
         sellByDate:
-          type: string
+          $ref: "#/components/schemas/inventory_sellByDate"
         inStock:
-          type: integer
+          $ref: "#/components/schemas/inventory_inStock"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     InventoryResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
+    AnimalsRequestPost:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/animals_storeID"
+        animalType:
+          $ref: "#/components/schemas/animals_animalType"
+        animalRace:
+          $ref: "#/components/schemas/animals_animalRace"
+        animalName:
+          $ref: "#/components/schemas/animals_animalName"
+        animalGender:
+          $ref: "#/components/schemas/animals_animalGender"
+        animalAge:
+          $ref: "#/components/schemas/animals_animalAge"
+        animalCount:
+          $ref: "#/components/schemas/animals_animalCount"
+    AnimalsRequestPut:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/animals_storeID"
+        animalType:
+          $ref: "#/components/schemas/animals_animalType"
+        animalRace:
+          $ref: "#/components/schemas/animals_animalRace"
+        animalName:
+          $ref: "#/components/schemas/animals_animalName"
+        animalGender:
+          $ref: "#/components/schemas/animals_animalGender"
+        animalAge:
+          $ref: "#/components/schemas/animals_animalAge"
+        animalCount:
+          $ref: "#/components/schemas/animals_animalCount"
     AnimalsResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
-        animalEntryCount:
-          type: integer
+          $ref: "#/components/schemas/infoMessage"
         animalEntry:
           type: array
           items:
             type: object
             properties:
               animalID:
-                type: integer
+                $ref: "#/components/schemas/animals_animalID"
               storeID:
-                type: integer
+                $ref: "#/components/schemas/animals_storeID"
               animalType:
-                type: string
+                $ref: "#/components/schemas/animals_animalType"
               animalRace:
-                type: string
+                $ref: "#/components/schemas/animals_animalRace"
               animalName:
-                type: string
+                $ref: "#/components/schemas/animals_animalName"
               animalGender:
-                type: string
+                $ref: "#/components/schemas/animals_animalGender"
               animalAge:
-                type: integer
+                $ref: "#/components/schemas/animals_animalAge"
               animalCount:
-                type: integer
+                $ref: "#/components/schemas/animals_animalCount"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string    
+                $ref: "#/components/schemas/updatedDate"
     AnimalsResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     AnimalsResponseCRUDLong:
       type: object
       properties:
-        opCode:
-          type: string
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         animalID:
-          type: integer
+          $ref: "#/components/schemas/animals_animalID"
         storeID:
-          type: integer
+          $ref: "#/components/schemas/animals_storeID"
         animalType:
-          type: string
+          $ref: "#/components/schemas/animals_animalType"
         animalRace:
-          type: string
+          $ref: "#/components/schemas/animals_animalRace"
         animalName:
-          type: string
+          $ref: "#/components/schemas/animals_animalName"
         animalGender:
-          type: string
+          $ref: "#/components/schemas/animals_animalGender"
         animalAge:
-          type: integer
+          $ref: "#/components/schemas/animals_animalAge"
         animalCount:
-          type: integer
+          $ref: "#/components/schemas/animals_animalCount"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     AnimalsResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
+    PricesAndDiscountsRequestPost:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/pricesAndDiscounts_storeID"
+        productID:
+          $ref: "#/components/schemas/pricesAndDiscounts_productID"
+        animalID:
+          $ref: "#/components/schemas/pricesAndDiscounts_animalID"
+        price:
+          $ref: "#/components/schemas/pricesAndDiscounts_price"
+        discount:
+          $ref: "#/components/schemas/pricesAndDiscounts_discount"
+        fromDate:
+          $ref: "#/components/schemas/pricesAndDiscounts_fromDate"
+        toDate:
+          $ref: "#/components/schemas/pricesAndDiscounts_toDate"
     PricesAndDiscountsResponseListLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
-        padCount:
-          type: integer
+          $ref: "#/components/schemas/infoMessage"
         priceAndDiscount:
           type: array
           items:
             type: object
             properties:
               padID:
-                type: integer
+                $ref: "#/components/schemas/pricesAndDiscounts_padID"
               storeID:
-                type: integer
+                $ref: "#/components/schemas/pricesAndDiscounts_storeID"
               productID:
-                type: integer
+                $ref: "#/components/schemas/pricesAndDiscounts_productID"
               animalID:
-                type: integer
+                $ref: "#/components/schemas/pricesAndDiscounts_animalID"
               price:
-                type: number
+                $ref: "#/components/schemas/pricesAndDiscounts_price"
               discount:
-                type: number
+                $ref: "#/components/schemas/pricesAndDiscounts_discount"
               fromDate:
-                type: string
+                $ref: "#/components/schemas/pricesAndDiscounts_fromDate"
               toDate:
-                type: string
+                $ref: "#/components/schemas/pricesAndDiscounts_toDate"
               createdBy:
-                type: string
+                $ref: "#/components/schemas/createdBy"
               createdDate:
-                type: string
+                $ref: "#/components/schemas/createdDate"
               updatedBy:
-                type: string
+                $ref: "#/components/schemas/updatedBy"
               updatedDate:
-                type: string
+                $ref: "#/components/schemas/updatedDate"
     PricesAndDiscountsResponseListShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     PricesAndDiscountsResponseCRUDLong:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
         padID:
-          type: integer
+          $ref: "#/components/schemas/pricesAndDiscounts_padID"
         storeID:
-          type: integer
+          $ref: "#/components/schemas/pricesAndDiscounts_storeID"
         productID:
-          type: integer
+          $ref: "#/components/schemas/pricesAndDiscounts_productID"
         animalID:
-          type: integer
+          $ref: "#/components/schemas/pricesAndDiscounts_animalID"
         price:
-          type: number
+          $ref: "#/components/schemas/pricesAndDiscounts_price"
         discount:
-          type: number
+          $ref: "#/components/schemas/pricesAndDiscounts_discount"
         fromDate:
-          type: string
+          $ref: "#/components/schemas/pricesAndDiscounts_fromDate"
         toDate:
-          type: string
+          $ref: "#/components/schemas/pricesAndDiscounts_toDate"
         createdBy:
-          type: string
+          $ref: "#/components/schemas/createdBy"
         createdDate:
-          type: string
+          $ref: "#/components/schemas/createdDate"
         updatedBy:
-          type: string
+          $ref: "#/components/schemas/updatedBy"
         updatedDate:
-          type: string
+          $ref: "#/components/schemas/updatedDate"
     PricesAndDiscountsResponseCRUDShort:
       type: object
       properties:
         retCode:
-          type: string
+          $ref: "#/components/schemas/retCode"
         reasonCode:
-          type: string
+          $ref: "#/components/schemas/reasonCode"
         infoMessage:
-          type: string
+          $ref: "#/components/schemas/infoMessage"
     TokenResponse:
       type: object
       properties:
         token:
           type: string
+    #
+    # Dictionary part
+    #
+    # generic
+    retCode:
+      type: string
+      minLength: 2
+      maxLength: 2
+      example: '00'
+    reasonCode:
+      type: string
+      minLength: 2
+      maxLength: 2
+      example: '01'
+    infoMessage:
+      type: string
+      minLength: 0
+      maxLength: 72
+      example: TBPET001 entry not found
+    createdBy:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: YINUSER
+    createdDate:
+      type: string
+      minLength: 26
+      maxLength: 26
+      example: 2026-01-01-12.15.51.467890
+    updatedBy:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: YINUSER
+    updatedDate:
+      type: string
+      minLength: 26
+      maxLength: 26
+      example: 2026-01-01-12.15.51.467890
+    #
+    # refTables
+    refTables_tableID:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: STORSTAT
+    refTables_tableKey:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: ACTIVE
+    refTables_tableValue:
+      type: string
+      minLength: 1
+      maxLength: 255
+      value: Store is active
+    #
+    # stores
+    stores_storeID:
+      type: integer
+      minimum: 1
+      example: 12345
+    stores_storeCode:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: STBOB001
+    stores_storeStatus:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: ACTIVE
+    stores_storeName:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: Bob's Pet Shop
+    stores_storeNameU:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: BOB'S PET SHOP
+    #
+    # suppliers
+    suppliers_supplierID:
+      type: integer
+      minimum: 1
+      example: 12345
+    suppliers_supplierCode:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: SU080001
+    suppliers_supplierStatus:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: ACTIVE
+    suppliers_supplierName:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: Dog Food Intl.
+    suppliers_supplierNameU:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: DOG FOOD INTL.
+    #
+    # products
+    products_productID:
+      type: integer
+      minimum: 1
+      example: 12345
+    products_productCode:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: DFI00001
+    products_productStatus:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: ACTIVE
+    products_productName:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: Canned Dog Food Beef 400g
+    products_productNameU:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: CANNED DOG FOOD BEEF 400G
+    products_groupCode:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: PECA0001
+    products_supplierID:
+      type: integer
+      minimum: 1
+      example: 12345
+    #
+    # inventory
+    inventory_inventoryID:
+      type: integer
+      minimum: 1
+      example: 12345
+    inventory_storeID:
+      type: integer
+      minimum: 1
+      example: 12345
+    inventory_productID:
+      type: integer
+      minimum: 1
+      example: 12345
+    inventory_sellByDate:
+      type: string
+      minLength: 26
+      maxLength: 26
+      example: 2026-01-01-12.15.51.467890
+    inventory_inStock:
+      type: integer
+      minimum: 0
+      example: 120000
+    #
+    # animals
+    animals_animalID:
+      type: integer
+      minimum: 1
+      example: 12345
+    animals_storeID:
+      type: integer
+      minimum: 1
+      example: 12345
+    animals_animalType:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: BIRD0001
+    animals_animalRace:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: COCT0001
+    animals_animalName:
+      type: string
+      minLength: 0
+      maxLength: 255
+      example: Polly
+    animals_animalGender:
+      type: string
+      minLength: 1
+      maxLength: 1
+      example: F
+    animals_animalAge:
+      type: integer
+      minimum: 0
+      example: 5
+    animals_animalCount:
+      type: integer
+      minimum: 0
+      example: 1
+    #
+    # pricesAndDiscounts
+    pricesAndDiscounts_padID:
+      type: integer
+      minimum: 1
+      example: 12345
+    pricesAndDiscounts_storeID:
+      type: integer
+      minimum: 1
+      example: 12345
+    pricesAndDiscounts_productID:
+      type: integer
+      minimum: 1
+      example: 12345
+    pricesAndDiscounts_animalID:
+      type: integer
+      minimum: 1
+      example: 12345
+    pricesAndDiscounts_price:
+      type: number
+      exclusiveMinimum: 0
+      multipleOf: 0.01
+      example: 12.99
+    pricesAndDiscounts_discount:
+      type: number
+      multipleOf: 0.01
+      not:
+        enum: [0]
+      example: -2.5
+    pricesAndDiscounts_fromDate:
+      type: string
+      minLength: 26
+      maxLength: 26
+      example: 2026-01-01-12.15.51.467890
+    pricesAndDiscounts_toDate:
+      type: string
+      minLength: 26
+      maxLength: 26
+      example: 2026-01-01-12.15.51.467890
