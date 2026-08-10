@@ -2,21 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pet shop</title>
+    <title>Pet Shop Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
-    <script type="module" crossorigin src="./assets/rolldown-runtime-BpQH8Ho1.js"></script>
-    <script type="module" crossorigin src="./assets/vendor-react-dom-5liYakh8.js"></script>
-    <script type="module" crossorigin src="./assets/vendor-react-DUHRBQPP.js"></script>
-    <script type="module" crossorigin src="./assets/vendor-B5xVLm8e.js"></script>
-    <script type="module" crossorigin src="./assets/main-CQF1Fxca.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/main-CaBeM7YE.css">
+    <script type="module" crossorigin src="./assets/index-BY59xMzE.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-CbXtAM7H.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-react-dom-D_G5JT9x.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-Dao0q3rO.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-react-CznXPbDH.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DpFWrEIX.css">
   </head>
   <body>
     <div id="root"></div>
-    <script type="text/javascript" src="petshop_config.js"></script>
-    <script type="text/javascript">
-      const myLocation = petshopConfig.locations.find((configEntry) => configEntry.location == "dashboard");
-    </script>
+    <!-- Classic script (not type="module"), so it runs before the deferred
+         module script below. See src/config.js for how this is used. -->
+    <script src="./runtime-config.js"></script>
   </body>
 </html>
