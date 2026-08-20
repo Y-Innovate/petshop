@@ -1138,6 +1138,11 @@ paths:
       operationId: newAccessToken
       tags:
         - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TokenRequestPost"
       responses:
         '201':
           description: Created
@@ -1869,6 +1874,17 @@ components:
           $ref: "#/components/schemas/reasonCode"
         infoMessage:
           $ref: "#/components/schemas/infoMessage"
+    TokenRequestPost:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 8
+        password:
+          type: string
+          minLength: 1
+          maxLength: 100
     TokenResponse:
       type: object
       properties:

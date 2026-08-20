@@ -10,12 +10,12 @@ paths:
             initWith: 0x00
             size: 13842
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM201/fields"
+              $ref: "#/components/x-ioareas/LPETM201/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: tableID_filter
@@ -29,12 +29,16 @@ paths:
         - Link:
             program: PETC201
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM201_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -47,9 +51,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -87,7 +91,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC201_RET_ERR
@@ -95,9 +99,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -110,7 +114,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1refTables/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -118,14 +122,14 @@ paths:
             initWith: 0x00
             size: 834
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM001/fields"
+              $ref: "#/components/x-ioareas/LPETM001/fields"
         - ParseRequestJSON:
             name: PETM001_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: tableID
@@ -154,12 +158,16 @@ paths:
         - Link:
             program: PETC001
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM001_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -172,9 +180,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -208,7 +216,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC001_C_RET_ERR
@@ -216,9 +224,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -231,7 +239,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1refTables/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /refTables/{tableID}:
     get:
       x-LWWProcessingSteps:
@@ -240,14 +248,14 @@ paths:
             initWith: 0x00
             size: 834
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM001/fields"
+              $ref: "#/components/x-ioareas/LPETM001/fields"
         - ExtractIdFromPath:
             name: PETM001_R_TABLEID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: TABLEID
@@ -256,9 +264,9 @@ paths:
               $ref: "petshop.yaml/paths/~1refTables~1{tableID}/get/parameters"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: tableKey
@@ -269,12 +277,16 @@ paths:
         - Link:
             program: PETC001
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM001_R_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -287,9 +299,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -323,7 +335,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC001_R_RET_ERR
@@ -331,9 +343,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -346,7 +358,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1refTables~1{tableID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     put:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -354,14 +366,14 @@ paths:
             initWith: 0x00
             size: 834
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM001/fields"
+              $ref: "#/components/x-ioareas/LPETM001/fields"
         - ExtractIdFromPath:
             name: PETM001_U_TABLEID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: TABLEID
@@ -370,9 +382,9 @@ paths:
               $ref: "petshop.yaml/paths/~1refTables~1{tableID}/put/parameters"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: tableKey
@@ -381,9 +393,9 @@ paths:
             name: PETM001_U_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/5/ParseRequestJSON"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/5/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: tableValue
@@ -400,12 +412,16 @@ paths:
         - Link:
             program: PETC001
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM001_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -418,9 +434,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -454,7 +470,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC001_U_RET_ERR
@@ -462,9 +478,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -477,7 +493,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     delete:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -485,14 +501,14 @@ paths:
             initWith: 0x00
             size: 834
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM001/fields"
+              $ref: "#/components/x-ioareas/LPETM001/fields"
         - ExtractIdFromPath:
             name: PETM001_U_TABLEID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: TABLEID
@@ -501,9 +517,9 @@ paths:
               $ref: "petshop.yaml/paths/~1refTables~1{tableID}/delete/parameters"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: tableKey
@@ -514,17 +530,21 @@ paths:
         - Link:
             program: PETC001
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: PETC001_D_RET
             properties:
               $ref: "petshop.yaml/components/schemas/RefTablesResponseCRUDShort/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/6/CreateObject/properties"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/6/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: RETURNCODE
@@ -537,7 +557,7 @@ paths:
                 toName: infoMessage
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/6/CreateObject"
+              $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/6/CreateObject"
   /stores:
     get:
       x-LWWProcessingSteps:
@@ -549,12 +569,12 @@ paths:
             initWith: 0x00
             size: 24672
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM202/fields"
+              $ref: "#/components/x-ioareas/LPETM202/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeName_filter
@@ -565,12 +585,16 @@ paths:
         - Link:
             program: PETC202
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM202_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -583,9 +607,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -629,7 +653,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC202_RET_ERR
@@ -637,9 +661,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -652,7 +676,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1stores/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -660,14 +684,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM002/fields"
+              $ref: "#/components/x-ioareas/LPETM002/fields"
         - ParseRequestJSON:
             name: PETM002_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeCode
@@ -696,12 +720,16 @@ paths:
         - Link:
             program: PETC002
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM002_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -714,9 +742,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -756,7 +784,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC002_C_RET_ERR
@@ -764,9 +792,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -779,7 +807,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1stores/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /stores/{storeID}:
     get:
       x-LWWProcessingSteps:
@@ -788,14 +816,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM002/fields"
+              $ref: "#/components/x-ioareas/LPETM002/fields"
         - ExtractIdFromPath:
             name: PETM002_R_STOREID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: STOREID
@@ -805,12 +833,16 @@ paths:
         - Link:
             program: PETC002
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM002_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -823,9 +855,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -865,7 +897,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC002_R_RET_ERR
@@ -873,9 +905,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -888,7 +920,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     put:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -896,14 +928,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM002/fields"
+              $ref: "#/components/x-ioareas/LPETM002/fields"
         - ExtractIdFromPath:
             name: PETM002_U_STOREID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: STOREID
@@ -911,9 +943,9 @@ paths:
             name: PETM002_U_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeName
@@ -936,12 +968,16 @@ paths:
         - Link:
             program: PETC002
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM002_U_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -954,9 +990,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -996,7 +1032,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC002_U_RET_ERR
@@ -1004,9 +1040,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/StoresResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1019,7 +1055,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1stores~1{storeID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     delete:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -1027,14 +1063,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM002/fields"
+              $ref: "#/components/x-ioareas/LPETM002/fields"
         - ExtractIdFromPath:
             name: PETM002_D_STOREID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: STOREID
@@ -1044,17 +1080,21 @@ paths:
         - Link:
             program: PETC002
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: PETC002_D_RET
             properties:
               $ref: "petshop.yaml/components/schemas/StoresResponseCRUDShort/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: RETURNCODE
@@ -1067,7 +1107,7 @@ paths:
                 toName: infoMessage
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/4/CreateObject"
+              $ref: "#/paths/~1stores~1{storeID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /suppliers:
     get:
       x-LWWProcessingSteps:
@@ -1079,12 +1119,12 @@ paths:
             initWith: 0x00
             size: 24672
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM203/fields"
+              $ref: "#/components/x-ioareas/LPETM203/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: supplierName_filter
@@ -1095,12 +1135,16 @@ paths:
         - Link:
             program: PETC203
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM203_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1113,9 +1157,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1159,7 +1203,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC203_RET_ERR
@@ -1167,9 +1211,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1182,7 +1226,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1suppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -1190,14 +1234,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM003/fields"
+              $ref: "#/components/x-ioareas/LPETM003/fields"
         - ParseRequestJSON:
             name: PETM003_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: supplierCode
@@ -1226,12 +1270,16 @@ paths:
         - Link:
             program: PETC003
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM003_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1244,9 +1292,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1286,7 +1334,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC003_C_RET_ERR
@@ -1294,9 +1342,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1309,7 +1357,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1suppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /suppliers/{supplierID}:
     get:
       x-LWWProcessingSteps:
@@ -1318,14 +1366,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM003/fields"
+              $ref: "#/components/x-ioareas/LPETM003/fields"
         - ExtractIdFromPath:
             name: PETM003_R_SUPPLIERID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: SUPPLIERID
@@ -1335,12 +1383,16 @@ paths:
         - Link:
             program: PETC003
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM003_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1353,9 +1405,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1395,7 +1447,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC003_R_RET_ERR
@@ -1403,9 +1455,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1418,7 +1470,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     put:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -1426,14 +1478,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM003/fields"
+              $ref: "#/components/x-ioareas/LPETM003/fields"
         - ExtractIdFromPath:
             name: PETM003_U_SUPPLIERID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: SUPPLIERID
@@ -1441,9 +1493,9 @@ paths:
             name: PETM003_U_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: supplierName
@@ -1466,12 +1518,16 @@ paths:
         - Link:
             program: PETC003
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM003_U_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1484,9 +1540,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1526,7 +1582,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC003_U_RET_ERR
@@ -1534,9 +1590,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1549,7 +1605,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1suppliers~1{supplierID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     delete:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -1557,14 +1613,14 @@ paths:
             initWith: 0x00
             size: 1350
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM003/fields"
+              $ref: "#/components/x-ioareas/LPETM003/fields"
         - ExtractIdFromPath:
             name: PETM003_D_SUPPLIERID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: SUPPLIERID
@@ -1574,17 +1630,21 @@ paths:
         - Link:
             program: PETC003
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: PETC003_D_RET
             properties:
               $ref: "petshop.yaml/components/schemas/SuppliersResponseCRUDShort/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: RETURNCODE
@@ -1597,7 +1657,7 @@ paths:
                 toName: infoMessage
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/4/CreateObject"
+              $ref: "#/paths/~1suppliers~1{supplierID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /products:
     get:
       x-LWWProcessingSteps:
@@ -1609,12 +1669,12 @@ paths:
             initWith: 0x00
             size: 25072
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM204/fields"
+              $ref: "#/components/x-ioareas/LPETM204/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: productName_filter
@@ -1625,12 +1685,16 @@ paths:
         - Link:
             program: PETC204
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM204_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1643,9 +1707,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1695,7 +1759,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC204_RET_ERR
@@ -1703,9 +1767,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1718,7 +1782,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1products/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -1726,14 +1790,14 @@ paths:
             initWith: 0x00
             size: 1370
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM004/fields"
+              $ref: "#/components/x-ioareas/LPETM004/fields"
         - ParseRequestJSON:
             name: PETM004_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: productCode
@@ -1768,12 +1832,16 @@ paths:
         - Link:
             program: PETC004
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM004_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1786,9 +1854,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1834,7 +1902,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC004_C_RET_ERR
@@ -1842,9 +1910,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1857,7 +1925,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1products/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /products/{productID}:
     get:
       x-LWWProcessingSteps:
@@ -1866,14 +1934,14 @@ paths:
             initWith: 0x00
             size: 1370
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM004/fields"
+              $ref: "#/components/x-ioareas/LPETM004/fields"
         - ExtractIdFromPath:
             name: PETM004_R_PRODUCTID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: PRODUCTID
@@ -1883,12 +1951,16 @@ paths:
         - Link:
             program: PETC004
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM004_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -1901,9 +1973,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1949,7 +2021,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC004_R_RET_ERR
@@ -1957,9 +2029,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -1972,7 +2044,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     put:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -1980,14 +2052,14 @@ paths:
             initWith: 0x00
             size: 1370
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM004/fields"
+              $ref: "#/components/x-ioareas/LPETM004/fields"
         - ExtractIdFromPath:
             name: PETM004_U_PRODUCTID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: PRODUCTID
@@ -1995,9 +2067,9 @@ paths:
             name: PETM004_U_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: productName
@@ -2026,12 +2098,16 @@ paths:
         - Link:
             program: PETC004
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM004_U_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2044,9 +2120,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2092,7 +2168,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC004_U_RET_ERR
@@ -2100,9 +2176,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2115,7 +2191,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1products~1{productID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     delete:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -2123,14 +2199,14 @@ paths:
             initWith: 0x00
             size: 1370
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM004/fields"
+              $ref: "#/components/x-ioareas/LPETM004/fields"
         - ExtractIdFromPath:
             name: PETM004_D_PRODUCTID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: PRODUCTID
@@ -2140,17 +2216,21 @@ paths:
         - Link:
             program: PETC004
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: PETC004_D_RET
             properties:
               $ref: "petshop.yaml/components/schemas/ProductsResponseCRUDShort/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: RETURNCODE
@@ -2163,7 +2243,7 @@ paths:
                 toName: infoMessage
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/4/CreateObject"
+              $ref: "#/paths/~1products~1{productID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /inventory:
     get:
       x-LWWProcessingSteps:
@@ -2175,12 +2255,12 @@ paths:
             initWith: 0x00
             size: 4242
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM205/fields"
+              $ref: "#/components/x-ioareas/LPETM205/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID_filter
@@ -2191,12 +2271,16 @@ paths:
         - Link:
             program: PETC205
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM204_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2209,9 +2293,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2255,7 +2339,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC205_RET_ERR
@@ -2263,9 +2347,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2278,7 +2362,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -2286,14 +2370,14 @@ paths:
             initWith: 0x00
             size: 358
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM005/fields"
+              $ref: "#/components/x-ioareas/LPETM005/fields"
         - ParseRequestJSON:
             name: PETM005_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID
@@ -2325,12 +2409,16 @@ paths:
         - Link:
             program: PETC005
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM005_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2343,9 +2431,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2385,7 +2473,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC005_C_RET_ERR
@@ -2393,9 +2481,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2408,7 +2496,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1inventory/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /inventory/{inventoryID}:
     get:
       x-LWWProcessingSteps:
@@ -2417,14 +2505,14 @@ paths:
             initWith: 0x00
             size: 358
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM005/fields"
+              $ref: "#/components/x-ioareas/LPETM005/fields"
         - ExtractIdFromPath:
             name: PETM005_R_INVENTORYID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: INVENTORYID
@@ -2434,12 +2522,16 @@ paths:
         - Link:
             program: PETC005
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM005_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2452,9 +2544,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2494,7 +2586,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC005_R_RET_ERR
@@ -2502,9 +2594,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2517,7 +2609,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     put:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -2525,14 +2617,14 @@ paths:
             initWith: 0x00
             size: 358
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM005/fields"
+              $ref: "#/components/x-ioareas/LPETM005/fields"
         - ExtractIdFromPath:
             name: PETM005_U_INVENTORYID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: INVENTORYID
@@ -2540,9 +2632,9 @@ paths:
             name: PETM005_U_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID
@@ -2568,12 +2660,16 @@ paths:
         - Link:
             program: PETC005
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM005_U_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2586,9 +2682,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2628,7 +2724,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC005_U_RET_ERR
@@ -2636,9 +2732,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2651,7 +2747,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1inventory~1{inventoryID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     delete:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -2659,14 +2755,14 @@ paths:
             initWith: 0x00
             size: 358
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM005/fields"
+              $ref: "#/components/x-ioareas/LPETM005/fields"
         - ExtractIdFromPath:
             name: PETM005_D_INVENTORYID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: INVENTORYID
@@ -2676,17 +2772,21 @@ paths:
         - Link:
             program: PETC005
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: PETC005_D_RET
             properties:
               $ref: "petshop.yaml/components/schemas/InventoryResponseCRUDShort/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: RETURNCODE
@@ -2699,7 +2799,7 @@ paths:
                 toName: infoMessage
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject"
+              $ref: "#/paths/~1inventory~1{inventoryID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /animals:
     get:
       x-LWWProcessingSteps:
@@ -2711,12 +2811,12 @@ paths:
             initWith: 0x00
             size: 14194
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM206/fields"
+              $ref: "#/components/x-ioareas/LPETM206/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID_filter
@@ -2733,12 +2833,16 @@ paths:
         - Link:
             program: PETC206
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM206_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2751,9 +2855,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2806,7 +2910,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC206_RET_ERR
@@ -2814,9 +2918,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2829,7 +2933,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1animals/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -2837,14 +2941,14 @@ paths:
             initWith: 0x00
             size: 852
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM006/fields"
+              $ref: "#/components/x-ioareas/LPETM006/fields"
         - ParseRequestJSON:
             name: PETM006_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID
@@ -2885,12 +2989,16 @@ paths:
         - Link:
             program: PETC006
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM006_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -2903,9 +3011,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2954,7 +3062,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC006_C_RET_ERR
@@ -2962,9 +3070,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -2977,7 +3085,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1animals/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /animals/{animalID}:
     get:
       x-LWWProcessingSteps:
@@ -2986,14 +3094,14 @@ paths:
             initWith: 0x00
             size: 852
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM006/fields"
+              $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
             name: PETM006_R_ANIMALID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: ANIMALID
@@ -3003,12 +3111,16 @@ paths:
         - Link:
             program: PETC006
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM006_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -3021,9 +3133,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3072,7 +3184,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC006_R_RET_ERR
@@ -3080,9 +3192,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3095,7 +3207,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     put:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -3103,14 +3215,14 @@ paths:
             initWith: 0x00
             size: 852
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM006/fields"
+              $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
             name: PETM006_U_ANIMALID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: ANIMALID
@@ -3118,9 +3230,9 @@ paths:
             name: PETM006_U_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID
@@ -3155,12 +3267,16 @@ paths:
         - Link:
             program: PETC006
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM006_U_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -3173,9 +3289,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3224,7 +3340,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC006_U_RET_ERR
@@ -3232,9 +3348,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3247,7 +3363,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1animals~1{animalID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     delete:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -3255,14 +3371,14 @@ paths:
             initWith: 0x00
             size: 852
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM006/fields"
+              $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
             name: PETM006_D_ANIMALID
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 toName: ANIMALID
@@ -3272,17 +3388,21 @@ paths:
         - Link:
             program: PETC006
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: PETC006_D_RET
             properties:
               $ref: "petshop.yaml/components/schemas/AnimalsResponseCRUDShort/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: RETURNCODE
@@ -3295,7 +3415,7 @@ paths:
                 toName: infoMessage
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject"
+              $ref: "#/paths/~1animals~1{animalID}/delete/x-LWWProcessingSteps/4/CreateObject"
   /pricesAndDiscounts:
     get:
       x-LWWProcessingSteps:
@@ -3307,12 +3427,12 @@ paths:
             initWith: 0x00
             size: 5490
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM207/fields"
+              $ref: "#/components/x-ioareas/LPETM207/fields"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
             to:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID_filter
@@ -3329,12 +3449,16 @@ paths:
         - Link:
             program: PETC207
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
             name: LPETM207_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+              $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -3347,9 +3471,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseListLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3402,7 +3526,7 @@ paths:
                           toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC207_RET_ERR
@@ -3410,9 +3534,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseListShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3425,7 +3549,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1pricesAndDiscounts/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
     post:
       x-LWWProcessingSteps:
         - AllocateIOArea:
@@ -3433,14 +3557,14 @@ paths:
             initWith: 0x00
             size: 420
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LPETM007/fields"
+              $ref: "#/components/x-ioareas/LPETM007/fields"
         - ParseRequestJSON:
             name: PETM007_C_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: storeID
@@ -3481,12 +3605,16 @@ paths:
         - Link:
             program: PETC007
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
             name: LPETM007_C_OK
             source:
-              $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
             expressions:
               - type: fieldEqualsConstant
@@ -3499,9 +3627,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDLong/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3550,7 +3678,7 @@ paths:
                       toName: updatedDate
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
             LWWProcessingStepsWhenFalse:
               - CreateObject:
                   name: PETC007_C_RET_ERR
@@ -3558,9 +3686,9 @@ paths:
                     $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDShort/properties"
               - Mapping:
                   from:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
                   to:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
                   combinations:
                     - type: singleFields
                       fromName: RETURNCODE
@@ -3573,7 +3701,7 @@ paths:
                       toName: infoMessage
               - JSONWriter:
                   responseObject:
-                    $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+                    $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
   /token:
     post:
       x-LWWProcessingSteps:
@@ -3582,14 +3710,14 @@ paths:
             initWith: 0x00
             size: 1136
             fields:
-              $ref: "petshop_2.yaml/components/x-ioareas/LWWADPLI/fields"
+              $ref: "#/components/x-ioareas/LWWADPLI/fields"
         - ParseRequestJSON:
             name: LWWADPLI_JSNR
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/1/ParseRequestJSON"
             to:
-              $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             combinations:
               - type: singleFields
                 fromName: username
@@ -3600,24 +3728,28 @@ paths:
         - Link:
             program: LWWADPLI
             passDataWith: container
-            ioArea:
-              $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea"
         - CreateObject:
             name: LWWADPLI_RET
             properties:
               $ref: "petshop.yaml/components/schemas/TokenResponse/properties"
         - Mapping:
             from:
-              $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             to:
-              $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject/properties"
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject/properties"
             combinations:
               - type: singleFields
                 fromName: TOKEN
                 toName: token
         - JSONWriter:
             responseObject:
-              $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject"
+              $ref: "#/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject"
 components:
   x-ioareas:
     LPETM001:
