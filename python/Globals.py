@@ -3,4 +3,5 @@ class Globals:
     myCreds = ""
     myBasepath = ""
     myBearer = ""
+    myDebug = 0
     s = None

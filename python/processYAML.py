@@ -6,12 +6,13 @@ from getpass import getpass
 from Globals import Globals
 from MyRequests import MyRequests
 
-Globals.myHost = "https://yinhdisv:8081"
-#Globals.myHost = "https://mainframeyin:8092"
+#Globals.myHost = "https://yinhdisv-1:8082"
+Globals.myHost = "https://mainframeyin:8092"
 Globals.myBasepath = ""
-Globals.myCreds = ('','')
-#Globals.myCreds = ('','')
+#Globals.myCreds = ('YBTKS','')
+Globals.myCreds = ('YBTKS','')
 Globals.pathPrefix = "/LWWAPI/API"
+Globals.myDebug = 1
 Globals.s = requests.sessions.Session()
 
 if Globals.myCreds[0] == '':
@@ -24,7 +25,10 @@ if Globals.myCreds[1] == '':
 
 print("Getting bearer token")
 
-MyRequests.getBearerToken(f"{Globals.pathPrefix}/token")
+Globals.myBearer = ""
+
+#MyRequests.getBearerToken(f"{Globals.pathPrefix}/token")
+Globals.uri = f"{Globals.pathPrefix}/token"
 
 def doStuff():
     data = {}
@@ -32,10 +36,12 @@ def doStuff():
 
     resppost = MyRequests.post(f"{Globals.pathPrefix}/APIYAML", data)
 
-    if (resppost.status_code == 201):
+    if (resppost.status_code == 201 or resppost.status_code == 200):
         print(f"{resppost.status_code} {resppost.text}")
 
         myYAML = json.loads(resppost.text)
+
+        return
 
         data = {}
         data['ID_APIYAML'] = myYAML['ID_APIYAML']

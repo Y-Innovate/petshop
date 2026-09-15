@@ -1,4 +1,8 @@
+# Petshop LWW processing steps
 paths:
+  #
+  # Reference tables
+  #
   /refTables:
     get:
       x-LWWProcessingSteps:
