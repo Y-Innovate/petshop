@@ -5,13 +5,14 @@ import json
 from getpass import getpass
 from Globals import Globals
 from MyRequests import MyRequests
+from pathlib import Path
 
 Globals.myHost = "https://t01.yinhdisv.nl:8081"
 #Globals.myHost = "https://mainframeyin:8092"
 Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
 #Globals.myCreds = ('YBTKS','')
-with open("/u/ybtks/.creds", "r") as credfile:
+with open(f"{Path.home()}/.creds", "r") as credfile:
     Globals.myCreds = json.load(credfile)
 Globals.pathPrefix = "/petshop/API/v1"
 Globals.s = requests.sessions.Session()
