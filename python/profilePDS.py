@@ -2,6 +2,7 @@ import sys
 import yaml
 from jinja2 import Template, Environment, BaseLoader
 from zoautil_py import datasets
+from zoautil_py.zoau_io import zopen
 
 srcpds = sys.argv[1]
 tgtpds = sys.argv[2]
@@ -19,6 +20,8 @@ memberContents = template2.render(prfl)
 
 append = False
 
-for line in memberContents.splitlines():
-    datasets.write(f'{tgtpds}({member})', line[:72].rstrip(), append=append)
-    append = True
+lines = memberContents.splitlines()
+
+with zopen(f"//'{tgtpds}({member})'", 'w', 'cp037') as tgtmem:
+    for line in lines:
+        tgtmem.write(line[:80].ljust(80))

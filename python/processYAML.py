@@ -6,29 +6,31 @@ from getpass import getpass
 from Globals import Globals
 from MyRequests import MyRequests
 
-#Globals.myHost = "https://yinhdisv-1:8082"
-Globals.myHost = "https://mainframeyin:8092"
+Globals.myHost = "https://t01.yinhdisv.nl:8081"
+#Globals.myHost = "https://mainframeyin:8092"
+Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
 #Globals.myCreds = ('YBTKS','')
-Globals.myCreds = ('YBTKS','')
+with open("/u/ybtks/.creds", "r") as credfile:
+    Globals.myCreds = json.load(credfile)
 Globals.pathPrefix = "/LWWAPI/API"
-Globals.myDebug = 1
+Globals.myDebug = 0
 Globals.s = requests.sessions.Session()
 
-if Globals.myCreds[0] == '':
-    userid = input("Give your userid: ")
-    Globals.myCreds = (userid,'')
+if isinstance(Globals.myCreds, tuple):
+    if Globals.myCreds[0] == '':
+        userid = input("Give your userid: ")
+        Globals.myCreds = (userid,'')
 
-if Globals.myCreds[1] == '':
-    passwd = getpass("Give your password: ")
-    Globals.myCreds = (Globals.myCreds[0], passwd)
+    if Globals.myCreds[1] == '':
+        passwd = getpass("Give your password: ")
+        Globals.myCreds = (Globals.myCreds[0], passwd)
 
-print("Getting bearer token")
+#print("Getting bearer token")
 
-Globals.myBearer = ""
-
+MyRequests.getBearerToken(Globals.myAuthHost)
 #MyRequests.getBearerToken(f"{Globals.pathPrefix}/token")
-Globals.uri = f"{Globals.pathPrefix}/token"
+#Globals.uri = f"{Globals.pathPrefix}/token"
 
 def doStuff():
     data = {}
@@ -40,8 +42,6 @@ def doStuff():
         print(f"{resppost.status_code} {resppost.text}")
 
         myYAML = json.loads(resppost.text)
-
-        return
 
         data = {}
         data['ID_APIYAML'] = myYAML['ID_APIYAML']

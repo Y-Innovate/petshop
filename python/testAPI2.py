@@ -6,23 +6,13 @@ from getpass import getpass
 from Globals import Globals
 from MyRequests import MyRequests
 
-#Globals.myHost = "https://t01.yinhdisv.nl:8081"
-Globals.myHost = "https://mainframeyin:8092"
+Globals.myHost = "https://t01.yinhdisv.nl:8081"
+#Globals.myHost = "https://mainframeyin:8092"
 Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
 #Globals.myCreds = ('','')
-Globals.myCreds = {
-    "client_id": "4f4f2c39-daca-41c5-bf94-8f5ee79bd137",
-    "client_secret": "",
-    "scope": "api://7dc22c1f-6a01-43a5-aee6-adc2532a783c/.default",
-    "grant_type": "client_credentials"
-}
-# Globals.myCreds = {
-#     "client_id": "eca0ec9f-ee68-4c32-9048-67becb923b4f",
-#     "client_secret": "",
-#     "scope": "api://7dc22c1f-6a01-43a5-aee6-adc2532a783c/.default",
-#     "grant_type": "client_credentials"
-# }
+with open("/u/ybtks/.creds", "r") as credfile:
+    Globals.myCreds = json.load(credfile)
 Globals.pathPrefix = "/LWWAPI/API"
 Globals.s = requests.sessions.Session()
 

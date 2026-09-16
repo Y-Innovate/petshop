@@ -6,24 +6,30 @@ from getpass import getpass
 from Globals import Globals
 from MyRequests import MyRequests
 
-Globals.myHost = "https://yinhdisv:8081"
+Globals.myHost = "https://t01.yinhdisv.nl:8081"
 #Globals.myHost = "https://mainframeyin:8092"
+Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
-Globals.myCreds = ('YBTKS','')
+#Globals.myCreds = ('YBTKS','')
+with open("/u/ybtks/.creds", "r") as credfile:
+    Globals.myCreds = json.load(credfile)
 Globals.pathPrefix = "/petshop/API/v1"
 Globals.s = requests.sessions.Session()
+Globals.myDebug = 1
 
-if Globals.myCreds[0] == '':
-    userid = input("Give your userid: ")
-    Globals.myCreds = (userid,'')
+if isinstance(Globals.myCreds, tuple):
+    if Globals.myCreds[0] == '':
+        userid = input("Give your userid: ")
+        Globals.myCreds = (userid,'')
 
-if Globals.myCreds[1] == '':
-    passwd = getpass("Give your password: ")
-    Globals.myCreds = (Globals.myCreds[0], passwd)
+    if Globals.myCreds[1] == '':
+        passwd = getpass("Give your password: ")
+        Globals.myCreds = (Globals.myCreds[0], passwd)
 
-print("Getting bearer token")
+#print("Getting bearer token")
 
-MyRequests.getBearerToken(f"{Globals.pathPrefix}/token")
+MyRequests.getBearerToken(Globals.myAuthHost)
+#MyRequests.getBearerToken(f"{Globals.pathPrefix}/token")
 
 def doStuff():
     storeID = 0
@@ -44,7 +50,6 @@ def doStuff():
             newRefTable["tableKey"] = "ACTIVE"
             newRefTable["tableValue"] = "Store is active"
 
-            X=input('touch')
             resppost = MyRequests.post(f"{Globals.pathPrefix}/refTables", newRefTable)
 
             if (resppost.status_code != 201):

@@ -17,12 +17,8 @@ Globals.myHost = "https://t01.yinhdisv.nl:8081"
 Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
 #Globals.myCreds = ('YBTKS','')
-Globals.myCreds = {
-    "client_id": "4f4f2c39-daca-41c5-bf94-8f5ee79bd137",
-    "client_secret": "",
-    "scope": "api://7dc22c1f-6a01-43a5-aee6-adc2532a783c/.default",
-    "grant_type": "client_credentials"
-}
+with open("/u/ybtks/.creds", "r") as credfile:
+    Globals.myCreds = json.load(credfile)
 Globals.myDebug = 0
 Globals.s = requests.sessions.Session()
 
@@ -40,7 +36,7 @@ if isinstance(Globals.myCreds, tuple):
 MyRequests.getBearerToken(Globals.myAuthHost)
 #MyRequests.getBearerToken("/LWWAPI/API/token")
 
-dir = "/home/bobby/Y-Innovate/software/git/petshop/v1/git/ui"
+dir = "/u/ybtks/git/petshop/v1/git/ui"
 
 os.chdir(dir)
 
@@ -76,11 +72,15 @@ def createDir(someDir, id, parentId, custom):
     x = re.search(".*\\/([^\\/]*)$", someDir)
 
     data = {}
-    data['folderId'] = ""
+    if not id:
+        data['folderId'] = ""
+        data['generateId'] = "Y"
+    else:
+        data['folderId'] = id
+        data['generateId'] = "N"
     data['parentFolderId'] = parentId
     data['folderName'] = x.group(1)
     data['path'] = f"/petshop/{someDir[n:]}"
-    data['generateId'] = "Y"
     #data['defaultTran'] = ""
     #data['defaultWebpageId'] = ""
     data['custom'] = custom
@@ -485,29 +485,6 @@ workingTreeDeletesDirs = computeDirsList(workingTreeDeletes)
 #print(workingTreeDeletesDirs)
 
 #print(neededDirs)
-
-
-data = {}
-data['folderId'] = "PE000000"
-data['parentFolderId'] = "ROOT"
-data['folderName'] = "petshop"
-data['path'] = "/petshop"
-data['generateId'] = "N"
-data['defaultTran'] = "PE01"
-data['defaultWebpageId'] = "PE000001"
-data['loginRedirectWebpageId'] = "PE000005"
-#data['custom'] = custom
-
-if Globals.myDebug > 0:
-    print(f"{data['folderId']} {data['folderName']}")
-
-resppost = MyRequests.post("/LWWAPI/Admin/folders", data)
-
-if (resppost.status_code >= 400):
-    raise Exception('status code ' + str(resppost.status_code))
-
-if Globals.myDebug > 0:
-    print(f"\n{resppost.status_code} {resppost.text}")
 
 
 doDir(dir, "PE000000", "")
