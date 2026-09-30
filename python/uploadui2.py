@@ -487,5 +487,28 @@ workingTreeDeletesDirs = computeDirsList(workingTreeDeletes)
 
 #print(neededDirs)
 
+respget = MyRequests.get(f"/LWWAPI/Admin/folders/PE000000")
+
+if respget.status_code == 404:
+    data = {}
+    data['folderId'] = "PE000000"
+    data['parentFolderId'] = "ROOT"
+    data['folderName'] = "petshop"
+    data['path'] = f"/petshop"
+    data['generateId'] = "N"
+    data['defaultTran'] = "PE01"
+
+    if Globals.myDebug > 0:
+        print(f"{data['folderId']} {data['folderName']}")
+
+    resppost = MyRequests.post("/LWWAPI/Admin/folders", data)
+
+    if (resppost.status_code >= 400):
+        raise Exception('status code ' + str(resppost.status_code))
+
+    if Globals.myDebug > 0:
+        print(f"\n{resppost.status_code} {resppost.text}")
+
+
 
 doDir(dir, "PE000000", "")
