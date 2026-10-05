@@ -1,0 +1,26 @@
+storeCode,storeStatus,storeName,createdBy,updatedBy
+PS000001,ACTIVE,Pet store 1,YBTKS,YBTKS
+PS000002,ACTIVE,Bob's Pet Shop,YBTKS,YBTKS
+PS000003,ACTIVE,The Happy Hamster,YBTKS,
+PS000004,ACTIVE,Paws & Claws Amsterdam,,
+PS000005,INACTIVE,Aquarium World Utrecht,YBTKS,YBTKS
+PS000006,ACTIVE,Feathers and Friends Rotterdam,YBTKS,YBTKS
+PS000007,ACTIVE,Den Haag Dierenspeciaalzaak,YBTKS,
+PS000008,ACTIVE,The Cat's Whiskers Eindhoven,YBTKS,YBTKS
+PS000009,ACTIVE,Groningen Pet Supplies,,
+PS000010,INACTIVE,Reptile Paradise Tilburg,YBTKS,YBTKS
+PS000011,ACTIVE,Waggy Tails Haarlem,YBTKS,YBTKS
+PS000012,ACTIVE,Nijmegen Petcenter,YBTKS,
+PS000013,ACTIVE,Bunny Barn Arnhem,YBTKS,YBTKS
+PS000014,ACTIVE,Aquarius Fish & Aquaria Breda,,
+PS000015,ACTIVE,Maastricht Pet Palace,YBTKS,YBTKS
+PS000016,INACTIVE,Leiden Hondenhoek,YBTKS,YBTKS
+PS000017,ACTIVE,Parrot Point Zwolle,YBTKS,
+PS000018,ACTIVE,Amersfoort Animal Corner,YBTKS,YBTKS
+PS000019,ACTIVE,Delft Dog & Cat Store,,
+PS000020,ACTIVE,Alkmaar Pet Market,YBTKS,YBTKS
+PS000021,ACTIVE,Leeuwarden Lovely Pets,YBTKS,YBTKS
+PS000022,INACTIVE,Enschede Exotic Animals,YBTKS,
+PS000023,ACTIVE,Apeldoorn Pet Stop,YBTKS,YBTKS
+PS000024,ACTIVE,Den Bosch Dierenparadijs,,
+PS000025,ACTIVE,Almere Aquarium & Terrarium,YBTKS,YBTKS
