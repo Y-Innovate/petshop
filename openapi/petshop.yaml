@@ -1,11 +1,13 @@
 openapi: 3.2.0
 info:
-  version: 1.0.0
+  version: 1.1.0
   title: Pet Shop API
   description: API for managing a pet shop
 servers:
 - url: https://mainframeyin:8091/petshop/API/v1
 - url: https://mainframeyin:8092/petshop/API/v1
+security:
+  - bearerAuth: []
 paths:
   /refTables:
     summary: Manage reference tables
@@ -42,12 +44,20 @@ paths:
                 $ref: "#/components/schemas/RefTablesResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/RefTablesResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseListShort"
         '500':
-          $ref: "#/components/schemas/RefTablesResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -71,12 +81,20 @@ paths:
                 $ref: "#/components/schemas/RefTablesResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -110,12 +128,20 @@ paths:
                 $ref: "#/components/schemas/RefTablesResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -152,12 +178,20 @@ paths:
                 $ref: "#/components/schemas/RefTablesResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -189,12 +223,20 @@ paths:
                 $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/RefTablesResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RefTablesResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -228,12 +270,20 @@ paths:
                 $ref: "#/components/schemas/StoresResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/StoresResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseListShort"
         '500':
-          $ref: "#/components/schemas/StoresResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -257,12 +307,20 @@ paths:
                 $ref: "#/components/schemas/StoresResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -290,12 +348,20 @@ paths:
                 $ref: "#/components/schemas/StoresResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -326,12 +392,20 @@ paths:
                 $ref: "#/components/schemas/StoresResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -357,12 +431,20 @@ paths:
                 $ref: "#/components/schemas/StoresResponseCRUDShort"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/StoresResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoresResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -381,6 +463,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/suppliers_supplierName"
+        - name: storeID_filter
+          in: query
+          description: Filter suppliers connected to this store
+          required: false
+          schema:
+            $ref: "#/components/schemas/stores_storeID"
         - name: supplierID_since
           in: query
           description: Pagination supplier ID
@@ -396,12 +484,20 @@ paths:
                 $ref: "#/components/schemas/SuppliersResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/SuppliersResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseListShort"
         '500':
-          $ref: "#/components/schemas/SuppliersResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -425,12 +521,20 @@ paths:
                 $ref: "#/components/schemas/SuppliersResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -458,12 +562,20 @@ paths:
                 $ref: "#/components/schemas/SuppliersResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -494,12 +606,20 @@ paths:
                 $ref: "#/components/schemas/SuppliersResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -525,12 +645,20 @@ paths:
                 $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/SuppliersResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuppliersResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -549,6 +677,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/products_productName"
+        - name: storeID_filter
+          in: query
+          description: Filter store ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/products_storeID"
         - name: productID_since
           in: query
           description: Pagination product ID
@@ -564,12 +698,20 @@ paths:
                 $ref: "#/components/schemas/ProductsResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/ProductsResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseListShort"
         '500':
-          $ref: "#/components/schemas/ProductsResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -593,12 +735,20 @@ paths:
                 $ref: "#/components/schemas/ProductsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -626,12 +776,20 @@ paths:
                 $ref: "#/components/schemas/ProductsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -662,12 +820,20 @@ paths:
                 $ref: "#/components/schemas/ProductsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -693,12 +859,20 @@ paths:
                 $ref: "#/components/schemas/ProductsResponseCRUDShort"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/ProductsResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -716,13 +890,13 @@ paths:
           description: Filter store ID
           required: false
           schema:
-            $ref: "#/components/schemas/inventory_inventoryID"
-        - name: productID_since
+            $ref: "#/components/schemas/inventory_storeID"
+        - name: inventoryID_since
           in: query
-          description: Pagination product ID
+          description: Pagination inventory ID
           required: false
           schema:
-            $ref: "#/components/schemas/inventory_productID"
+            $ref: "#/components/schemas/inventory_inventoryID"
       responses:
         '200':
           description: Successful retrieval of inventory
@@ -732,12 +906,20 @@ paths:
                 $ref: "#/components/schemas/InventoryResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/InventoryResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseListShort"
         '500':
-          $ref: "#/components/schemas/InventoryResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -761,12 +943,20 @@ paths:
                 $ref: "#/components/schemas/InventoryResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -794,12 +984,20 @@ paths:
                 $ref: "#/components/schemas/InventoryResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -830,12 +1028,20 @@ paths:
                 $ref: "#/components/schemas/InventoryResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -861,12 +1067,20 @@ paths:
                 $ref: "#/components/schemas/InventoryResponseCRUDShort"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/InventoryResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InventoryResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -912,12 +1126,20 @@ paths:
                 $ref: "#/components/schemas/AnimalsResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/AnimalsResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseListShort"
         '500':
-          $ref: "#/components/schemas/AnimalsResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -941,12 +1163,20 @@ paths:
                 $ref: "#/components/schemas/AnimalsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -974,12 +1204,20 @@ paths:
                 $ref: "#/components/schemas/AnimalsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -1010,12 +1248,20 @@ paths:
                 $ref: "#/components/schemas/AnimalsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -1041,12 +1287,20 @@ paths:
                 $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/AnimalsResponseCRUDShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnimalsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -1092,12 +1346,20 @@ paths:
                 $ref: "#/components/schemas/PricesAndDiscountsResponseListLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/PricesAndDiscountsResponseListShort"
           description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseListShort"
         '500':
-          $ref: "#/components/schemas/PricesAndDiscountsResponseListShort"
           description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseListShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
@@ -1121,21 +1383,386 @@ paths:
                 $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDLong"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
-          $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
         '500':
-          $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
           description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
         default:
           description: Unexpected error
       x-LWWProcessingSteps:
         $ref: "petshop_2.yaml/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps"
+  /pricesAndDiscounts/{padID}:
+    summary: Manage petshop prices and discounts
+    get:
+      summary: Get existing prices and discounts entry details
+      operationId: getPricesAndDiscountsEntry
+      tags:
+        - get
+      parameters:
+        - name: padID
+          in: path
+          description: Unique ID of a prices and discounts entry
+          required: true
+          schema:
+            $ref: "#/components/schemas/pricesAndDiscounts_padID"
+      responses:
+        '200':
+          description: Successful retrieval of prices and discounts entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        default:
+          description: Unexpected error
+    put:
+      summary: Update existing prices and discounts entry
+      operationId: updatePricesAndDiscountsEntry
+      tags:
+        - update
+      parameters:
+        - name: padID
+          in: path
+          description: Unique ID of a prices and discounts entry
+          required: true
+          schema:
+            $ref: "#/components/schemas/pricesAndDiscounts_padID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PricesAndDiscountsRequestPut"
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        default:
+          description: Unexpected error
+    delete:
+      summary: Delete existing prices and discounts entry
+      operationId: deletePricesAndDiscountsEntry
+      tags:
+        - delete
+      parameters:
+        - name: padID
+          in: path
+          description: Unique ID of a prices and discounts entry
+          required: true
+          schema:
+            $ref: "#/components/schemas/pricesAndDiscounts_padID"
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PricesAndDiscountsResponseCRUDShort"
+        default:
+          description: Unexpected error
+  /storeSuppliers:
+    summary: Manage petshop store suppliers
+    get:
+      summary: Retrieve store suppliers
+      operationId: listStoreSuppliers
+      tags:
+        - list
+      parameters:
+        - name: storeID_filter
+          in: query
+          description: Filter store ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_storeID"
+        - name: supplierID_filter
+          in: query
+          description: Filter supplier ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_supplierID"
+        - name: storeID_since
+          in: query
+          description: Pagination store ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_storeID"
+        - name: supplierID_since
+          in: query
+          description: Pagination supplier ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_supplierID"
+      responses:
+        '200':
+          description: Successful retrieval of store suppliers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseListLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseListShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseListShort"
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        $ref: "petshop_2.yaml/paths/~1storeSuppliers/get/x-LWWProcessingSteps"
+    post:
+      summary: Insert new store supplier entry
+      operationId: newStoreSupplierEntry
+      tags:
+        - insert
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreSuppliersRequestPost"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        $ref: "petshop_2.yaml/paths/~1storeSuppliers/post/x-LWWProcessingSteps"
+  /storeSuppliers/{storeID}:
+    summary: Manage petshop store suppliers
+    get:
+      summary: Get existing store supplier entry details
+      operationId: getStoreSupplierEntry
+      tags:
+        - get
+      parameters:
+        - name: storeID
+          in: path
+          description: Store ID that together with supplier ID is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_storeID"
+        - name: supplierID
+          in: query
+          description: Supplier ID that together with store ID is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_supplierID"
+      responses:
+        '200':
+          description: Successful retrieval of store supplier entry
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        $ref: "petshop_2.yaml/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps"
+    put:
+      summary: Update existing store supplier entry
+      operationId: updateStoreSupplierEntry
+      tags:
+        - update
+      parameters:
+        - name: storeID
+          in: path
+          description: Store ID that together with supplier ID is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_storeID"
+        - name: supplierID
+          in: query
+          description: Supplier ID that together with store ID is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_supplierID"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StoreSuppliersRequestPut"
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        $ref: "petshop_2.yaml/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps"
+    delete:
+      summary: Delete existing store supplier entry
+      operationId: deleteStoreSupplierEntry
+      tags:
+        - delete
+      parameters:
+        - name: storeID
+          in: path
+          description: Store ID that together with supplier ID is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_storeID"
+        - name: supplierID
+          in: query
+          description: Supplier ID that together with store ID is unique
+          required: true
+          schema:
+            $ref: "#/components/schemas/storeSuppliers_supplierID"
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreSuppliersResponseCRUDShort"
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        $ref: "petshop_2.yaml/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps"
   /token:
     summary: Retrieve access token
     post:
       summary: Retrieve access token
       operationId: newAccessToken
+      security: []
       tags:
         - insert
       requestBody:
@@ -1152,6 +1779,8 @@ paths:
                 $ref: "#/components/schemas/TokenResponse"
         '401':
           description: Unauthorized
+        '403':
+          description: Forbidden
         '404':
           description: Not Found
         '500':
@@ -1161,6 +1790,11 @@ paths:
       x-LWWProcessingSteps:
         $ref: "petshop_2.yaml/paths/~1token/post/x-LWWProcessingSteps"
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Token obtained from POST /token
   schemas:
     RefTablesRequestPost:
       type: object
@@ -1349,6 +1983,8 @@ components:
           $ref: "#/components/schemas/suppliers_supplierStatus"
         supplierName:
           $ref: "#/components/schemas/suppliers_supplierName"
+        storeIDs:
+          $ref: "#/components/schemas/suppliers_storeIDs"
     SuppliersRequestPut:
       type: object
       properties:
@@ -1358,6 +1994,8 @@ components:
           $ref: "#/components/schemas/suppliers_supplierStatus"
         supplierName:
           $ref: "#/components/schemas/suppliers_supplierName"
+        storeIDs:
+          $ref: "#/components/schemas/suppliers_storeIDs"
     SuppliersResponseListLong:
       type: object
       properties:
@@ -1382,6 +2020,8 @@ components:
                 $ref: "#/components/schemas/suppliers_supplierCode"
               supplierStatus:
                 $ref: "#/components/schemas/suppliers_supplierStatus"
+              storeIDs:
+                $ref: "#/components/schemas/suppliers_storeIDs"
               createdBy:
                 $ref: "#/components/schemas/createdBy"
               createdDate:
@@ -1418,6 +2058,8 @@ components:
           $ref: "#/components/schemas/suppliers_supplierName"
         supplierNameU:
           $ref: "#/components/schemas/suppliers_supplierNameU"
+        storeIDs:
+          $ref: "#/components/schemas/suppliers_storeIDs"
         createdBy:
           $ref: "#/components/schemas/createdBy"
         createdDate:
@@ -1448,6 +2090,8 @@ components:
           $ref: "#/components/schemas/products_groupCode"
         supplierID:
           $ref: "#/components/schemas/products_supplierID"
+        storeID:
+          $ref: "#/components/schemas/products_storeID"
     ProductsRequestPut:
       type: object
       properties:
@@ -1461,6 +2105,8 @@ components:
           $ref: "#/components/schemas/products_groupCode"
         supplierID:
           $ref: "#/components/schemas/products_supplierID"
+        storeID:
+          $ref: "#/components/schemas/products_storeID"
     ProductsResponseListLong:
       type: object
       properties:
@@ -1489,6 +2135,8 @@ components:
                 $ref: "#/components/schemas/products_groupCode"
               supplierID:
                 $ref: "#/components/schemas/products_supplierID"
+              storeID:
+                $ref: "#/components/schemas/products_storeID"
               createdBy:
                 $ref: "#/components/schemas/createdBy"
               createdDate:
@@ -1529,6 +2177,8 @@ components:
           $ref: "#/components/schemas/products_groupCode"
         supplierID:
           $ref: "#/components/schemas/products_supplierID"
+        storeID:
+          $ref: "#/components/schemas/products_storeID"
         createdBy:
           $ref: "#/components/schemas/createdBy"
         createdDate:
@@ -1662,6 +2312,8 @@ components:
           $ref: "#/components/schemas/animals_animalAge"
         animalCount:
           $ref: "#/components/schemas/animals_animalCount"
+        supplierID:
+          $ref: "#/components/schemas/animals_supplierID"
     AnimalsRequestPut:
       type: object
       properties:
@@ -1679,6 +2331,8 @@ components:
           $ref: "#/components/schemas/animals_animalAge"
         animalCount:
           $ref: "#/components/schemas/animals_animalCount"
+        supplierID:
+          $ref: "#/components/schemas/animals_supplierID"
     AnimalsResponseListLong:
       type: object
       properties:
@@ -1709,6 +2363,8 @@ components:
                 $ref: "#/components/schemas/animals_animalAge"
               animalCount:
                 $ref: "#/components/schemas/animals_animalCount"
+              supplierID:
+                $ref: "#/components/schemas/animals_supplierID"
               createdBy:
                 $ref: "#/components/schemas/createdBy"
               createdDate:
@@ -1751,6 +2407,8 @@ components:
           $ref: "#/components/schemas/animals_animalAge"
         animalCount:
           $ref: "#/components/schemas/animals_animalCount"
+        supplierID:
+          $ref: "#/components/schemas/animals_supplierID"
         createdBy:
           $ref: "#/components/schemas/createdBy"
         createdDate:
@@ -1769,6 +2427,23 @@ components:
         infoMessage:
           $ref: "#/components/schemas/infoMessage"
     PricesAndDiscountsRequestPost:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/pricesAndDiscounts_storeID"
+        productID:
+          $ref: "#/components/schemas/pricesAndDiscounts_productID"
+        animalID:
+          $ref: "#/components/schemas/pricesAndDiscounts_animalID"
+        price:
+          $ref: "#/components/schemas/pricesAndDiscounts_price"
+        discount:
+          $ref: "#/components/schemas/pricesAndDiscounts_discount"
+        fromDate:
+          $ref: "#/components/schemas/pricesAndDiscounts_fromDate"
+        toDate:
+          $ref: "#/components/schemas/pricesAndDiscounts_toDate"
+    PricesAndDiscountsRequestPut:
       type: object
       properties:
         storeID:
@@ -1874,6 +2549,97 @@ components:
           $ref: "#/components/schemas/reasonCode"
         infoMessage:
           $ref: "#/components/schemas/infoMessage"
+    StoreSuppliersRequestPost:
+      type: object
+      properties:
+        storeID:
+          $ref: "#/components/schemas/storeSuppliers_storeID"
+        supplierID:
+          $ref: "#/components/schemas/storeSuppliers_supplierID"
+        fromDate:
+          $ref: "#/components/schemas/storeSuppliers_fromDate"
+        toDate:
+          $ref: "#/components/schemas/storeSuppliers_toDate"
+    StoreSuppliersRequestPut:
+      type: object
+      properties:
+        fromDate:
+          $ref: "#/components/schemas/storeSuppliers_fromDate"
+        toDate:
+          $ref: "#/components/schemas/storeSuppliers_toDate"
+    StoreSuppliersResponseListLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
+        storeSuppliers:
+          type: array
+          items:
+            type: object
+            properties:
+              storeID:
+                $ref: "#/components/schemas/storeSuppliers_storeID"
+              supplierID:
+                $ref: "#/components/schemas/storeSuppliers_supplierID"
+              fromDate:
+                $ref: "#/components/schemas/storeSuppliers_fromDate"
+              toDate:
+                $ref: "#/components/schemas/storeSuppliers_toDate"
+              createdBy:
+                $ref: "#/components/schemas/createdBy"
+              createdDate:
+                $ref: "#/components/schemas/createdDate"
+              updatedBy:
+                $ref: "#/components/schemas/updatedBy"
+              updatedDate:
+                $ref: "#/components/schemas/updatedDate"
+    StoreSuppliersResponseListShort:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
+    StoreSuppliersResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
+        storeID:
+          $ref: "#/components/schemas/storeSuppliers_storeID"
+        supplierID:
+          $ref: "#/components/schemas/storeSuppliers_supplierID"
+        fromDate:
+          $ref: "#/components/schemas/storeSuppliers_fromDate"
+        toDate:
+          $ref: "#/components/schemas/storeSuppliers_toDate"
+        createdBy:
+          $ref: "#/components/schemas/createdBy"
+        createdDate:
+          $ref: "#/components/schemas/createdDate"
+        updatedBy:
+          $ref: "#/components/schemas/updatedBy"
+        updatedDate:
+          $ref: "#/components/schemas/updatedDate"
+    StoreSuppliersResponseCRUDShort:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
     TokenRequestPost:
       type: object
       properties:
@@ -1945,7 +2711,7 @@ components:
       type: string
       minLength: 1
       maxLength: 255
-      value: Store is active
+      example: Store is active
     #
     # stores
     stores_storeID:
@@ -1998,6 +2764,13 @@ components:
       minLength: 1
       maxLength: 255
       example: DOG FOOD INTL.
+    suppliers_storeIDs:
+      type: array
+      description: Stores this supplier is connected to (each store at most once)
+      uniqueItems: true
+      items:
+        $ref: "#/components/schemas/stores_storeID"
+      example: [12345, 12346]
     #
     # products
     products_productID:
@@ -2030,6 +2803,10 @@ components:
       maxLength: 8
       example: PECA0001
     products_supplierID:
+      type: integer
+      minimum: 1
+      example: 12345
+    products_storeID:
       type: integer
       minimum: 1
       example: 12345
@@ -2094,6 +2871,10 @@ components:
       type: integer
       minimum: 0
       example: 1
+    animals_supplierID:
+      type: integer
+      minimum: 1
+      example: 12345
     #
     # pricesAndDiscounts
     pricesAndDiscounts_padID:
@@ -2133,3 +2914,24 @@ components:
       minLength: 26
       maxLength: 26
       example: 2026-01-01-12.15.51.467890
+    #
+    # storeSuppliers
+    # fromDate/toDate are optional (NULL in DB2), returned as spaces when empty
+    storeSuppliers_storeID:
+      type: integer
+      minimum: 1
+      example: 12345
+    storeSuppliers_supplierID:
+      type: integer
+      minimum: 1
+      example: 12345
+    storeSuppliers_fromDate:
+      type: string
+      minLength: 0
+      maxLength: 26
+      example: 2026-01-01-00.00.00.000000
+    storeSuppliers_toDate:
+      type: string
+      minLength: 0
+      maxLength: 26
+      example: 2026-12-31-23.59.59.999999

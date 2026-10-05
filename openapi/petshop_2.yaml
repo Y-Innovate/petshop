@@ -3706,6 +3706,589 @@ paths:
               - JSONWriter:
                   responseObject:
                     $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  #
+  # Store suppliers
+  #
+  /storeSuppliers:
+    get:
+      x-LWWProcessingSteps:
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "petshop.yaml/paths/~1storeSuppliers/get/parameters"
+        - AllocateIOArea:
+            name: LPETM213
+            initWith: 0x00
+            size: 5130
+            fields:
+              $ref: "#/components/x-ioareas/LPETM213/fields"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/0/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID_filter
+                toName: STOREID-FILTER
+              - type: singleFields
+                fromName: supplierID_filter
+                toName: SUPPLIERID-FILTER
+              - type: singleFields
+                fromName: storeID_since
+                toName: STOREID-SINCE
+              - type: singleFields
+                fromName: supplierID_since
+                toName: SUPPLIERID-SINCE
+        - Link:
+            program: PETC213
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/1/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/1/AllocateIOArea"
+        - Condition:
+            name: LPETM213_OK
+            source:
+              $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC213_RET_OK
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseListLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: groupToArray
+                      fromGroupName: STORESUPPL-ENTRY
+                      toArrayName: storeSuppliers
+                      itemMappings:
+                        - type: singleFields
+                          fromName: STOREID
+                          toName: storeID
+                        - type: singleFields
+                          fromName: SUPPLIERID
+                          toName: supplierID
+                        - type: singleFields
+                          fromName: FROMDATE
+                          toName: fromDate
+                        - type: singleFields
+                          fromName: TODATE
+                          toName: toDate
+                        - type: singleFields
+                          fromName: CREATEDBY
+                          toName: createdBy
+                        - type: singleFields
+                          fromName: CREATEDDATE
+                          toName: createdDate
+                        - type: singleFields
+                          fromName: UPDATEDBY
+                          toName: updatedBy
+                        - type: singleFields
+                          fromName: UPDATEDDATE
+                          toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC213_RET_ERR
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseListShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    post:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM013
+            initWith: 0x00
+            size: 402
+            fields:
+              $ref: "#/components/x-ioareas/LPETM013/fields"
+        - ParseRequestJSON:
+            name: PETM013_C_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/1/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
+              - type: singleFields
+                fromName: fromDate
+                toName: FROMDATE
+              - type: singleFields
+                fromName: toDate
+                toName: TODATE
+              - type: constant
+                constant: C
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: CREATEDBY
+              - type: generated
+                genEnum: 2
+                toName: CREATEDDATE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC013
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM013_C_OK
+            source:
+              $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC013_C_RET_OK
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: FROMDATE
+                      toName: fromDate
+                    - type: singleFields
+                      fromName: TODATE
+                      toName: toDate
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC013_C_RET_ERR
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /storeSuppliers/{storeID}:
+    get:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM013
+            initWith: 0x00
+            size: 402
+            fields:
+              $ref: "#/components/x-ioareas/LPETM013/fields"
+        - ExtractIdFromPath:
+            name: PETM013_R_STOREID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: STOREID
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "petshop.yaml/paths/~1storeSuppliers~1{storeID}/get/parameters"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC013
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM013_R_OK
+            source:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC013_R_RET_OK
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: FROMDATE
+                      toName: fromDate
+                    - type: singleFields
+                      fromName: TODATE
+                      toName: toDate
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC013_R_RET_ERR
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/get/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM013
+            initWith: 0x00
+            size: 402
+            fields:
+              $ref: "#/components/x-ioareas/LPETM013/fields"
+        - ExtractIdFromPath:
+            name: PETM013_U_STOREID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: STOREID
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "petshop.yaml/paths/~1storeSuppliers~1{storeID}/put/parameters"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
+        - ParseRequestJSON:
+            name: PETM013_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/5/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: fromDate
+                toName: FROMDATE
+              - type: singleFields
+                fromName: toDate
+                toName: TODATE
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC013
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM013_U_OK
+            source:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC013_U_RET_OK
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
+                      fromName: FROMDATE
+                      toName: fromDate
+                    - type: singleFields
+                      fromName: TODATE
+                      toName: toDate
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC013_U_RET_ERR
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1storeSuppliers~1{storeID}/put/x-LWWProcessingSteps/8/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM013
+            initWith: 0x00
+            size: 402
+            fields:
+              $ref: "#/components/x-ioareas/LPETM013/fields"
+        - ExtractIdFromPath:
+            name: PETM013_D_STOREID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: STOREID
+        - ServicePathRequestVariables:
+            variables:
+              $ref: "petshop.yaml/paths/~1storeSuppliers~1{storeID}/delete/parameters"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/3/ServicePathRequestVariables/variables"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC013
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC013_D_RET
+            properties:
+              $ref: "petshop.yaml/components/schemas/StoreSuppliersResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/6/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1storeSuppliers~1{storeID}/delete/x-LWWProcessingSteps/6/CreateObject"
   /token:
     post:
       x-LWWProcessingSteps:
@@ -4198,6 +4781,60 @@ components:
              10 ANIMALID           PIC S9(9) USAGE COMP-5.
              10 PRICE              PIC S9(7)V9(2) USAGE COMP-3.
              10 DISCOUNT           PIC S9(7)V9(2) USAGE COMP-3.
+             10 FROMDATE           PIC N(26).
+             10 TODATE             PIC N(26).
+             10 CREATEDBY          PIC N(08).
+             10 CREATEDDATE        PIC N(26).
+             10 UPDATEDBY          PIC N(08).
+             10 UPDATEDDATE        PIC N(26).
+    LPETM013:
+      fields:
+        - name: OPCODE
+          type: CHARARRAY1200
+          length: 1
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STOREID
+          type: UI4
+          length: 4
+        - name: SUPPLIERID
+          type: UI4
+          length: 4
+        - name: FROMDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: TODATE
+          type: CHARARRAY1200
+          length: 26
+        - name: CREATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: CREATEDDATE
+          type: CHARARRAY1200
+          length: 26
+        - name: UPDATEDBY
+          type: CHARARRAY1200
+          length: 08
+        - name: UPDATEDDATE
+          type: CHARARRAY1200
+          length: 26
+      copybook:
+        name: LPETM013
+        source: |
+          05 LPETM013.
+             10 OPCODE             PIC N.
+             10 RETURNCODE         PIC N(02).
+             10 REASONCODE         PIC N(02).
+             10 INFOMESSAGE        PIC N(72).
+             10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID         PIC S9(9) USAGE COMP-5.
              10 FROMDATE           PIC N(26).
              10 TODATE             PIC N(26).
              10 CREATEDBY          PIC N(08).
@@ -4749,6 +5386,83 @@ components:
                 15 ANIMALID                PIC S9(9) USAGE COMP-5.
                 15 PRICE                   PIC S9(7)V9(2) USAGE COMP-3.
                 15 DISCOUNT                PIC S9(7)V9(2) USAGE COMP-3.
+                15 FROMDATE                PIC N(26).
+                15 TODATE                  PIC N(26).
+                15 CREATEDBY               PIC N(08).
+                15 CREATEDDATE             PIC N(26).
+                15 UPDATEDBY               PIC N(08).
+                15 UPDATEDDATE             PIC N(26).
+    LPETM213:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 02
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: STOREID-FILTER
+          type: UI4
+          length: 4
+        - name: SUPPLIERID-FILTER
+          type: UI4
+          length: 4
+        - name: STOREID-SINCE
+          type: UI4
+          length: 4
+        - name: SUPPLIERID-SINCE
+          type: UI4
+          length: 4
+        - name: STORESUPPL-COUNT
+          type: UI2
+          length: 2
+        - name: STORESUPPL-ENTRY
+          type: GROUPDEPENDSON
+          maxOccurs: 20
+          dependsOn: STORESUPPL-COUNT
+          fields:
+            - name: STOREID
+              type: UI4
+              length: 4
+            - name: SUPPLIERID
+              type: UI4
+              length: 4
+            - name: FROMDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: TODATE
+              type: CHARARRAY1200
+              length: 26
+            - name: CREATEDBY
+              type: CHARARRAY1200
+              length: 08
+            - name: CREATEDDATE
+              type: CHARARRAY1200
+              length: 26
+            - name: UPDATEDBY
+              type: CHARARRAY1200
+              length: 08
+            - name: UPDATEDDATE
+              type: CHARARRAY1200
+              length: 26
+      copybook:
+        name: LPETM213
+        source: |
+          05 LPETM213.
+             10 RETURNCODE                 PIC N(02).
+             10 REASONCODE                 PIC N(02).
+             10 INFOMESSAGE                PIC N(72).
+             10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID-FILTER          PIC S9(9) USAGE COMP-5.
+             10 STOREID-SINCE              PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID-SINCE           PIC S9(9) USAGE COMP-5.
+             10 STORESUPPL-COUNT           PIC S9(4) USAGE COMP-5.
+             10 STORESUPPL-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON STORESUPPL-COUNT.
+                15 STOREID                 PIC S9(9) USAGE COMP-5.
+                15 SUPPLIERID              PIC S9(9) USAGE COMP-5.
                 15 FROMDATE                PIC N(26).
                 15 TODATE                  PIC N(26).
                 15 CREATEDBY               PIC N(08).
