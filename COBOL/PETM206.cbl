@@ -126,6 +126,7 @@
                     AND (:W-ANIMALRACE-FILTER = ''
                      OR   ANIMALRACE = :W-ANIMALRACE-FILTER)
                     AND  ANIMALID > :W-ANIMALID-SINCE
+                  ORDER  BY ANIMALID
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC

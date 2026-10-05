@@ -26,6 +26,7 @@
       *     08 31 = Error: UPDATE of non existing key                 *
       *     08 32 = Error: SQL error in UPDATE                        *
       *     08 33 = Error: UPDATE to non existing store or supplier   *
+      *     08 34 = Error: UPDATE to duplicate key                    *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
       *     08 90 = Error: PETA990 returned non-zero                  *
@@ -442,6 +443,11 @@
               MOVE N'08' TO RETURNCODE OF W-LPETM006
               MOVE N'33' TO REASONCODE OF W-LPETM006
               MOVE N'TBPET006 store or supplier does not exist' TO
+                   INFOMESSAGE OF W-LPETM006
+           WHEN -803
+              MOVE N'08' TO RETURNCODE OF W-LPETM006
+              MOVE N'34' TO REASONCODE OF W-LPETM006
+              MOVE N'TBPET006 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM006
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM006

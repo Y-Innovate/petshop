@@ -112,6 +112,7 @@
                    FROM  TBPET002
                   WHERE  STORENAMEU LIKE :W-STORENAME-FILTER
                     AND  STOREID    >    :W-STOREID-SINCE
+                  ORDER  BY STOREID
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC

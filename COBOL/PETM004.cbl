@@ -21,9 +21,12 @@
       *     08 07 = Error: SUPPLIERID required                        *
       *     08 11 = Error: INSERT of duplicate key                    *
       *     08 12 = Error: SQL error in INSERT                        *
+      *     08 13 = Error: INSERT of non existing supplier            *
       *     08 21 = Error: SQL error in SELECT                        *
       *     08 31 = Error: UPDATE of non existing key                 *
       *     08 32 = Error: SQL error in UPDATE                        *
+      *     08 33 = Error: UPDATE to non existing supplier            *
+      *     08 34 = Error: UPDATE to duplicate key                    *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
       *     08 90 = Error: PETA990 returned non-zero                  *
@@ -275,6 +278,11 @@
               MOVE N'11' TO REASONCODE OF W-LPETM004
               MOVE N'TBPET004 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM004
+           WHEN -530
+              MOVE N'08' TO RETURNCODE OF W-LPETM004
+              MOVE N'13' TO REASONCODE OF W-LPETM004
+              MOVE N'TBPET004 supplier does not exist' TO
+                   INFOMESSAGE OF W-LPETM004
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM004
               MOVE N'12' TO REASONCODE OF W-LPETM004
@@ -405,6 +413,16 @@
               MOVE N'08' TO RETURNCODE OF W-LPETM004
               MOVE N'31' TO REASONCODE OF W-LPETM004
               MOVE N'TBPET004 entry not found' TO
+                   INFOMESSAGE OF W-LPETM004
+           WHEN -530
+              MOVE N'08' TO RETURNCODE OF W-LPETM004
+              MOVE N'33' TO REASONCODE OF W-LPETM004
+              MOVE N'TBPET004 supplier does not exist' TO
+                   INFOMESSAGE OF W-LPETM004
+           WHEN -803
+              MOVE N'08' TO RETURNCODE OF W-LPETM004
+              MOVE N'34' TO REASONCODE OF W-LPETM004
+              MOVE N'TBPET004 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM004
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM004

@@ -21,7 +21,7 @@
           05 W-PGMNAME                     PIC X(8).
           05 W-SQLCODE                     PIC -99999.
           05 W-STOREID-FILTER              PIC S9(9) COMP-5.
-          05 W-PRODUCTID-SINCE             PIC S9(9) COMP-5.
+          05 W-INVENTORYID-SINCE           PIC S9(9) COMP-5.
 
        01 ERROR-MESSAGE.
           05 ERROR-LEN    PIC S9(4) COMP
@@ -70,7 +70,7 @@
            MOVE 0 TO INVENTORY-COUNT OF P-LPETM205
 
            MOVE STOREID-FILTER OF P-LPETM205 TO W-STOREID-FILTER
-           MOVE PRODUCTID-SINCE OF P-LPETM205 TO W-PRODUCTID-SINCE
+           MOVE INVENTORYID-SINCE OF P-LPETM205 TO W-INVENTORYID-SINCE
            .
        R001-INIT-END.
            EXIT.
@@ -92,7 +92,8 @@
                          UPDATEDDATE
                    FROM  TBPET005
                   WHERE  STOREID   = :W-STOREID-FILTER
-                    AND  PRODUCTID > :W-PRODUCTID-SINCE
+                    AND  INVENTORYID > :W-INVENTORYID-SINCE
+                  ORDER  BY INVENTORYID
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC

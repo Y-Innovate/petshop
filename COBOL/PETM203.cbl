@@ -112,6 +112,7 @@
                    FROM  TBPET003
                   WHERE  SUPPLIERNAMEU LIKE :W-SUPPLIERNAME-FILTER
                     AND  SUPPLIERID    >    :W-SUPPLIERID-SINCE
+                  ORDER  BY SUPPLIERID
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC

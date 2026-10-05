@@ -423,7 +423,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM001_C_OK
+            name: LPETM001_U_OK
             source:
               $ref: "#/paths/~1refTables~1{tableID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -507,7 +507,7 @@ paths:
             fields:
               $ref: "#/components/x-ioareas/LPETM001/fields"
         - ExtractIdFromPath:
-            name: PETM001_U_TABLEID
+            name: PETM001_D_TABLEID
         - Mapping:
             from:
               $ref: "#/paths/~1refTables~1{tableID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
@@ -844,7 +844,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM002_C_OK
+            name: LPETM002_R_OK
             source:
               $ref: "#/paths/~1stores~1{storeID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -1394,7 +1394,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM003_C_OK
+            name: LPETM003_R_OK
             source:
               $ref: "#/paths/~1suppliers~1{supplierID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -1962,7 +1962,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM004_C_OK
+            name: LPETM004_R_OK
             source:
               $ref: "#/paths/~1products~1{productID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -2270,8 +2270,8 @@ paths:
                 fromName: storeID_filter
                 toName: STOREID-FILTER
               - type: singleFields
-                fromName: productID_since
-                toName: PRODUCTID-SINCE
+                fromName: inventoryID_since
+                toName: INVENTORYID-SINCE
         - Link:
             program: PETC205
             passDataWith: container
@@ -2282,7 +2282,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea"
         - Condition:
-            name: LPETM204_OK
+            name: LPETM205_OK
             source:
               $ref: "#/paths/~1inventory/get/x-LWWProcessingSteps/1/AllocateIOArea/fields"
             boolOperator: AND
@@ -2292,7 +2292,7 @@ paths:
                 constant: "00"
             LWWProcessingStepsWhenTrue:
               - CreateObject:
-                  name: PETC204_RET_OK
+                  name: PETC205_RET_OK
                   properties:
                     $ref: "petshop.yaml/components/schemas/InventoryResponseListLong/properties"
               - Mapping:
@@ -2533,7 +2533,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM005_C_OK
+            name: LPETM005_R_OK
             source:
               $ref: "#/paths/~1inventory~1{inventoryID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -2857,7 +2857,7 @@ paths:
                 constant: "00"
             LWWProcessingStepsWhenTrue:
               - CreateObject:
-                  name: PETC204_RET_OK
+                  name: PETC206_RET_OK
                   properties:
                     $ref: "petshop.yaml/components/schemas/AnimalsResponseListLong/properties"
               - Mapping:
@@ -3134,7 +3134,7 @@ paths:
               - containerName: LWW-LINK-PAR-03
                 $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
         - Condition:
-            name: LPETM006_C_OK
+            name: LPETM006_R_OK
             source:
               $ref: "#/paths/~1animals~1{animalID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
             boolOperator: AND
@@ -3491,7 +3491,7 @@ paths:
                 constant: "00"
             LWWProcessingStepsWhenTrue:
               - CreateObject:
-                  name: PETC204_RET_OK
+                  name: PETC207_RET_OK
                   properties:
                     $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseListLong/properties"
               - Mapping:
@@ -3727,6 +3727,336 @@ paths:
               - JSONWriter:
                   responseObject:
                     $ref: "#/paths/~1pricesAndDiscounts/post/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+  /pricesAndDiscounts/{padID}:
+    get:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM007
+            initWith: 0x00
+            size: 420
+            fields:
+              $ref: "#/components/x-ioareas/LPETM007/fields"
+        - ExtractIdFromPath:
+            name: PETM007_R_PADID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: PADID
+              - type: constant
+                constant: R
+                toName: OPCODE
+        - Link:
+            program: PETC007
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM007_R_OK
+            source:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC007_R_RET_OK
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PADID
+                      toName: padID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: ANIMALID
+                      toName: animalID
+                    - type: singleFields
+                      fromName: PRICE
+                      toName: price
+                    - type: singleFields
+                      fromName: DISCOUNT
+                      toName: discount
+                    - type: singleFields
+                      fromName: FROMDATE
+                      toName: fromDate
+                    - type: singleFields
+                      fromName: TODATE
+                      toName: toDate
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC007_R_RET_ERR
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/get/x-LWWProcessingSteps/4/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    put:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM007
+            initWith: 0x00
+            size: 420
+            fields:
+              $ref: "#/components/x-ioareas/LPETM007/fields"
+        - ExtractIdFromPath:
+            name: PETM007_U_PADID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: PADID
+        - ParseRequestJSON:
+            name: PETM007_U_JSNR
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/3/ParseRequestJSON"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                fromName: storeID
+                toName: STOREID
+              - type: singleFields
+                fromName: productID
+                toName: PRODUCTID
+              - type: singleFields
+                fromName: animalID
+                toName: ANIMALID
+              - type: singleFields
+                fromName: price
+                toName: PRICE
+              - type: singleFields
+                fromName: discount
+                toName: DISCOUNT
+              - type: singleFields
+                fromName: fromDate
+                toName: FROMDATE
+              - type: singleFields
+                fromName: toDate
+                toName: TODATE
+              - type: constant
+                constant: U
+                toName: OPCODE
+              - type: generated
+                genEnum: 1
+                toName: UPDATEDBY
+              - type: generated
+                genEnum: 2
+                toName: UPDATEDDATE
+        - Link:
+            program: PETC007
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETM007_U_OK
+            source:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC007_U_RET_OK
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDLong/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: PADID
+                      toName: padID
+                    - type: singleFields
+                      fromName: STOREID
+                      toName: storeID
+                    - type: singleFields
+                      fromName: PRODUCTID
+                      toName: productID
+                    - type: singleFields
+                      fromName: ANIMALID
+                      toName: animalID
+                    - type: singleFields
+                      fromName: PRICE
+                      toName: price
+                    - type: singleFields
+                      fromName: DISCOUNT
+                      toName: discount
+                    - type: singleFields
+                      fromName: FROMDATE
+                      toName: fromDate
+                    - type: singleFields
+                      fromName: TODATE
+                      toName: toDate
+                    - type: singleFields
+                      fromName: CREATEDBY
+                      toName: createdBy
+                    - type: singleFields
+                      fromName: CREATEDDATE
+                      toName: createdDate
+                    - type: singleFields
+                      fromName: UPDATEDBY
+                      toName: updatedBy
+                    - type: singleFields
+                      fromName: UPDATEDDATE
+                      toName: updatedDate
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC007_U_RET_ERR
+                  properties:
+                    $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1pricesAndDiscounts~1{padID}/put/x-LWWProcessingSteps/6/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
+    delete:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETM007
+            initWith: 0x00
+            size: 420
+            fields:
+              $ref: "#/components/x-ioareas/LPETM007/fields"
+        - ExtractIdFromPath:
+            name: PETM007_D_PADID
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/1/ExtractIdFromPath"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            combinations:
+              - type: singleFields
+                toName: PADID
+              - type: constant
+                constant: D
+                toName: OPCODE
+        - Link:
+            program: PETC007
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/0/AllocateIOArea"
+        - CreateObject:
+            name: PETC007_D_RET
+            properties:
+              $ref: "petshop.yaml/components/schemas/PricesAndDiscountsResponseCRUDShort/properties"
+        - Mapping:
+            from:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            to:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/4/CreateObject/properties"
+            combinations:
+              - type: singleFields
+                fromName: RETURNCODE
+                toName: retCode
+              - type: singleFields
+                fromName: REASONCODE
+                toName: reasonCode
+              - type: singleFields
+                fromName: INFOMESSAGE
+                toName: infoMessage
+        - JSONWriter:
+            responseObject:
+              $ref: "#/paths/~1pricesAndDiscounts~1{padID}/delete/x-LWWProcessingSteps/4/CreateObject"
   #
   # Store suppliers
   #
@@ -4922,17 +5252,17 @@ components:
              10 RETURNCODE        PIC N(02).
              10 REASONCODE        PIC N(02).
              10 INFOMESSAGE       PIC N(72).
-             10 TABLEID_FILTER    PIC N(08).
-             10 TABLEID_SINCE     PIC N(08).
-             10 TABKEY_SINCE      PIC N(08).
-             10 REFTABLE_COUNT    PIC S9(4) USAGE COMP-5.
-             10 REFTABLE_ENTRY OCCURS 20 TIMES
-                  DEPENDING ON REFTABLE_COUNT.
+             10 TABLEID-FILTER    PIC N(08).
+             10 TABLEID-SINCE     PIC N(08).
+             10 TABKEY-SINCE      PIC N(08).
+             10 REFTABLE-COUNT    PIC S9(4) USAGE COMP-5.
+             10 REFTABLE-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON REFTABLE-COUNT.
                 15 TABLEID        PIC N(08).
                 15 TABKEY         PIC N(08).
                 15 TABVALUE.
-                   20 TABVALUE_LEN   PIC S9(4) USAGE COMP-5.
-                   20 TABVALUE_TEXT  PIC N(256).
+                   20 TABVALUE-LEN   PIC S9(4) USAGE COMP-5.
+                   20 TABVALUE-TEXT  PIC N(256).
                 15 CREATEDBY         PIC N(08).
                 15 CREATEDDATE       PIC N(26).
                 15 UPDATEDBY         PIC N(08).
@@ -5196,7 +5526,7 @@ components:
         - name: STOREID-FILTER
           type: UI4
           length: 4
-        - name: PRODUCTID-SINCE
+        - name: INVENTORYID-SINCE
           type: UI4
           length: 4
         - name: INVENTORY-COUNT
@@ -5242,7 +5572,7 @@ components:
              10 REASONCODE                 PIC N(02).
              10 INFOMESSAGE                PIC N(72).
              10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
-             10 PRODUCTID-SINCE            PIC S9(9) USAGE COMP-5.
+             10 INVENTORYID-SINCE          PIC S9(9) USAGE COMP-5.
              10 INVENTORY-COUNT            PIC S9(4) USAGE COMP-5.
              10 INVENTORY-ENTRY OCCURS 20 TIMES
                   DEPENDING ON INVENTORY-COUNT.
@@ -5328,6 +5658,36 @@ components:
             - name: UPDATEDDATE
               type: CHARARRAY1200
               length: 26
+      copybook:
+        name: LPETM206
+        source: |
+          05 LPETM206.
+             10 RETURNCODE                 PIC N(02).
+             10 REASONCODE                 PIC N(02).
+             10 INFOMESSAGE                PIC N(72).
+             10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID-FILTER          PIC S9(9) USAGE COMP-5.
+             10 ANIMALTYPE-FILTER          PIC N(08).
+             10 ANIMALRACE-FILTER          PIC N(08).
+             10 ANIMALID-SINCE             PIC S9(9) USAGE COMP-5.
+             10 ANIMAL-ENTRY-COUNT         PIC S9(4) USAGE COMP-5.
+             10 ANIMAL-ENTRY OCCURS 20 TIMES
+                  DEPENDING ON ANIMAL-ENTRY-COUNT.
+                15 ANIMALID                PIC S9(9) USAGE COMP-5.
+                15 STOREID                 PIC S9(9) USAGE COMP-5.
+                15 SUPPLIERID              PIC S9(9) USAGE COMP-5.
+                15 ANIMALTYPE              PIC N(08).
+                15 ANIMALRACE              PIC N(08).
+                15 ANIMALNAME.
+                   20 ANIMALNAME-LEN       PIC S9(4) USAGE COMP-5.
+                   20 ANIMALNAME-TEXT      PIC N(256).
+                15 ANIMALGENDER            PIC N.
+                15 ANIMALAGE               PIC S9(9) USAGE COMP-5.
+                15 ANIMALCOUNT             PIC S9(9) USAGE COMP-5.
+                15 CREATEDBY               PIC N(08).
+                15 CREATEDDATE             PIC N(26).
+                15 UPDATEDBY               PIC N(08).
+                15 UPDATEDDATE             PIC N(26).
     LPETM207:
       fields:
         - name: RETURNCODE

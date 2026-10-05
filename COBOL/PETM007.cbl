@@ -8,6 +8,8 @@
       *   OPCODE: 'C', 'R', 'U' or 'D' for create, read, update or    *
       *            delete a row in TBPET007                           *
       *   TBPET007 Fields depending on OPCODE                         *
+      *   FROMDATE and TODATE are optional: spaces or low-values mean *
+      *   NULL. On output NULL is returned as spaces.                 *
       * Output:                                                       *
       *   RETURNCODE and REASONCODE                                   *
       *     00 00 = Success                                           *
@@ -19,9 +21,12 @@
       *     08 05 = Error: PRICE or DISCOUNT required                 *
       *     08 11 = Error: INSERT of duplicate key                    *
       *     08 12 = Error: SQL error in INSERT                        *
+      *     08 13 = Error: INSERT with unknown store/product/animal   *
       *     08 21 = Error: SQL error in SELECT                        *
       *     08 31 = Error: UPDATE of non existing key                 *
       *     08 32 = Error: SQL error in UPDATE                        *
+      *     08 33 = Error: UPDATE with unknown store/product/animal   *
+      *     08 34 = Error: UPDATE to duplicate key                    *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
       *     08 90 = Error: PETA990 returned non-zero                  *
@@ -124,9 +129,9 @@
 
            IF OPCODE OF W-LPETM007 = N'R'
               IF    RETURNCODE OF W-LPETM007 = N'00'
-              AND ( PADID      OF W-LPETM007 = 0
-              OR   (STOREID    OF W-LPETM007 = 0
-              AND   PRODUCTID  OF W-LPETM007 = 0
+              AND   PADID      OF W-LPETM007 = 0
+              AND  (STOREID    OF W-LPETM007 = 0
+              OR   (PRODUCTID  OF W-LPETM007 = 0
               AND   ANIMALID   OF W-LPETM007 = 0))
                  MOVE N'08' TO RETURNCODE OF W-LPETM007
                  MOVE N'04' TO REASONCODE OF W-LPETM007
@@ -267,6 +272,11 @@
               MOVE N'11' TO REASONCODE OF W-LPETM007
               MOVE N'TBPET007 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM007
+           WHEN -530
+              MOVE N'08' TO RETURNCODE OF W-LPETM007
+              MOVE N'13' TO REASONCODE OF W-LPETM007
+              MOVE N'TBPET007 store, product or animal does not exist'
+                TO INFOMESSAGE OF W-LPETM007
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM007
               MOVE N'12' TO REASONCODE OF W-LPETM007
@@ -353,12 +363,12 @@
                  MOVE DISCOUNT OF DCLTBPET007 TO DISCOUNT OF W-LPETM007
               END-IF
               IF FROMDATE-IND OF DCLTBPET007 < 0
-                 MOVE LOW-VALUES TO FROMDATE OF W-LPETM007
+                 MOVE SPACES TO FROMDATE OF W-LPETM007
               ELSE
                  MOVE FROMDATE OF DCLTBPET007 TO FROMDATE OF W-LPETM007
               END-IF
               IF TODATE-IND OF DCLTBPET007 < 0
-                 MOVE LOW-VALUES TO TODATE OF W-LPETM007
+                 MOVE SPACES TO TODATE OF W-LPETM007
               ELSE
                  MOVE TODATE OF DCLTBPET007 TO TODATE OF W-LPETM007
               END-IF
@@ -417,7 +427,7 @@
                                       :DCLTBPET007.TODATE-IND,
                      UPDATEDBY    = :DCLTBPET007.UPDATEDBY,
                      UPDATEDDATE  = CURRENT TIMESTAMP
-               WHERE ANIMALID = :DCLTBPET007.ANIMALID
+               WHERE PADID = :DCLTBPET007.PADID
                      )
            END-EXEC
 
@@ -433,6 +443,16 @@
               MOVE N'08' TO RETURNCODE OF W-LPETM007
               MOVE N'31' TO REASONCODE OF W-LPETM007
               MOVE N'TBPET007 entry not found' TO
+                   INFOMESSAGE OF W-LPETM007
+           WHEN -530
+              MOVE N'08' TO RETURNCODE OF W-LPETM007
+              MOVE N'33' TO REASONCODE OF W-LPETM007
+              MOVE N'TBPET007 store, product or animal does not exist'
+                TO INFOMESSAGE OF W-LPETM007
+           WHEN -803
+              MOVE N'08' TO RETURNCODE OF W-LPETM007
+              MOVE N'34' TO REASONCODE OF W-LPETM007
+              MOVE N'TBPET007 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM007
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM007
@@ -512,14 +532,16 @@
               MOVE 0 TO DISCOUNT-IND OF DCLTBPET007
               MOVE DISCOUNT OF W-LPETM007 TO DISCOUNT OF DCLTBPET007
            END-IF
-           IF FROMDATE OF W-LPETM007 = LOW-VALUES
+           IF FROMDATE OF W-LPETM007 = SPACES
+           OR FROMDATE OF W-LPETM007 = LOW-VALUES
               MOVE -1 TO FROMDATE-IND OF DCLTBPET007
            ELSE
               MOVE 0 TO FROMDATE-IND OF DCLTBPET007
               MOVE FUNCTION DISPLAY-OF(FROMDATE OF W-LPETM007) TO
                    FROMDATE OF DCLTBPET007
            END-IF
-           IF TODATE OF W-LPETM007 = LOW-VALUES
+           IF TODATE OF W-LPETM007 = SPACES
+           OR TODATE OF W-LPETM007 = LOW-VALUES
               MOVE -1 TO TODATE-IND OF DCLTBPET007
            ELSE
               MOVE 0 TO TODATE-IND OF DCLTBPET007

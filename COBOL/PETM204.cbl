@@ -114,6 +114,7 @@
                    FROM  TBPET004
                   WHERE  PRODUCTNAMEU LIKE :W-PRODUCTNAME-FILTER
                     AND  PRODUCTID    >    :W-PRODUCTID-SINCE
+                  ORDER  BY PRODUCTID
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC

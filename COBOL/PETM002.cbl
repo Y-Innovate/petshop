@@ -22,6 +22,7 @@
       *     08 21 = Error: SQL error in SELECT                        *
       *     08 31 = Error: UPDATE of non existing key                 *
       *     08 32 = Error: SQL error in UPDATE                        *
+      *     08 34 = Error: UPDATE to duplicate key                    *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
       *     08 90 = Error: PETA990 returned non-zero                  *
@@ -383,6 +384,11 @@
               MOVE N'08' TO RETURNCODE OF W-LPETM002
               MOVE N'31' TO REASONCODE OF W-LPETM002
               MOVE N'TBPET002 entry not found' TO
+                   INFOMESSAGE OF W-LPETM002
+           WHEN -803
+              MOVE N'08' TO RETURNCODE OF W-LPETM002
+              MOVE N'34' TO REASONCODE OF W-LPETM002
+              MOVE N'TBPET002 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM002
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM002

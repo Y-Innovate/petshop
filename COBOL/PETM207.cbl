@@ -4,6 +4,10 @@
       * This program is a list module for the PET store database's    *
       * TBPET007 PRICESANDDISCOUNTS table.                            *
       * ------------------------------------------------------------- *
+      * Output:                                                       *
+      *   Up to 20 entries ordered by PADID. NULL FROMDATE and TODATE *
+      *   are returned as spaces.                                     *
+      * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
       * Date     Who What                                             *
@@ -105,6 +109,7 @@
                     AND (:W-ANIMALID-FILTER = 0
                      OR  ANIMALID = :W-ANIMALID-FILTER)
                     AND  PADID > :W-PADID-SINCE
+                  ORDER  BY PADID
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC
@@ -229,7 +234,7 @@
                             PAD-COUNT OF P-LPETM207)
                  END-IF
                  IF FROMDATE-IND OF DCLTBPET007 < 0
-                    MOVE '1900-01-01-00:00:00.000000' TO
+                    MOVE SPACES TO
                          FROMDATE OF P-LPETM207(
                             PAD-COUNT OF P-LPETM207)
                  ELSE
@@ -238,7 +243,7 @@
                             PAD-COUNT OF P-LPETM207)
                  END-IF
                  IF TODATE-IND OF DCLTBPET007 < 0
-                    MOVE '1900-01-01-00:00:00.000000' TO
+                    MOVE SPACES TO
                          TODATE OF P-LPETM207(
                             PAD-COUNT OF P-LPETM207)
                  ELSE

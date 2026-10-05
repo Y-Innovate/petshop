@@ -3,7 +3,7 @@
              10 REASONCODE                 PIC N(02).
              10 INFOMESSAGE                PIC N(72).
              10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
-             10 PRODUCTID-SINCE            PIC S9(9) USAGE COMP-5.
+             10 INVENTORYID-SINCE          PIC S9(9) USAGE COMP-5.
              10 INVENTORY-COUNT            PIC S9(4) USAGE COMP-5.
              10 INVENTORY-ENTRY OCCURS 20 TIMES
                   DEPENDING ON INVENTORY-COUNT.

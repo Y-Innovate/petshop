@@ -110,24 +110,38 @@
                  MOVE 7   TO STSTXTL OF W-LINKPAR
                  MOVE 'Created' TO STSTXTT OF W-LINKPAR
               WHEN N'U'
-                 MOVE 201 TO STSCODE OF W-LINKPAR
-                 MOVE 7   TO STSTXTL OF W-LINKPAR
-                 MOVE 'Updated' TO STSTXTT OF W-LINKPAR
               WHEN N'D'
-                 MOVE 201 TO STSCODE OF W-LINKPAR
-                 MOVE 7   TO STSTXTL OF W-LINKPAR
-                 MOVE 'Deleted' TO STSTXTT OF W-LINKPAR
+                 MOVE 200 TO STSCODE OF W-LINKPAR
+                 MOVE 2   TO STSTXTL OF W-LINKPAR
+                 MOVE 'OK' TO STSTXTT OF W-LINKPAR
               END-EVALUATE
            ELSE
-              IF RETURNCODE OF W-LPETM007 = N'04'
+      *       04 01 = not found, 08 31/41 = UPDATE/DELETE of non
+      *       existing key, 08 11/34 = duplicate key, 08 0x = invalid
+      *       input, 08 13/33 = non existing parent (foreign key)
+              EVALUATE TRUE
+              WHEN RETURNCODE OF W-LPETM007 = N'04'
+              WHEN REASONCODE OF W-LPETM007 = N'31'
+              WHEN REASONCODE OF W-LPETM007 = N'41'
                  MOVE 404 TO STSCODE OF W-LINKPAR
                  MOVE 9   TO STSTXTL OF W-LINKPAR
                  MOVE 'Not Found' TO STSTXTT OF W-LINKPAR
-              ELSE
+              WHEN REASONCODE OF W-LPETM007 = N'11'
+              WHEN REASONCODE OF W-LPETM007 = N'34'
+                 MOVE 409 TO STSCODE OF W-LINKPAR
+                 MOVE 8   TO STSTXTL OF W-LINKPAR
+                 MOVE 'Conflict' TO STSTXTT OF W-LINKPAR
+              WHEN REASONCODE OF W-LPETM007(1:1) = N'0'
+              WHEN REASONCODE OF W-LPETM007 = N'13'
+              WHEN REASONCODE OF W-LPETM007 = N'33'
+                 MOVE 400 TO STSCODE OF W-LINKPAR
+                 MOVE 11  TO STSTXTL OF W-LINKPAR
+                 MOVE 'Bad Request' TO STSTXTT OF W-LINKPAR
+              WHEN OTHER
                  MOVE 500 TO STSCODE OF W-LINKPAR
                  MOVE 21  TO STSTXTL OF W-LINKPAR
                  MOVE 'Internal Server Error' TO STSTXTT OF W-LINKPAR
-              END-IF
+              END-EVALUATE
            END-IF
            .
        R005-CALL-PETM007-END.

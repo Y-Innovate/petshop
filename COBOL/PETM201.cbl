@@ -102,6 +102,7 @@
                     AND  TABLEID >=   :W-TABLEID-SINCE
                     AND (TABLEID >    :W-TABLEID-SINCE
                      OR  TABKEY  >    :W-TABKEY-SINCE)
+                  ORDER  BY TABLEID, TABKEY
                     FOR  FETCH ONLY
                   FETCH  FIRST 20 ROWS ONLY
            END-EXEC
