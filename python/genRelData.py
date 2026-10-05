@@ -134,6 +134,10 @@ def csvRows(tablename):
 
 def insertStatement(mod, tables, row, created, updated):
     comment, columns, values, froms, wheres = mod.build(row, tables)
+    # DB2 does not allow an untyped NULL in a SELECT list, so leave NULL
+    # columns out: they are all nullable without default and become NULL
+    pairs = [(c, v) for c, v in zip(columns, values) if v != "NULL"]
+    columns, values = [c for c, _ in pairs], [v for _, v in pairs]
     columns = columns + ["CREATEDBY", "CREATEDDATE", "UPDATEDBY", "UPDATEDDATE"]
     values = values + [sqlLiteral(row["createdBy"]), f"'{db2Timestamp(created)}'",
                        sqlLiteral(row["updatedBy"]), f"'{db2Timestamp(updated)}'"]
