@@ -38,64 +38,70 @@ STOREID  DFHMDF POS=(6,17),LENGTH=8,INITIAL='________',                *
                ATTRB=(UNPROT,NORM,IC)
          DFHMDF POS=(6,26),LENGTH=1,INITIAL=' ',                       *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(7,3),LENGTH=13,INITIAL='ANIMALTYPE:  ',           *
+         DFHMDF POS=(7,3),LENGTH=13,INITIAL='SUPPLIERID:  ',           *
                ATTRB=(PROT,BRT)
-ANIMLTP  DFHMDF POS=(7,17),LENGTH=8,INITIAL='________',                *
+SUPPLID  DFHMDF POS=(7,17),LENGTH=8,INITIAL='________',                *
                ATTRB=(UNPROT,NORM)
          DFHMDF POS=(7,26),LENGTH=1,INITIAL=' ',                       *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(8,3),LENGTH=13,INITIAL='ANIMALRACE:  ',           *
+         DFHMDF POS=(8,3),LENGTH=13,INITIAL='ANIMALTYPE:  ',           *
                ATTRB=(PROT,BRT)
-ANIMLRC  DFHMDF POS=(8,17),LENGTH=8,INITIAL='________',                *
+ANIMLTP  DFHMDF POS=(8,17),LENGTH=8,INITIAL='________',                *
                ATTRB=(UNPROT,NORM)
          DFHMDF POS=(8,26),LENGTH=1,INITIAL=' ',                       *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(9,3),LENGTH=13,INITIAL='ANIMALNAME:  ',           *
+         DFHMDF POS=(9,3),LENGTH=13,INITIAL='ANIMALRACE:  ',           *
                ATTRB=(PROT,BRT)
-ANIMLNM  DFHMDF POS=(9,17),LENGTH=60,INITIAL='_________________________*
-               ___________________________________',                   *
+ANIMLRC  DFHMDF POS=(9,17),LENGTH=8,INITIAL='________',                *
                ATTRB=(UNPROT,NORM)
-         DFHMDF POS=(9,78),LENGTH=1,INITIAL=' ',                       *
+         DFHMDF POS=(9,26),LENGTH=1,INITIAL=' ',                       *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(10,3),LENGTH=13,INITIAL='ANIMALGENDER:',          *
+         DFHMDF POS=(10,3),LENGTH=13,INITIAL='ANIMALNAME:  ',          *
                ATTRB=(PROT,BRT)
-ANIMLGE  DFHMDF POS=(10,17),LENGTH=1,INITIAL='_',                      *
+ANIMLNM  DFHMDF POS=(10,17),LENGTH=60,INITIAL='________________________*
+               ____________________________________',                  *
                ATTRB=(UNPROT,NORM)
-         DFHMDF POS=(10,19),LENGTH=1,INITIAL=' ',                      *
+         DFHMDF POS=(10,78),LENGTH=1,INITIAL=' ',                      *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(11,3),LENGTH=13,INITIAL='ANIMALAGE:   ',          *
+         DFHMDF POS=(11,3),LENGTH=13,INITIAL='ANIMALGENDER:',          *
                ATTRB=(PROT,BRT)
-ANIMLAG  DFHMDF POS=(11,17),LENGTH=8,INITIAL='________',               *
+ANIMLGE  DFHMDF POS=(11,17),LENGTH=1,INITIAL='_',                      *
                ATTRB=(UNPROT,NORM)
-         DFHMDF POS=(11,26),LENGTH=1,INITIAL=' ',                      *
+         DFHMDF POS=(11,19),LENGTH=1,INITIAL=' ',                      *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(12,3),LENGTH=13,INITIAL='ANIMALCOUNT: ',          *
+         DFHMDF POS=(12,3),LENGTH=13,INITIAL='ANIMALAGE:   ',          *
                ATTRB=(PROT,BRT)
-ANIMLCO  DFHMDF POS=(12,17),LENGTH=8,INITIAL='________',               *
+ANIMLAG  DFHMDF POS=(12,17),LENGTH=8,INITIAL='________',               *
                ATTRB=(UNPROT,NORM)
          DFHMDF POS=(12,26),LENGTH=1,INITIAL=' ',                      *
                ATTRB=(PROT,BRT,ASKIP)
-         DFHMDF POS=(13,3),LENGTH=12,INITIAL='CRE BY:     ',           *
+         DFHMDF POS=(13,3),LENGTH=13,INITIAL='ANIMALCOUNT: ',          *
                ATTRB=(PROT,BRT)
-CREBY    DFHMDF POS=(13,16),LENGTH=8,INITIAL='        ',               *
-               ATTRB=(PROT,NORM)
-         DFHMDF POS=(14,3),LENGTH=12,INITIAL='CRE DATE:   ',           *
-               ATTRB=(PROT,BRT)
-CREDATE  DFHMDF POS=(14,16),LENGTH=19,INITIAL='                   ',   *
-               ATTRB=(PROT,NORM)
-         DFHMDF POS=(15,3),LENGTH=12,INITIAL='UPD BY:     ',           *
-               ATTRB=(PROT,BRT)
-UPDBY    DFHMDF POS=(15,16),LENGTH=8,INITIAL='        ',               *
-               ATTRB=(PROT,NORM)
-         DFHMDF POS=(16,3),LENGTH=12,INITIAL='UPD DATE:   ',           *
-               ATTRB=(PROT,BRT)
-UPDDATE  DFHMDF POS=(16,16),LENGTH=19,INITIAL='                   ',   *
-               ATTRB=(PROT,NORM)
-         DFHMDF POS=(18,3),LENGTH=12,INITIAL='Action:     ',           *
-               ATTRB=(PROT,BRT)
-ACTION   DFHMDF POS=(18,16),LENGTH=1,INITIAL='_',                      *
+ANIMLCO  DFHMDF POS=(13,17),LENGTH=8,INITIAL='________',               *
                ATTRB=(UNPROT,NORM)
-         DFHMDF POS=(18,18),LENGTH=1,INITIAL=' ',                      *
+         DFHMDF POS=(13,26),LENGTH=1,INITIAL=' ',                      *
+               ATTRB=(PROT,BRT,ASKIP)
+         DFHMDF POS=(14,3),LENGTH=12,INITIAL='CRE BY:     ',           *
+               ATTRB=(PROT,BRT)
+CREBY    DFHMDF POS=(14,16),LENGTH=8,INITIAL='        ',               *
+               ATTRB=(PROT,NORM)
+         DFHMDF POS=(15,3),LENGTH=12,INITIAL='CRE DATE:   ',           *
+               ATTRB=(PROT,BRT)
+CREDATE  DFHMDF POS=(15,16),LENGTH=19,INITIAL='                   ',   *
+               ATTRB=(PROT,NORM)
+         DFHMDF POS=(16,3),LENGTH=12,INITIAL='UPD BY:     ',           *
+               ATTRB=(PROT,BRT)
+UPDBY    DFHMDF POS=(16,16),LENGTH=8,INITIAL='        ',               *
+               ATTRB=(PROT,NORM)
+         DFHMDF POS=(17,3),LENGTH=12,INITIAL='UPD DATE:   ',           *
+               ATTRB=(PROT,BRT)
+UPDDATE  DFHMDF POS=(17,16),LENGTH=19,INITIAL='                   ',   *
+               ATTRB=(PROT,NORM)
+         DFHMDF POS=(19,3),LENGTH=12,INITIAL='Action:     ',           *
+               ATTRB=(PROT,BRT)
+ACTION   DFHMDF POS=(19,16),LENGTH=1,INITIAL='_',                      *
+               ATTRB=(UNPROT,NORM)
+         DFHMDF POS=(19,18),LENGTH=1,INITIAL=' ',                      *
                ATTRB=(PROT,BRT,ASKIP)
 ERRMSG   DFHMDF POS=(22,1),LENGTH=78,INITIAL=' ',                      *
                ATTRB=(PROT,NORM)

@@ -3,6 +3,7 @@
              10 REASONCODE                 PIC N(02).
              10 INFOMESSAGE                PIC N(72).
              10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID-FILTER          PIC S9(9) USAGE COMP-5.
              10 ANIMALTYPE-FILTER          PIC N(08).
              10 ANIMALRACE-FILTER          PIC N(08).
              10 ANIMALID-SINCE             PIC S9(9) USAGE COMP-5.
@@ -11,6 +12,7 @@
                   DEPENDING ON ANIMAL-ENTRY-COUNT.
                 15 ANIMALID                PIC S9(9) USAGE COMP-5.
                 15 STOREID                 PIC S9(9) USAGE COMP-5.
+                15 SUPPLIERID              PIC S9(9) USAGE COMP-5.
                 15 ANIMALTYPE              PIC N(08).
                 15 ANIMALRACE              PIC N(08).
                 15 ANIMALNAME.

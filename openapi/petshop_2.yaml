@@ -2813,7 +2813,7 @@ paths:
         - AllocateIOArea:
             name: LPETM206
             initWith: 0x00
-            size: 14194
+            size: 14278
             fields:
               $ref: "#/components/x-ioareas/LPETM206/fields"
         - Mapping:
@@ -2825,6 +2825,9 @@ paths:
               - type: singleFields
                 fromName: storeID_filter
                 toName: STOREID-FILTER
+              - type: singleFields
+                fromName: supplierID_filter
+                toName: SUPPLIERID-FILTER
               - type: singleFields
                 fromName: animalType_filter
                 toName: ANIMALTYPE-FILTER
@@ -2882,6 +2885,9 @@ paths:
                         - type: singleFields
                           fromName: STOREID
                           toName: storeID
+                        - type: singleFields
+                          fromName: SUPPLIERID
+                          toName: supplierID
                         - type: singleFields
                           fromName: ANIMALTYPE
                           toName: animalType
@@ -2943,7 +2949,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 852
+            size: 856
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ParseRequestJSON:
@@ -2957,6 +2963,9 @@ paths:
               - type: singleFields
                 fromName: storeID
                 toName: STOREID
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
               - type: singleFields
                 fromName: animalType
                 toName: ANIMALTYPE
@@ -3035,6 +3044,9 @@ paths:
                       fromName: STOREID
                       toName: storeID
                     - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
                       fromName: ANIMALTYPE
                       toName: animalType
                     - type: singleFields
@@ -3096,7 +3108,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 852
+            size: 856
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
@@ -3156,6 +3168,9 @@ paths:
                     - type: singleFields
                       fromName: STOREID
                       toName: storeID
+                    - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
                     - type: singleFields
                       fromName: ANIMALTYPE
                       toName: animalType
@@ -3217,7 +3232,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 852
+            size: 856
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
@@ -3241,6 +3256,9 @@ paths:
               - type: singleFields
                 fromName: storeID
                 toName: STOREID
+              - type: singleFields
+                fromName: supplierID
+                toName: SUPPLIERID
               - type: singleFields
                 fromName: animalType
                 toName: ANIMALTYPE
@@ -3313,6 +3331,9 @@ paths:
                       fromName: STOREID
                       toName: storeID
                     - type: singleFields
+                      fromName: SUPPLIERID
+                      toName: supplierID
+                    - type: singleFields
                       fromName: ANIMALTYPE
                       toName: animalType
                     - type: singleFields
@@ -3373,7 +3394,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 852
+            size: 856
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
@@ -4663,6 +4684,9 @@ components:
         - name: STOREID
           type: UI4
           length: 4
+        - name: SUPPLIERID
+          type: UI4
+          length: 4
         - name: ANIMALTYPE
           type: CHARARRAY1200
           length: 08
@@ -4703,6 +4727,7 @@ components:
              10 INFOMESSAGE        PIC N(72).
              10 ANIMALID           PIC S9(9) USAGE COMP-5.
              10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID         PIC S9(9) USAGE COMP-5.
              10 ANIMALTYPE         PIC N(08).
              10 ANIMALRACE         PIC N(08).
              10 ANIMALNAME.
@@ -5244,6 +5269,9 @@ components:
         - name: STOREID-FILTER
           type: UI4
           length: 4
+        - name: SUPPLIERID-FILTER
+          type: UI4
+          length: 4
         - name: ANIMALTYPE-FILTER
           type: CHARARRAY1200
           length: 08
@@ -5265,6 +5293,9 @@ components:
               type: UI4
               length: 4
             - name: STOREID
+              type: UI4
+              length: 4
+            - name: SUPPLIERID
               type: UI4
               length: 4
             - name: ANIMALTYPE

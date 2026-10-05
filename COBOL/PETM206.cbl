@@ -4,6 +4,13 @@
       * This program is a list module for the PET store database's    *
       * TBPET006 ANIMALS table.                                       *
       * ------------------------------------------------------------- *
+      * Input:                                                        *
+      *   STOREID-FILTER (required), SUPPLIERID-FILTER (0 = no        *
+      *   filter), ANIMALTYPE-FILTER, ANIMALRACE-FILTER and           *
+      *   ANIMALID-SINCE for pagination                               *
+      * Output:                                                       *
+      *   Up to 20 entries. A NULL SUPPLIERID is returned as 0.       *
+      * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
       * Date     Who What                                             *
@@ -21,6 +28,7 @@
           05 W-PGMNAME                     PIC X(8).
           05 W-SQLCODE                     PIC -99999.
           05 W-STOREID-FILTER              PIC S9(9) COMP-5.
+          05 W-SUPPLIERID-FILTER           PIC S9(9) COMP-5.
           05 W-ANIMALTYPE-FILTER           PIC N(08).
           05 W-ANIMALRACE-FILTER           PIC N(08).
           05 W-ANIMALID-SINCE              PIC S9(9) COMP-5.
@@ -72,6 +80,7 @@
            MOVE 0 TO ANIMAL-ENTRY-COUNT OF P-LPETM206
 
            MOVE STOREID-FILTER OF P-LPETM206 TO W-STOREID-FILTER
+           MOVE SUPPLIERID-FILTER OF P-LPETM206 TO W-SUPPLIERID-FILTER
            IF ANIMALTYPE-FILTER IN LPETM206 = LOW-VALUES
               MOVE SPACES TO W-ANIMALTYPE-FILTER
            ELSE
@@ -97,6 +106,7 @@
               DECLARE C1 CURSOR FOR
                  SELECT  ANIMALID,
                          STOREID,
+                         SUPPLIERID,
                          ANIMALTYPE,
                          ANIMALRACE,
                          ANIMALNAME,
@@ -109,6 +119,8 @@
                          UPDATEDDATE
                    FROM  TBPET006
                   WHERE  STOREID   = :W-STOREID-FILTER
+                    AND (:W-SUPPLIERID-FILTER = 0
+                     OR   SUPPLIERID = :W-SUPPLIERID-FILTER)
                     AND (:W-ANIMALTYPE-FILTER = ''
                      OR   ANIMALTYPE = :W-ANIMALTYPE-FILTER)
                     AND (:W-ANIMALRACE-FILTER = ''
@@ -177,6 +189,8 @@
               FETCH C1
                INTO :DCLTBPET006.ANIMALID,
                     :DCLTBPET006.STOREID,
+                    :DCLTBPET006.SUPPLIERID
+                      :DCLTBPET006.SUPPLIERID-IND,
                     :DCLTBPET006.ANIMALTYPE,
                     :DCLTBPET006.ANIMALRACE,
                     :DCLTBPET006.ANIMALNAME,
@@ -199,6 +213,14 @@
                  MOVE STOREID OF DCLTBPET006 TO
                          STOREID OF P-LPETM206(
                             ANIMAL-ENTRY-COUNT OF P-LPETM206)
+                 IF SUPPLIERID-IND OF DCLTBPET006 < 0
+                    MOVE 0 TO SUPPLIERID OF P-LPETM206(
+                       ANIMAL-ENTRY-COUNT OF P-LPETM206)
+                 ELSE
+                    MOVE SUPPLIERID OF DCLTBPET006 TO
+                         SUPPLIERID OF P-LPETM206(
+                            ANIMAL-ENTRY-COUNT OF P-LPETM206)
+                 END-IF
                  MOVE ANIMALTYPE OF DCLTBPET006 TO
                       ANIMALTYPE OF P-LPETM206(
                          ANIMAL-ENTRY-COUNT OF P-LPETM206)
@@ -215,8 +237,8 @@
                  MOVE ANIMALGENDER OF DCLTBPET006 TO
                       ANIMALGENDER OF P-LPETM206(
                          ANIMAL-ENTRY-COUNT OF P-LPETM206)
-                 MOVE ANIMALGENDER OF DCLTBPET006 TO
-                      ANIMALGENDER OF P-LPETM206(
+                 MOVE ANIMALAGE OF DCLTBPET006 TO
+                      ANIMALAGE OF P-LPETM206(
                          ANIMAL-ENTRY-COUNT OF P-LPETM206)
                  MOVE ANIMALCOUNT OF DCLTBPET006 TO
                       ANIMALCOUNT OF P-LPETM206(

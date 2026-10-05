@@ -5,6 +5,7 @@
              10 INFOMESSAGE        PIC N(72).
              10 ANIMALID           PIC S9(9) USAGE COMP-5.
              10 STOREID            PIC S9(9) USAGE COMP-5.
+             10 SUPPLIERID         PIC S9(9) USAGE COMP-5.
              10 ANIMALTYPE         PIC N(08).
              10 ANIMALRACE         PIC N(08).
              10 ANIMALNAME.

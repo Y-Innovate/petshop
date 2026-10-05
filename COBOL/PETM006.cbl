@@ -8,6 +8,7 @@
       *   OPCODE: 'C', 'R', 'U' or 'D' for create, read, update or    *
       *            delete a row in TBPET006                           *
       *   TBPET006 Fields depending on OPCODE                         *
+      *   SUPPLIERID is optional: 0 means NULL (no supplier)          *
       * Output:                                                       *
       *   RETURNCODE and REASONCODE                                   *
       *     00 00 = Success                                           *
@@ -20,9 +21,11 @@
       *     08 06 = Error: ANIMALCOUNT required                       *
       *     08 11 = Error: INSERT of duplicate key                    *
       *     08 12 = Error: SQL error in INSERT                        *
+      *     08 13 = Error: INSERT of non existing store or supplier   *
       *     08 21 = Error: SQL error in SELECT                        *
       *     08 31 = Error: UPDATE of non existing key                 *
       *     08 32 = Error: SQL error in UPDATE                        *
+      *     08 33 = Error: UPDATE to non existing store or supplier   *
       *     08 41 = Error: DELETE of non existing key                 *
       *     08 42 = Error: SQL error in DELETE                        *
       *     08 90 = Error: PETA990 returned non-zero                  *
@@ -235,6 +238,7 @@
               INSERT
                 INTO TBPET006
                      (STOREID,
+                      SUPPLIERID,
                       ANIMALTYPE,
                       ANIMALRACE,
                       ANIMALNAME,
@@ -246,6 +250,8 @@
                       UPDATEDBY,
                       UPDATEDDATE)
               VALUES(:DCLTBPET006.STOREID,
+                     :DCLTBPET006.SUPPLIERID
+                       :DCLTBPET006.SUPPLIERID-IND,
                      :DCLTBPET006.ANIMALTYPE,
                      :DCLTBPET006.ANIMALRACE,
                      :DCLTBPET006.ANIMALNAME,
@@ -274,6 +280,11 @@
               MOVE N'11' TO REASONCODE OF W-LPETM006
               MOVE N'TBPET006 duplicate entry' TO
                    INFOMESSAGE OF W-LPETM006
+           WHEN -530
+              MOVE N'08' TO RETURNCODE OF W-LPETM006
+              MOVE N'13' TO REASONCODE OF W-LPETM006
+              MOVE N'TBPET006 store or supplier does not exist' TO
+                   INFOMESSAGE OF W-LPETM006
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM006
               MOVE N'12' TO REASONCODE OF W-LPETM006
@@ -300,6 +311,7 @@
            EXEC SQL
               SELECT ANIMALID,
                      STOREID,
+                     SUPPLIERID,
                      ANIMALTYPE,
                      ANIMALRACE,
                      ANIMALNAME,
@@ -312,6 +324,8 @@
                      UPDATEDDATE
                 INTO :DCLTBPET006.ANIMALID,
                      :DCLTBPET006.STOREID,
+                     :DCLTBPET006.SUPPLIERID
+                       :DCLTBPET006.SUPPLIERID-IND,
                      :DCLTBPET006.ANIMALTYPE,
                      :DCLTBPET006.ANIMALRACE,
                      :DCLTBPET006.ANIMALNAME,
@@ -338,6 +352,12 @@
                    ANIMALID     OF W-LPETM006
               MOVE STOREID      OF DCLTBPET006 TO
                    STOREID      OF W-LPETM006
+              IF SUPPLIERID-IND OF DCLTBPET006 < 0
+                 MOVE 0 TO SUPPLIERID OF W-LPETM006
+              ELSE
+                 MOVE SUPPLIERID OF DCLTBPET006 TO
+                      SUPPLIERID OF W-LPETM006
+              END-IF
               MOVE ANIMALTYPE   OF DCLTBPET006 TO
                    ANIMALTYPE   OF W-LPETM006
               MOVE ANIMALRACE   OF DCLTBPET006 TO
@@ -391,6 +411,8 @@
                    (
               UPDATE TBPET006
                  SET STOREID      = :DCLTBPET006.STOREID,
+                     SUPPLIERID   = :DCLTBPET006.SUPPLIERID
+                                      :DCLTBPET006.SUPPLIERID-IND,
                      ANIMALTYPE   = :DCLTBPET006.ANIMALTYPE,
                      ANIMALRACE   = :DCLTBPET006.ANIMALRACE,
                      ANIMALNAME   = :DCLTBPET006.ANIMALNAME,
@@ -415,6 +437,11 @@
               MOVE N'08' TO RETURNCODE OF W-LPETM006
               MOVE N'31' TO REASONCODE OF W-LPETM006
               MOVE N'TBPET006 entry not found' TO
+                   INFOMESSAGE OF W-LPETM006
+           WHEN -530
+              MOVE N'08' TO RETURNCODE OF W-LPETM006
+              MOVE N'33' TO REASONCODE OF W-LPETM006
+              MOVE N'TBPET006 store or supplier does not exist' TO
                    INFOMESSAGE OF W-LPETM006
            WHEN OTHER
               MOVE N'08' TO RETURNCODE OF W-LPETM006
@@ -470,6 +497,12 @@
        R210-COPY-TO-DCL SECTION.
            MOVE ANIMALID     OF W-LPETM006 TO ANIMALID    OF DCLTBPET006
            MOVE STOREID      OF W-LPETM006 TO STOREID     OF DCLTBPET006
+           IF SUPPLIERID OF W-LPETM006 = 0
+              MOVE -1 TO SUPPLIERID-IND OF DCLTBPET006
+           ELSE
+              MOVE 0 TO SUPPLIERID-IND OF DCLTBPET006
+              MOVE SUPPLIERID OF W-LPETM006 TO SUPPLIERID OF DCLTBPET006
+           END-IF
            MOVE ANIMALTYPE   OF W-LPETM006 TO ANIMALTYPE  OF DCLTBPET006
            MOVE ANIMALRACE   OF W-LPETM006 TO ANIMALRACE  OF DCLTBPET006
            MOVE ANIMALNAME   OF W-LPETM006 TO ANIMALNAME  OF DCLTBPET006

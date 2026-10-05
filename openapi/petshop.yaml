@@ -463,12 +463,6 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/suppliers_supplierName"
-        - name: storeID_filter
-          in: query
-          description: Filter suppliers connected to this store
-          required: false
-          schema:
-            $ref: "#/components/schemas/stores_storeID"
         - name: supplierID_since
           in: query
           description: Pagination supplier ID
@@ -677,12 +671,6 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/products_productName"
-        - name: storeID_filter
-          in: query
-          description: Filter store ID
-          required: false
-          schema:
-            $ref: "#/components/schemas/products_storeID"
         - name: productID_since
           in: query
           description: Pagination product ID
@@ -1111,6 +1099,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/animals_animalRace"
+        - name: supplierID_filter
+          in: query
+          description: Filter supplier ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/animals_supplierID"
         - name: animalID_since
           in: query
           description: Pagination animal ID
@@ -1983,8 +1977,6 @@ components:
           $ref: "#/components/schemas/suppliers_supplierStatus"
         supplierName:
           $ref: "#/components/schemas/suppliers_supplierName"
-        storeIDs:
-          $ref: "#/components/schemas/suppliers_storeIDs"
     SuppliersRequestPut:
       type: object
       properties:
@@ -1994,8 +1986,6 @@ components:
           $ref: "#/components/schemas/suppliers_supplierStatus"
         supplierName:
           $ref: "#/components/schemas/suppliers_supplierName"
-        storeIDs:
-          $ref: "#/components/schemas/suppliers_storeIDs"
     SuppliersResponseListLong:
       type: object
       properties:
@@ -2020,8 +2010,6 @@ components:
                 $ref: "#/components/schemas/suppliers_supplierCode"
               supplierStatus:
                 $ref: "#/components/schemas/suppliers_supplierStatus"
-              storeIDs:
-                $ref: "#/components/schemas/suppliers_storeIDs"
               createdBy:
                 $ref: "#/components/schemas/createdBy"
               createdDate:
@@ -2058,8 +2046,6 @@ components:
           $ref: "#/components/schemas/suppliers_supplierName"
         supplierNameU:
           $ref: "#/components/schemas/suppliers_supplierNameU"
-        storeIDs:
-          $ref: "#/components/schemas/suppliers_storeIDs"
         createdBy:
           $ref: "#/components/schemas/createdBy"
         createdDate:
@@ -2090,8 +2076,6 @@ components:
           $ref: "#/components/schemas/products_groupCode"
         supplierID:
           $ref: "#/components/schemas/products_supplierID"
-        storeID:
-          $ref: "#/components/schemas/products_storeID"
     ProductsRequestPut:
       type: object
       properties:
@@ -2105,8 +2089,6 @@ components:
           $ref: "#/components/schemas/products_groupCode"
         supplierID:
           $ref: "#/components/schemas/products_supplierID"
-        storeID:
-          $ref: "#/components/schemas/products_storeID"
     ProductsResponseListLong:
       type: object
       properties:
@@ -2135,8 +2117,6 @@ components:
                 $ref: "#/components/schemas/products_groupCode"
               supplierID:
                 $ref: "#/components/schemas/products_supplierID"
-              storeID:
-                $ref: "#/components/schemas/products_storeID"
               createdBy:
                 $ref: "#/components/schemas/createdBy"
               createdDate:
@@ -2177,8 +2157,6 @@ components:
           $ref: "#/components/schemas/products_groupCode"
         supplierID:
           $ref: "#/components/schemas/products_supplierID"
-        storeID:
-          $ref: "#/components/schemas/products_storeID"
         createdBy:
           $ref: "#/components/schemas/createdBy"
         createdDate:
@@ -2764,13 +2742,6 @@ components:
       minLength: 1
       maxLength: 255
       example: DOG FOOD INTL.
-    suppliers_storeIDs:
-      type: array
-      description: Stores this supplier is connected to (each store at most once)
-      uniqueItems: true
-      items:
-        $ref: "#/components/schemas/stores_storeID"
-      example: [12345, 12346]
     #
     # products
     products_productID:
@@ -2803,10 +2774,6 @@ components:
       maxLength: 8
       example: PECA0001
     products_supplierID:
-      type: integer
-      minimum: 1
-      example: 12345
-    products_storeID:
       type: integer
       minimum: 1
       example: 12345
@@ -2873,7 +2840,8 @@ components:
       example: 1
     animals_supplierID:
       type: integer
-      minimum: 1
+      minimum: 0
+      description: Supplier of the animal, 0 when there is none (NULL in DB2)
       example: 12345
     #
     # pricesAndDiscounts
