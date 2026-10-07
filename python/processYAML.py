@@ -35,7 +35,7 @@ MyRequests.getBearerToken(Globals.myAuthHost)
 
 def doStuff():
     data = {}
-    data['YAMLName'] = "/var/cicsts/lww/openapi/petshop.yaml"
+    data['YAMLName'] = "/var/cicsts/lww/openapi/petshop_1.1.0.yaml"
 
     resppost = MyRequests.post(f"{Globals.pathPrefix}/APIYAML", data)
 
@@ -70,6 +70,7 @@ def doStuff():
 
                         for APIMethod in myMethods['APIMethod']:
                             data = {}
+                            data['ID_API'] = myYAML['ID_API']
                             data['APIPath'] = APIPath['APIPath']
                             data['APIMethod'] = APIMethod['APIMethod']
                             data['pathWithId'] = APIMethod['pathWithId']
