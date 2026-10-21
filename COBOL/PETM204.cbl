@@ -4,6 +4,14 @@
       * This program is a list module for the PET store database's    *
       * TBPET004 PRODUCTS table.                                      *
       * ------------------------------------------------------------- *
+      * Input:                                                        *
+      *   PRODUCTNAME-FILTER,                                         *
+      *   STOREID-FILTER (0 = no filter, else only products           *
+      *   linked to the store via TBPET005 INVENTORY) and             *
+      *   PRODUCTID-SINCE for pagination                              *
+      * Output:                                                       *
+      *   Up to 20 entries.                                           *
+      * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
       * Date     Who What                                             *
@@ -23,6 +31,7 @@
           05 W-PRODUCTNAME-FILTER.
              49 W-PRODUCTNAME-FILTER-LEN  PIC S9(4) COMP-5.
              49 W-PRODUCTNAME-FILTER-TEXT PIC N(256).
+          05 W-STOREID-FILTER             PIC S9(9) COMP-5.
           05 W-PRODUCTID-SINCE            PIC S9(9) COMP-5.
 
        01 ERROR-MESSAGE.
@@ -89,6 +98,7 @@
               END-IF
            END-IF
 
+           MOVE STOREID-FILTER OF P-LPETM204 TO W-STOREID-FILTER
            MOVE PRODUCTID-SINCE OF P-LPETM204 TO W-PRODUCTID-SINCE
            .
        R001-INIT-END.
@@ -113,6 +123,10 @@
                          UPDATEDDATE
                    FROM  TBPET004
                   WHERE  PRODUCTNAMEU LIKE :W-PRODUCTNAME-FILTER
+                    AND (:W-STOREID-FILTER = 0
+                     OR  PRODUCTID IN
+                         (SELECT PRODUCTID FROM TBPET005
+                           WHERE STOREID = :W-STOREID-FILTER))
                     AND  PRODUCTID    >    :W-PRODUCTID-SINCE
                   ORDER  BY PRODUCTID
                     FOR  FETCH ONLY

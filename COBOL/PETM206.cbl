@@ -5,7 +5,7 @@
       * TBPET006 ANIMALS table.                                       *
       * ------------------------------------------------------------- *
       * Input:                                                        *
-      *   STOREID-FILTER (required), SUPPLIERID-FILTER (0 = no        *
+      *   STOREID-FILTER (0 = no filter), SUPPLIERID-FILTER (0 = no        *
       *   filter), ANIMALTYPE-FILTER, ANIMALRACE-FILTER and           *
       *   ANIMALID-SINCE for pagination                               *
       * Output:                                                       *
@@ -118,7 +118,8 @@
                          UPDATEDBY,
                          UPDATEDDATE
                    FROM  TBPET006
-                  WHERE  STOREID   = :W-STOREID-FILTER
+                  WHERE (:W-STOREID-FILTER = 0
+                     OR  STOREID   = :W-STOREID-FILTER)
                     AND (:W-SUPPLIERID-FILTER = 0
                      OR   SUPPLIERID = :W-SUPPLIERID-FILTER)
                     AND (:W-ANIMALTYPE-FILTER = ''

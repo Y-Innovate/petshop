@@ -4,6 +4,14 @@
       * This program is a list module for the PET store database's    *
       * TBPET003 SUPPLIERS table.                                     *
       * ------------------------------------------------------------- *
+      * Input:                                                        *
+      *   SUPPLIERNAME-FILTER,                                        *
+      *   STOREID-FILTER (0 = no filter, else only suppliers          *
+      *   linked to the store via TBPET013 STORESUPPL) and            *
+      *   SUPPLIERID-SINCE for pagination                             *
+      * Output:                                                       *
+      *   Up to 20 entries.                                           *
+      * ------------------------------------------------------------- *
       * Updates:                                                      *
       *                                                               *
       * Date     Who What                                             *
@@ -23,6 +31,7 @@
           05 W-SUPPLIERNAME-FILTER.
              49 W-SUPPLIERNAME-FILTER-LEN  PIC S9(4) COMP-5.
              49 W-SUPPLIERNAME-FILTER-TEXT PIC N(256).
+          05 W-STOREID-FILTER              PIC S9(9) COMP-5.
           05 W-SUPPLIERID-SINCE            PIC S9(9) COMP-5.
 
        01 ERROR-MESSAGE.
@@ -89,6 +98,7 @@
               END-IF
            END-IF
 
+           MOVE STOREID-FILTER OF P-LPETM203 TO W-STOREID-FILTER
            MOVE SUPPLIERID-SINCE OF P-LPETM203 TO W-SUPPLIERID-SINCE
            .
        R001-INIT-END.
@@ -111,6 +121,10 @@
                          UPDATEDDATE
                    FROM  TBPET003
                   WHERE  SUPPLIERNAMEU LIKE :W-SUPPLIERNAME-FILTER
+                    AND (:W-STOREID-FILTER = 0
+                     OR  SUPPLIERID IN
+                         (SELECT SUPPLIERID FROM TBPET013
+                           WHERE STOREID = :W-STOREID-FILTER))
                     AND  SUPPLIERID    >    :W-SUPPLIERID-SINCE
                   ORDER  BY SUPPLIERID
                     FOR  FETCH ONLY

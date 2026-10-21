@@ -5,6 +5,7 @@
              10  SUPPLIERNAME-FILTER.
                 15 SUPPLIERNAME-FILTER-LEN  PIC S9(4) COMP-5.
                 15 SUPPLIERNAME-FILTER-TEXT PIC N(256).
+             10 STOREID-FILTER              PIC S9(9) USAGE COMP-5.
              10 SUPPLIERID-SINCE            PIC S9(9) USAGE COMP-5.
              10 SUPPLIER-COUNT              PIC S9(4) USAGE COMP-5.
              10 SUPPLIER-ENTRY OCCURS 20 TIMES

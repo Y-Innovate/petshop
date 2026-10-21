@@ -5,6 +5,7 @@
              10 PRODUCTNAME-FILTER.
                 15 PRODUCTNAME-FILTER-LEN  PIC S9(4) COMP-5.
                 15 PRODUCTNAME-FILTER-TEXT PIC N(256).
+             10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
              10 PRODUCTID-SINCE            PIC S9(9) USAGE COMP-5.
              10 PRODUCT-COUNT              PIC S9(4) USAGE COMP-5.
              10 PRODUCT-ENTRY OCCURS 20 TIMES

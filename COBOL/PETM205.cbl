@@ -91,7 +91,8 @@
                          UPDATEDBY,
                          UPDATEDDATE
                    FROM  TBPET005
-                  WHERE  STOREID   = :W-STOREID-FILTER
+                  WHERE (:W-STOREID-FILTER = 0
+                     OR  STOREID   = :W-STOREID-FILTER)
                     AND  INVENTORYID > :W-INVENTORYID-SINCE
                   ORDER  BY INVENTORYID
                     FOR  FETCH ONLY
