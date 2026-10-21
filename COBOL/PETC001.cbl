@@ -79,6 +79,9 @@
 
            IF SW-CONT-FOUND
               SET ADDRESS OF P-CHAR TO W-CONT-POINTER
+              IF W-CONT-LENGTH > LENGTH OF W-LPETM001
+                 MOVE LENGTH OF W-LPETM001 TO W-CONT-LENGTH
+              END-IF
               MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LPETM001
            END-IF
 
@@ -89,6 +92,9 @@
 
            IF SW-CONT-FOUND
               SET ADDRESS OF P-CHAR TO W-CONT-POINTER
+              IF W-CONT-LENGTH > LENGTH OF W-LINKPAR
+                 MOVE LENGTH OF W-LINKPAR TO W-CONT-LENGTH
+              END-IF
               MOVE P-CHAR(1:W-CONT-LENGTH) TO W-LINKPAR
            END-IF
            .
