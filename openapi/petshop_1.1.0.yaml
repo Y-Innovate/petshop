@@ -529,6 +529,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/suppliers_supplierName"
+        - name: storeID_filter
+          in: query
+          description: Filter on suppliers linked to this store ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/stores_storeID"
         - name: supplierID_since
           in: query
           description: Pagination supplier ID
@@ -773,6 +779,12 @@ paths:
           required: false
           schema:
             $ref: "#/components/schemas/products_productName"
+        - name: storeID_filter
+          in: query
+          description: Filter on products linked to this store ID
+          required: false
+          schema:
+            $ref: "#/components/schemas/stores_storeID"
         - name: productID_since
           in: query
           description: Pagination product ID

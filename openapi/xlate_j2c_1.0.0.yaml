@@ -1,0 +1,73 @@
+info:
+  version: 1.0.0
+  title: JTEST01 to IOArea
+  description: Convert JTEST01 JSON to LTEST01 copybook 
+x-LWWProcessingSteps:
+  - ParseRequestJSON:
+      name: JTEST01_JSNR
+      from: container
+      containerName: JTEST01_RESPONSE
+  - AllocateIOArea:
+      name: LTEST01
+      initWith: 0x00
+      size: 1234
+      fields:
+        $ref: "#/components/x-ioareas/LTEST01/fields"
+  - Mapping:
+      from:
+        $ref: "#/x-LWWProcessingSteps/0/ParseRequestJSON"
+      to:
+        $ref: "#/x-LWWProcessingSteps/1/AllocateIOArea/fields"
+      combinations:
+        - type: singleFields
+          fromName: retCode
+          toName: RETURNCODE
+        - type: singleFields
+          fromName: reasonCode
+          toName: REASONCODE
+        - type: singleFields
+          fromName: infoMessage
+          toName: INFOMESSAGE
+  - IOAreaWriter:
+      to: container
+      containerName: LTEST01-RETURN
+      returnIOArea:
+        $ref: "#/x-LWWProcessingSteps/1/AllocateIOArea"
+components:
+  schemas:
+    JTEST01:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
+    retCode:
+      type: string
+      minLength: 2
+      maxLength: 2
+      example: '00'
+    reasonCode:
+      type: string
+      minLength: 2
+      maxLength: 2
+      example: '01'
+    infoMessage:
+      type: string
+      minLength: 0
+      maxLength: 72
+      example: TBPET001 entry not found
+  x-ioareas:
+    LTEST01:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY037
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY037
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY037
+          length: 72

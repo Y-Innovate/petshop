@@ -1121,7 +1121,7 @@ paths:
         - AllocateIOArea:
             name: LPETM203
             initWith: 0x00
-            size: 24672
+            size: 24676
             fields:
               $ref: "#/components/x-ioareas/LPETM203/fields"
         - Mapping:
@@ -1133,6 +1133,9 @@ paths:
               - type: singleFields
                 fromName: supplierName_filter
                 toName: SUPPLIERNAME-FILTER
+              - type: singleFields
+                fromName: storeID_filter
+                toName: STOREID-FILTER
               - type: singleFields
                 fromName: supplierID_since
                 toName: SUPPLIERID-SINCE
@@ -1671,7 +1674,7 @@ paths:
         - AllocateIOArea:
             name: LPETM204
             initWith: 0x00
-            size: 25072
+            size: 25076
             fields:
               $ref: "#/components/x-ioareas/LPETM204/fields"
         - Mapping:
@@ -1683,6 +1686,9 @@ paths:
               - type: singleFields
                 fromName: productName_filter
                 toName: PRODUCTNAME-FILTER
+              - type: singleFields
+                fromName: storeID_filter
+                toName: STOREID-FILTER
               - type: singleFields
                 fromName: productID_since
                 toName: PRODUCTID-SINCE
@@ -5360,6 +5366,9 @@ components:
         - name: SUPPLIERNAME-FILTER
           type: VARCHAR1200
           length: 256
+        - name: STOREID-FILTER
+          type: UI4
+          length: 4
         - name: SUPPLIERID-SINCE
           type: UI4
           length: 4
@@ -5408,6 +5417,7 @@ components:
              10  SUPPLIERNAME-FILTER.
                 15 SUPPLIERNAME-FILTER-LEN  PIC S9(4) COMP-5.
                 15 SUPPLIERNAME-FILTER-TEXT PIC N(256).
+             10 STOREID-FILTER              PIC S9(9) USAGE COMP-5.
              10 SUPPLIERID-SINCE            PIC S9(9) USAGE COMP-5.
              10 SUPPLIER-COUNT              PIC S9(4) USAGE COMP-5.
              10 SUPPLIER-ENTRY OCCURS 20 TIMES
@@ -5439,6 +5449,9 @@ components:
         - name: PRODUCTNAME-FILTER
           type: VARCHAR1200
           length: 256
+        - name: STOREID-FILTER
+          type: UI4
+          length: 4
         - name: PRODUCTID-SINCE
           type: UI4
           length: 4
@@ -5493,6 +5506,7 @@ components:
              10 PRODUCTNAME-FILTER.
                 15 PRODUCTNAME-FILTER-LEN  PIC S9(4) COMP-5.
                 15 PRODUCTNAME-FILTER-TEXT PIC N(256).
+             10 STOREID-FILTER             PIC S9(9) USAGE COMP-5.
              10 PRODUCTID-SINCE            PIC S9(9) USAGE COMP-5.
              10 PRODUCT-COUNT              PIC S9(4) USAGE COMP-5.
              10 PRODUCT-ENTRY OCCURS 20 TIMES
