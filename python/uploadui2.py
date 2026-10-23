@@ -37,7 +37,7 @@ if isinstance(Globals.myCreds, tuple):
 MyRequests.getBearerToken(Globals.myAuthHost)
 #MyRequests.getBearerToken("/LWWAPI/API/token")
 
-dir = "/u/ybtks/git/petshop/v1/git/ui"
+dir = "/home/bobby/Y-Innovate/software/git/petshop/v1/petshop-backend/ui"
 
 os.chdir(dir)
 
@@ -63,6 +63,28 @@ def nextFileId():
 
     return f"PTSHP{letter1}{letter2}{letter3}"
 
+def applyOverrides(data, path, key):
+    # A hidden file .<name> next to the file or folder <name> overrules fields of the payload,
+    # e.g. "newFile:" for files and "newFolder:" for folders
+    overrideFileName = os.path.join(os.path.dirname(path), f".{os.path.basename(path)}")
+
+    if (os.path.isfile(overrideFileName)):
+        with open(overrideFileName,'r') as overrideFile:
+            overrides = yaml.safe_load(overrideFile)
+
+        if overrides and key in overrides and overrides[key]:
+            for k in overrides[key]:
+                data[k] = overrides[key][k]
+
+def overrideChanged(relpath):
+    # True when the hidden override file .<name> of the file or folder <name> is changed,
+    # added or deleted in the working tree, so <name> must be sent again
+    x = relpath.rfind("/")
+
+    overrideRelpath = f"{relpath[:x+1]}.{relpath[x+1:]}"
+
+    return overrideRelpath in workingTreeUpdates or overrideRelpath in workingTreeDeletes
+
 def createDir(someDir, id, parentId, custom):
     global dir
 
@@ -82,9 +104,9 @@ def createDir(someDir, id, parentId, custom):
     data['parentFolderId'] = parentId
     data['folderName'] = x.group(1)
     data['path'] = f"/petshop/{someDir[n:]}"
-    #data['defaultTran'] = ""
-    #data['defaultWebpageId'] = ""
     data['custom'] = custom
+
+    applyOverrides(data, someDir, 'newFolder')
 
     if Globals.myDebug > 0:
         print(f"{data['folderId']} {data['folderName']}")
@@ -116,9 +138,9 @@ def updateDir(someDir, id, parentId, custom):
     data['folderName'] = x.group(1)
     data['path'] = f"/petshop/{someDir[n:]}"
     data['generateId'] = "N"
-    #data['defaultTran'] = ""
-    #data['defaultWebpageId'] = ""
     data['custom'] = custom
+
+    applyOverrides(data, someDir, 'newFolder')
 
     if Globals.myDebug > 0:
         print(f"{data['folderId']} {data['folderName']}")
@@ -158,6 +180,8 @@ def uploadFile(f, id, parentId, custom, found):
             mediaType = "text/html"
         elif (x.group(1) == "svg"):
             mediaType = "image/svg+xml"
+        elif (x.group(1) == "woff2"):
+            mediaType = "font/woff2"
         else:
             mediaType = f"text/plain"
     
@@ -178,8 +202,7 @@ def uploadFile(f, id, parentId, custom, found):
 
         calculatedHash = rsltGitHashObj.stdout.decode(encoding='utf-8').splitlines()[0]
 
-        #print(f"#{found}# #{calculatedHash}#")
-        if calculatedHash == found:
+        if calculatedHash == found and not overrideChanged(relpath):
             return
         else:
             _custom = calculatedHash
@@ -202,24 +225,11 @@ def uploadFile(f, id, parentId, custom, found):
     newFile['folderId'] = parentId
     newFile['fileName'] = x.group(2)
     newFile['mediaType'] = mediaType
-    #newFile['transaction'] = ""
     newFile['preventCache'] = "N"
     newFile['storeBinary'] = "Y"
-    #newFile['scriptLoadModule'] = ""
-    #newFile['preexecLoadModule'] = ""
-    #newFile['postexecLoadModule'] = ""
-    #newFile['whereStoreImage'] = ""
-    #newFile['templateName'] = ""
-    #newFile['DDName'] = ""
-    #newFile['member'] = ""
     newFile['custom'] = _custom
 
-    if (os.path.isfile(f"{x.group(1)}.{x.group(2)}")):
-        with open(f"{x.group(1)}.{x.group(2)}",'r') as overrideFile:
-            overrides = yaml.safe_load(overrideFile)
-
-            for x in overrides['newFile']:
-                newFile[x] = overrides['newFile'][x]
+    applyOverrides(newFile, f, 'newFile')
 
     resppost = MyRequests.post("/LWWAPI/Admin/files", None, {'jsondata': (None, json.dumps(newFile)), 'contents': (None, fileContentsB64)})
 
@@ -263,13 +273,16 @@ def doDir(someDir, parentId, folderHash):
     
     folderContents = json.loads(jsonresp)
     
-    #print(folderContents)
+    # List the folder from the committed tree, run from the content root so it also works for
+    # folders that were deleted from the working tree (their files still need deleting on the server).
+    relDir = someDir[len(dir)+1:]
 
-    cmdline = f"git -C '{someDir}' ls-tree -t {commitHash}"
+    if len(relDir) > 0:
+        cmdline = f"git -C '{dir}' ls-tree {commitHash} -- '{relDir}/'"
+    else:
+        cmdline = f"git -C '{dir}' ls-tree {commitHash}"
 
-    #print(cmdline)
-
-    rsltGitLsTree = subprocess.run([cmdline], shell=True, cwd=someDir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    rsltGitLsTree = subprocess.run([cmdline], shell=True, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     if rsltGitLsTree.returncode:
         print(rsltGitLsTree.stdout)
@@ -278,10 +291,12 @@ def doDir(someDir, parentId, folderHash):
 
     outGitLsTree = rsltGitLsTree.stdout.decode(encoding='utf-8').splitlines()
 
+    # ls-tree prints the names with the folder path in front; keep just the names
+    if len(relDir) > 0:
+        outGitLsTree = [l.replace(f"\t{relDir}/", "\t", 1) for l in outGitLsTree]
+
     gitFiles = []
     gitFolders = []
-
-    # print(outGitLsTree)
 
     for l in outGitLsTree:
         x = re.search("(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S*)", l)
@@ -347,8 +362,6 @@ def doDir(someDir, parentId, folderHash):
 
     gitFiles = [f for f in gitFiles if f['relpath'] not in workingTreeDeletes]
 
-    # print(gitFiles)
-
     for f in gitFiles:
         if f['fileName'][0] != ".":
             found = None
@@ -359,9 +372,8 @@ def doDir(someDir, parentId, folderHash):
                         f['fileId'] = c['fileId']
                         break
             
-            if not 'fileId' in f or f['hash'] != found or f['relpath'] in workingTreeUpdates:
+            if not 'fileId' in f or f['hash'] != found or f['relpath'] in workingTreeUpdates or overrideChanged(f['relpath']):
                 if not 'fileId' in f:
-                    # id = nextFileId()
                     id = None
                 else:
                     id = f['fileId']
@@ -384,8 +396,6 @@ def doDir(someDir, parentId, folderHash):
                     deleteFile(c['fileId'], fileName)
                     break
 
-    # print(gitFolders)
-
     for d in gitFolders:
         if d['folderName'][0] != ".":
             found = None
@@ -397,7 +407,6 @@ def doDir(someDir, parentId, folderHash):
                         break
             
             if not 'folderId' in d:
-                # id = nextFileId()
                 id = None
 
                 id = createDir(f"{someDir}/{d['folderName']}", id, parentId, d['hash'])
@@ -409,7 +418,7 @@ def doDir(someDir, parentId, folderHash):
                 #if d['dir'] in neededDirs:
                 doDir(f"{someDir}/{d['folderName']}", d['folderId'], d['hash'])
 
-                if d['hash'] != found:
+                if d['hash'] != found or overrideChanged(d['dir']):
                     updateDir(f"{someDir}/{d['folderName']}", d['folderId'], parentId, d['hash'])
 
 
@@ -427,7 +436,8 @@ outGitLog = rsltGitLog.stdout.decode(encoding='utf-8').splitlines()
 commitHash = outGitLog[0]
 
 # cmdline = "/bin/bash -c 'comm -23 <(git ls-files -o -m --exclude-standard | sort) <(git ls-files -d | sort)'"
-cmdline = f"git -C '{dir}' status -s -- ."
+# --no-renames: a moved file must show up as deleted (old place) and added (new place), not as "R"
+cmdline = f"git -C '{dir}' status -s --no-renames -- ."
 
 rsltWorkTree = subprocess.run([cmdline], shell=True, cwd=dir, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -449,9 +459,6 @@ for line in outWorkTree:
         workingTreeDeletes.append(path)
     elif "A" in status or "M" in status:
         workingTreeUpdates.append(path)
-
-#print(workingTreeUpdates)
-#print(workingTreeDeletes)
 
 neededDirs = []
 
