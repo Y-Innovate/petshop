@@ -74,7 +74,8 @@ A new table usually needs: `DDL/AA0000nn.sql` + line in `DDL/$INFO.txt`,
 `*_TBNR/TBSNAME/TBNAME/IXNAME*` keys in **all three** `envs/*.yaml`,
 `COPY/TBPETnnn.cpy` (DCLGEN layout), `COPY/LPETMnnn.cpy`, `COBOL/PETMnnn.cbl`,
 `COBOL/PETCnnn.cbl`, an `LKED/<member>.lked` per load module (PETM includes
-`DSNCLI`), x-ioareas + processing steps + paths in `openapi/`, and
+`DSNCLI`), x-ioareas + processing steps + paths in `openapi/`, a placeholder
+`ui/API/v1/<path>` + `.<path>` (copy `stores`/`.stores`) per API path, and
 possibly CSV/generator in `python/`. STORESUPPL (013) is the most recent
 complete example to copy from.
 
