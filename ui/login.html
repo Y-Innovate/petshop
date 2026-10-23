@@ -133,6 +133,31 @@ h1, h2, h3, h4, h5, h6 {
 .btn:hover {
     background-color: #3172d3;
 }
+.sso-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #989fa8;
+    font-size: 13px;
+    margin: 20px 0;
+}
+.sso-divider::before, .sso-divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #dee1e6;
+}
+.sso-divider span {
+    padding: 0 10px;
+}
+.btn-sso {
+    background-color: #ffffff;
+    color: #474b50;
+    border: 1px solid #dee1e6;
+    width: 100%;
+}
+.btn-sso:hover {
+    background-color: #f3f5f7;
+}
 .login, .register {
     display: flex;
     flex-flow: column;
@@ -249,6 +274,12 @@ h1, h2, h3, h4, h5, h6 {
 
             </form>
 
+            <div class="sso-divider">
+                <span>or</span>
+            </div>
+
+            <button type="button" class="btn btn-sso" id="ssoButton">Sign in with SSO</button>
+
         </div>
 
         <script>
@@ -265,6 +296,10 @@ h1, h2, h3, h4, h5, h6 {
                 eyeIcon.querySelector('path').setAttribute('d', isPassword ? eyeSlashPath : eyeOpenPath);
                 passwordToggle.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
                 passwordToggle.setAttribute('aria-pressed', isPassword ? 'true' : 'false');
+            });
+
+            document.getElementById('ssoButton').addEventListener('click', function () {
+                window.location.href = 'redirect_to_sso_login.html';
             });
         </script>
     </body>

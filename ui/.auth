@@ -1,0 +1,7 @@
+newFile:
+    fileId: PE000007
+    generateId: N
+    mediaType: text/html
+    preexecLoadModule: LWWADPL2
+    storeBinary: "N"
+    transaction: "LWBL"

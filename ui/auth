@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Petshop Backoffice</title>
+<base href="/petshop/" target="_self">
+</head>
+<body>
+<div id="div_main">
+Processing complete, this page should automatically redirect to index.html.<br />
+</div>
+<script type="text/javascript">
+if ("&NEXTPAGE;" == "true") {
+  window.location.href = "/petshop/index.html";
+} else {
+  window.location.href = "/pethop/changePassword.html";
+}
+</script>
+</body>
+</html>
