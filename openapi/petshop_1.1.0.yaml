@@ -2077,6 +2077,32 @@ paths:
           description: Unexpected error
       x-LWWProcessingSteps:
         $ref: "petshop_2_1.1.0.yaml/paths/~1token/post/x-LWWProcessingSteps"
+  /me:
+    summary: Signed-in user
+    get:
+      summary: Get the RACF userid and name of the signed-in user
+      operationId: getCurrentUser
+      tags:
+        - get
+      responses:
+        '200':
+          description: Signed-in user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeResponse"
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeResponseShort"
+        default:
+          description: Unexpected error
+      x-LWWProcessingSteps:
+        $ref: "petshop_2_1.1.0.yaml/paths/~1me/get/x-LWWProcessingSteps"
 components:
   securitySchemes:
     bearerAuth:
@@ -2929,6 +2955,28 @@ components:
         token:
           type: string
           maxLength: 1024
+    MeResponse:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
+        username:
+          $ref: "#/components/schemas/me_username"
+        name:
+          $ref: "#/components/schemas/me_name"
+    MeResponseShort:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        reasonCode:
+          $ref: "#/components/schemas/reasonCode"
+        infoMessage:
+          $ref: "#/components/schemas/infoMessage"
     #
     # Dictionary part
     #
@@ -2953,6 +3001,18 @@ components:
       minLength: 1
       maxLength: 8
       example: YINUSER
+    me_username:
+      type: string
+      description: RACF userid
+      minLength: 1
+      maxLength: 8
+      example: YINUSER
+    me_name:
+      type: string
+      description: Name from the RACF user profile, as-is
+      minLength: 0
+      maxLength: 20
+      example: JAN DE VRIES
     createdDate:
       type: string
       minLength: 26

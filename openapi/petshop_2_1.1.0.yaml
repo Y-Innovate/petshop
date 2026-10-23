@@ -4694,8 +4694,104 @@ paths:
         - JSONWriter:
             responseObject:
               $ref: "#/paths/~1token/post/x-LWWProcessingSteps/4/CreateObject"
+  /me:
+    get:
+      x-LWWProcessingSteps:
+        - AllocateIOArea:
+            name: LPETC290
+            initWith: 0x00
+            size: 208
+            fields:
+              $ref: "#/components/x-ioareas/LPETC290/fields"
+        - Link:
+            program: PETC290
+            passDataWith: container
+            in:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1me/get/x-LWWProcessingSteps/0/AllocateIOArea"
+            out:
+              - containerName: LWW-LINK-PAR-03
+                $ref: "#/paths/~1me/get/x-LWWProcessingSteps/0/AllocateIOArea"
+        - Condition:
+            name: LPETC290_OK
+            source:
+              $ref: "#/paths/~1me/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+            boolOperator: AND
+            expressions:
+              - type: fieldEqualsConstant
+                fieldName: RETURNCODE
+                constant: "00"
+            LWWProcessingStepsWhenTrue:
+              - CreateObject:
+                  name: PETC290_RET_OK
+                  properties:
+                    $ref: "petshop_1.1.0.yaml/components/schemas/MeResponse/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1me/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1me/get/x-LWWProcessingSteps/2/Condition/LWWProcessingStepsWhenTrue/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+                    - type: singleFields
+                      fromName: USERID
+                      toName: username
+                    - type: singleFields
+                      fromName: USERNAME
+                      toName: name
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1me/get/x-LWWProcessingSteps/2/Condition/LWWProcessingStepsWhenTrue/0/CreateObject"
+            LWWProcessingStepsWhenFalse:
+              - CreateObject:
+                  name: PETC290_RET_ERR
+                  properties:
+                    $ref: "petshop_1.1.0.yaml/components/schemas/MeResponseShort/properties"
+              - Mapping:
+                  from:
+                    $ref: "#/paths/~1me/get/x-LWWProcessingSteps/0/AllocateIOArea/fields"
+                  to:
+                    $ref: "#/paths/~1me/get/x-LWWProcessingSteps/2/Condition/LWWProcessingStepsWhenFalse/0/CreateObject/properties"
+                  combinations:
+                    - type: singleFields
+                      fromName: RETURNCODE
+                      toName: retCode
+                    - type: singleFields
+                      fromName: REASONCODE
+                      toName: reasonCode
+                    - type: singleFields
+                      fromName: INFOMESSAGE
+                      toName: infoMessage
+              - JSONWriter:
+                  responseObject:
+                    $ref: "#/paths/~1me/get/x-LWWProcessingSteps/2/Condition/LWWProcessingStepsWhenFalse/0/CreateObject"
 components:
   x-ioareas:
+    LPETC290:
+      fields:
+        - name: RETURNCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: REASONCODE
+          type: CHARARRAY1200
+          length: 2
+        - name: INFOMESSAGE
+          type: CHARARRAY1200
+          length: 72
+        - name: USERID
+          type: CHARARRAY1200
+          length: 8
+        - name: USERNAME
+          type: CHARARRAY1200
+          length: 20
     LPETM001:
       fields:
         - name: OPCODE
