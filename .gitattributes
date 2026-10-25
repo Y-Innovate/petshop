@@ -1,3 +1,4 @@
 *  zos-working-tree-encoding=ISO8859-1
+*.md  zos-working-tree-encoding=UTF-8
 /ui/**  zos-working-tree-encoding=UTF-8
 python/**  zos-working-tree-encoding=UTF-8
