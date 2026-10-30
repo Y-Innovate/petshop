@@ -5,20 +5,75 @@
         <meta name="viewport" content="width=device-width,minimum-scale=1">
         <title>Login</title>
         <style type="text/css">
+:root {
+    color-scheme: light dark;
+    --bg: #f3f5f7;
+    --card: #ffffff;
+    --heading: #474b50;
+    --muted: #6b7179;
+    --icon: #c1c6cb;
+    --icon-hover: #989fa8;
+    --line: #dee1e6;
+    --input-bg: #ffffff;
+    --input-ink: #000000;
+    --placeholder: #989fa8;
+    --link: #2a8eeb;
+    --link-hover: #136fc5;
+    --btn: #3e7bd6;
+    --btn-hover: #3172d3;
+    --error: #ff0000;
+    --shadow: rgba(45, 57, 68, 0.1);
+    --card-shadow: rgba(45, 57, 68, 0.05);
+    --watermark-opacity: 0.06;
+}
+/* Dark rendition of the same grey/blue palette. */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #1b1e22;
+        --card: #26292e;
+        --heading: #e4e6e9;
+        --muted: #a3a9b1;
+        --icon: #6b7179;
+        --icon-hover: #989fa8;
+        --line: #3d4248;
+        --input-bg: #1b1e22;
+        --input-ink: #e4e6e9;
+        --placeholder: #7d838b;
+        --link: #5aa9f2;
+        --link-hover: #8ac2f6;
+        --btn: #3e7bd6;
+        --btn-hover: #4a87e0;
+        --error: #ff6b6b;
+        --shadow: rgba(0, 0, 0, 0.35);
+        --card-shadow: rgba(0, 0, 0, 0.3);
+        --watermark-opacity: 0.05;
+    }
+}
 * {
     box-sizing: border-box;
     font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     font-size: 16px;
 }
 body, html {
-    background-color: #f3f5f7;
+    background-color: var(--bg);
     margin: 0;
     padding: 0;
+}
+/* Large, faint elephant wing filling the background (edges may fall outside the window); the card (.login) is positioned so it paints on top. */
+body::before {
+    content: "";
+    position: fixed;
+    inset: -8vh 0 8vh 0;
+    background-color: var(--heading);
+    opacity: var(--watermark-opacity);
+    -webkit-mask: url(olifantje-vleugel.svg) no-repeat center / cover;
+    mask: url(olifantje-vleugel.svg) no-repeat center / cover;
+    pointer-events: none;
 }
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
     padding: 0;
-    color: #474b50;
+    color: var(--heading);
 }
 .form {
     display: flex;
@@ -30,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
     padding: 20px 0 10px 0;
     font-weight: 500;
     font-size: 14px;
-    color: #474b50;
+    color: var(--heading);
 }
 .form .form-group {
     display: flex;
@@ -40,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
 }
 .form .form-group .form-icon-left, .form .form-group .form-icon-right {
-    fill: #c1c6cb;
+    fill: var(--icon);
     width: 40px;
     position: absolute;
     transform: translateY(-50%);
@@ -60,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
     padding-right: 40px;
 }
 .form .form-group:focus-within .form-icon-left {
-    fill: #989fa8;
+    fill: var(--icon-hover);
 }
 .form .form-group .password-toggle {
     position: absolute;
@@ -79,10 +134,10 @@ h1, h2, h3, h4, h5, h6 {
 .form .form-group .password-toggle svg {
     width: 16px;
     height: 16px;
-    fill: #c1c6cb;
+    fill: var(--icon);
 }
 .form .form-group .password-toggle:hover svg {
-    fill: #989fa8;
+    fill: var(--icon-hover);
 }
 .form .form-group input#password {
     padding-right: 40px;
@@ -90,28 +145,29 @@ h1, h2, h3, h4, h5, h6 {
 .form .form-input {
     width: 100%;
     height: 43px;
-    border: 1px solid #dee1e6;
+    border: 1px solid var(--line);
     padding: 0 15px;
     border-radius: 4px;
-    color: #000;
+    background-color: var(--input-bg);
+    color: var(--input-ink);
 }
 .form .form-input::placeholder {
-    color: #989fa8;
+    color: var(--placeholder);
 }
 .form .form-link {
-    color: #2a8eeb;
+    color: var(--link);
     font-weight: 500;
     text-decoration: none;
     font-size: 14px;
 }
 .form .form-link:hover {
-    color: #136fc5;
+    color: var(--link-hover);
 }
 .form p.register-link {
     margin: 0;
     padding: 20px 0 0 0;
     font-size: 14px;
-    color: #6b7179;
+    color: var(--muted);
 }
 .btn {
     display: inline-flex;
@@ -121,50 +177,51 @@ h1, h2, h3, h4, h5, h6 {
     appearance: none;
     cursor: pointer;
     border: 0;
-    background-color: #3e7bd6;
+    background-color: var(--btn);
     color: #FFFFFF;
     padding: 0 14px;
     font-size: 14px;
     font-weight: 600;
     border-radius: 4px;
     height: 42px;
-    box-shadow: 0px 0px 6px 1px rgba(45, 57, 68, 0.1);
+    box-shadow: 0px 0px 6px 1px var(--shadow);
 }
 .btn:hover {
-    background-color: #3172d3;
+    background-color: var(--btn-hover);
 }
 .sso-divider {
     display: flex;
     align-items: center;
     text-align: center;
-    color: #989fa8;
+    color: var(--icon-hover);
     font-size: 13px;
     margin: 20px 0;
 }
 .sso-divider::before, .sso-divider::after {
     content: "";
     flex: 1;
-    border-bottom: 1px solid #dee1e6;
+    border-bottom: 1px solid var(--line);
 }
 .sso-divider span {
     padding: 0 10px;
 }
 .btn-sso {
-    background-color: #ffffff;
-    color: #474b50;
-    border: 1px solid #dee1e6;
+    background-color: var(--card);
+    color: var(--heading);
+    border: 1px solid var(--line);
     width: 100%;
 }
 .btn-sso:hover {
-    background-color: #f3f5f7;
+    background-color: var(--bg);
 }
 .login, .register {
+    position: relative;
     display: flex;
     flex-flow: column;
     width: 400px;
     max-width: 95%;
-    background-color: #ffffff;
-    box-shadow: 0px 0px 7px 1px rgba(45, 57, 68, 0.05);
+    background-color: var(--card);
+    box-shadow: 0px 0px 7px 1px var(--card-shadow);
     border-radius: 5px;
     margin: 100px auto;
     padding: 35px;
@@ -175,6 +232,20 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
     padding: 15px 0;
     margin: 0;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+}
+.login h1 .logo, .register h1 .logo {
+    display: inline-block;
+    flex: none;
+    width: 49px;
+    height: 40px;
+    margin-right: 10px;
+    /* The image is white on transparent; use it as a mask so it takes the title colour in light and dark mode. */
+    background-color: var(--heading);
+    -webkit-mask: url(olifantje.svg) no-repeat center / contain;
+    mask: url(olifantje.svg) no-repeat center / contain;
 }
 .pad-1 { padding: 5px; }
 .mar-1 { margin: 5px; }
@@ -251,7 +322,7 @@ h1, h2, h3, h4, h5, h6 {
     <body>
         <div class="login">
 
-            <h1>LWW Login</h1>
+            <h1><span class="logo" aria-hidden="true"></span>LWW Login</h1>
 
             <form action="process_login.html" method="post" class="form login-form">
 
@@ -301,6 +372,11 @@ h1, h2, h3, h4, h5, h6 {
             document.getElementById('ssoButton').addEventListener('click', function () {
                 window.location.href = 'redirect_to_sso_login.html';
             });
+
+            const requestedURL = new URLSearchParams(window.location.search).get('requestedURL');
+            if (requestedURL) {
+                sessionStorage.setItem('requestedURL', requestedURL);
+            }
         </script>
     </body>
 </html>

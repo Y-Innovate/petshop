@@ -11,7 +11,20 @@ Processing complete, this page should automatically redirect to index.html.<br /
 </div>
 <script type="text/javascript">
 if ("&NEXTPAGE;" == "true") {
-  window.location.href = "/petshop/index.html";
+  const requestedURL = sessionStorage.getItem('requestedURL');
+  sessionStorage.removeItem('requestedURL');
+
+  bDone = false;
+
+  if (requestedURL) {
+    try {
+      window.location.href = requestedURL;
+      bDone = true;
+    } catch (e) { /* invalid URL: ignore */ }
+  }
+  if (!bDone) {
+    window.location.href = "/petshop/index.html";
+  }
 } else {
   window.location.href = "/pethop/changePassword.html";
 }
