@@ -18,7 +18,8 @@
              CREATEDBY                      GRAPHIC(8) NOT NULL,
              CREATEDDATE                    TIMESTAMP NOT NULL,
              UPDATEDBY                      GRAPHIC(8) NOT NULL,
-             UPDATEDDATE                    TIMESTAMP NOT NULL
+             UPDATEDDATE                    TIMESTAMP NOT NULL,
+             CHILDFRIENDLY                  GRAPHIC(1) NOT NULL
            ) END-EXEC.
       ******************************************************************
       * COBOL DECLARATION FOR TABLE TBPET006                           *
@@ -40,6 +41,7 @@
            10 CREATEDDATE          PIC X(26).
            10 UPDATEDBY            PIC N(8).
            10 UPDATEDDATE          PIC X(26).
+           10 CHILDFRIENDLY        PIC N(1).
       ******************************************************************
-      * THE NUMBER OF COLUMNS DESCRIBED BY THIS DECLARATION IS 13      *
+      * THE NUMBER OF COLUMNS DESCRIBED BY THIS DECLARATION IS 14      *
       ******************************************************************

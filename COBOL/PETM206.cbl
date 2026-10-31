@@ -16,6 +16,7 @@
       * Date     Who What                                             *
       * -------- --- ------------------------------------------------ *
       * yy/mm/dd ii  description                                      *
+      * 26/10/31 BTK Add column CHILDFRIENDLY                         *
       *===============================================================*
 
        DATA DIVISION.
@@ -113,6 +114,7 @@
                          ANIMALGENDER,
                          ANIMALAGE,
                          ANIMALCOUNT,
+                         CHILDFRIENDLY,
                          CREATEDBY,
                          CREATEDDATE,
                          UPDATEDBY,
@@ -199,6 +201,7 @@
                     :DCLTBPET006.ANIMALGENDER,
                     :DCLTBPET006.ANIMALAGE,
                     :DCLTBPET006.ANIMALCOUNT,
+                    :DCLTBPET006.CHILDFRIENDLY,
                     :DCLTBPET006.CREATEDBY,
                     :DCLTBPET006.CREATEDDATE,
                     :DCLTBPET006.UPDATEDBY,
@@ -244,6 +247,9 @@
                          ANIMAL-ENTRY-COUNT OF P-LPETM206)
                  MOVE ANIMALCOUNT OF DCLTBPET006 TO
                       ANIMALCOUNT OF P-LPETM206(
+                         ANIMAL-ENTRY-COUNT OF P-LPETM206)
+                 MOVE CHILDFRIENDLY OF DCLTBPET006 TO
+                      CHILDFRIENDLY OF P-LPETM206(
                          ANIMAL-ENTRY-COUNT OF P-LPETM206)
                  MOVE CREATEDBY OF DCLTBPET006 TO
                       CREATEDBY OF P-LPETM206(

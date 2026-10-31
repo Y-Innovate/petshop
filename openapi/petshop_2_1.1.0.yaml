@@ -2819,7 +2819,7 @@ paths:
         - AllocateIOArea:
             name: LPETM206
             initWith: 0x00
-            size: 14278
+            size: 14318
             fields:
               $ref: "#/components/x-ioareas/LPETM206/fields"
         - Mapping:
@@ -2913,6 +2913,9 @@ paths:
                           fromName: ANIMALCOUNT
                           toName: animalCount
                         - type: singleFields
+                          fromName: CHILDFRIENDLY
+                          toName: childFriendly
+                        - type: singleFields
                           fromName: CREATEDBY
                           toName: createdBy
                         - type: singleFields
@@ -2955,7 +2958,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 856
+            size: 858
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ParseRequestJSON:
@@ -2990,6 +2993,9 @@ paths:
               - type: singleFields
                 fromName: animalCount
                 toName: ANIMALCOUNT
+              - type: singleFields
+                fromName: childFriendly
+                toName: CHILDFRIENDLY
               - type: constant
                 constant: C
                 toName: OPCODE
@@ -3071,6 +3077,9 @@ paths:
                       fromName: ANIMALCOUNT
                       toName: animalCount
                     - type: singleFields
+                      fromName: CHILDFRIENDLY
+                      toName: childFriendly
+                    - type: singleFields
                       fromName: CREATEDBY
                       toName: createdBy
                     - type: singleFields
@@ -3114,7 +3123,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 856
+            size: 858
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
@@ -3196,6 +3205,9 @@ paths:
                       fromName: ANIMALCOUNT
                       toName: animalCount
                     - type: singleFields
+                      fromName: CHILDFRIENDLY
+                      toName: childFriendly
+                    - type: singleFields
                       fromName: CREATEDBY
                       toName: createdBy
                     - type: singleFields
@@ -3238,7 +3250,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 856
+            size: 858
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
@@ -3283,6 +3295,9 @@ paths:
               - type: singleFields
                 fromName: animalCount
                 toName: ANIMALCOUNT
+              - type: singleFields
+                fromName: childFriendly
+                toName: CHILDFRIENDLY
               - type: constant
                 constant: U
                 toName: OPCODE
@@ -3358,6 +3373,9 @@ paths:
                       fromName: ANIMALCOUNT
                       toName: animalCount
                     - type: singleFields
+                      fromName: CHILDFRIENDLY
+                      toName: childFriendly
+                    - type: singleFields
                       fromName: CREATEDBY
                       toName: createdBy
                     - type: singleFields
@@ -3400,7 +3418,7 @@ paths:
         - AllocateIOArea:
             name: LPETM006
             initWith: 0x00
-            size: 856
+            size: 858
             fields:
               $ref: "#/components/x-ioareas/LPETM006/fields"
         - ExtractIdFromPath:
@@ -5137,6 +5155,9 @@ components:
         - name: ANIMALCOUNT
           type: UI4
           length: 4
+        - name: CHILDFRIENDLY
+          type: CHARARRAY1200
+          length: 01
         - name: CREATEDBY
           type: CHARARRAY1200
           length: 08
@@ -5168,6 +5189,7 @@ components:
              10 ANIMALGENDER       PIC N(01).
              10 ANIMALAGE          PIC S9(9) USAGE COMP-5.
              10 ANIMALCOUNT        PIC S9(9) USAGE COMP-5.
+             10 CHILDFRIENDLY      PIC N(01).
              10 CREATEDBY          PIC N(08).
              10 CREATEDDATE        PIC N(26).
              10 UPDATEDBY          PIC N(08).
@@ -5756,6 +5778,9 @@ components:
             - name: ANIMALCOUNT
               type: UI4
               length: 4
+            - name: CHILDFRIENDLY
+              type: CHARARRAY1200
+              length: 01
             - name: CREATEDBY
               type: CHARARRAY1200
               length: 08
@@ -5794,6 +5819,7 @@ components:
                 15 ANIMALGENDER            PIC N.
                 15 ANIMALAGE               PIC S9(9) USAGE COMP-5.
                 15 ANIMALCOUNT             PIC S9(9) USAGE COMP-5.
+                15 CHILDFRIENDLY           PIC N(01).
                 15 CREATEDBY               PIC N(08).
                 15 CREATEDDATE             PIC N(26).
                 15 UPDATEDBY               PIC N(08).

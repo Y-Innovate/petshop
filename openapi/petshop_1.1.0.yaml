@@ -2610,6 +2610,8 @@ components:
           $ref: "#/components/schemas/animals_animalAge"
         animalCount:
           $ref: "#/components/schemas/animals_animalCount"
+        childFriendly:
+          $ref: "#/components/schemas/animals_childFriendly"
         supplierID:
           $ref: "#/components/schemas/animals_supplierID"
     AnimalsRequestPut:
@@ -2629,6 +2631,8 @@ components:
           $ref: "#/components/schemas/animals_animalAge"
         animalCount:
           $ref: "#/components/schemas/animals_animalCount"
+        childFriendly:
+          $ref: "#/components/schemas/animals_childFriendly"
         supplierID:
           $ref: "#/components/schemas/animals_supplierID"
     AnimalsResponseListLong:
@@ -2661,6 +2665,8 @@ components:
                 $ref: "#/components/schemas/animals_animalAge"
               animalCount:
                 $ref: "#/components/schemas/animals_animalCount"
+              childFriendly:
+                $ref: "#/components/schemas/animals_childFriendly"
               supplierID:
                 $ref: "#/components/schemas/animals_supplierID"
               createdBy:
@@ -2705,6 +2711,8 @@ components:
           $ref: "#/components/schemas/animals_animalAge"
         animalCount:
           $ref: "#/components/schemas/animals_animalCount"
+        childFriendly:
+          $ref: "#/components/schemas/animals_childFriendly"
         supplierID:
           $ref: "#/components/schemas/animals_supplierID"
         createdBy:
@@ -3193,6 +3201,13 @@ components:
       type: integer
       minimum: 0
       example: 1
+    animals_childFriendly:
+      type: string
+      enum: ["Y", "N"]
+      description: |
+        Y when the animal is child friendly, N when it is not. Optional on
+        POST (default N) and PUT (omitted keeps the current value).
+      example: "Y"
     animals_supplierID:
       type: integer
       minimum: 0

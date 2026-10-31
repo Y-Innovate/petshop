@@ -9,6 +9,8 @@
       *            delete a row in TBPET006                           *
       *   TBPET006 Fields depending on OPCODE                         *
       *   SUPPLIERID is optional: 0 means NULL (no supplier)          *
+      *   CHILDFRIENDLY is 'Y' or 'N'. Spaces or LOW-VALUES mean      *
+      *   'N' on create and keep the current value on update          *
       * Output:                                                       *
       *   RETURNCODE and REASONCODE                                   *
       *     00 00 = Success                                           *
@@ -19,6 +21,7 @@
       *     08 04 = Error: ANIMALTYPE required                        *
       *     08 05 = Error: ANIMALRACE required                        *
       *     08 06 = Error: ANIMALCOUNT required                       *
+      *     08 07 = Error: CHILDFRIENDLY not 'Y' or 'N'               *
       *     08 11 = Error: INSERT of duplicate key                    *
       *     08 12 = Error: SQL error in INSERT                        *
       *     08 13 = Error: INSERT of non existing store or supplier   *
@@ -36,6 +39,7 @@
       * Date     Who What                                             *
       * -------- --- ------------------------------------------------ *
       * yy/mm/dd ii  description                                      *
+      * 26/10/31 BTK Add column CHILDFRIENDLY                         *
       *===============================================================*
 
        DATA DIVISION.
@@ -47,6 +51,8 @@
        01 WORK.
           05 W-PGMNAME    PIC X(8).
           05 W-SQLCODE    PIC -99999.
+          05 W-CHILDFRIENDLY-IND
+                          PIC S9(4) USAGE COMP-5.
 
        01 ERROR-MESSAGE.
           05 ERROR-LEN    PIC S9(4) COMP
@@ -180,6 +186,24 @@
                       INFOMESSAGE OF W-LPETM006
               END-IF
 
+              IF  RETURNCODE OF W-LPETM006 = N'00'
+                 EVALUATE TRUE
+                 WHEN CHILDFRIENDLY OF W-LPETM006 = N'Y'
+                 WHEN CHILDFRIENDLY OF W-LPETM006 = N'N'
+                    CONTINUE
+                 WHEN CHILDFRIENDLY OF W-LPETM006 = SPACES
+                 WHEN CHILDFRIENDLY OF W-LPETM006 = LOW-VALUES
+                    IF OPCODE OF W-LPETM006 = N'C'
+                       MOVE N'N' TO CHILDFRIENDLY OF W-LPETM006
+                    END-IF
+                 WHEN OTHER
+                    MOVE N'08' TO RETURNCODE OF W-LPETM006
+                    MOVE N'07' TO REASONCODE OF W-LPETM006
+                    MOVE N'CHILDFRIENDLY must be Y or N' TO
+                         INFOMESSAGE OF W-LPETM006
+                 END-EVALUATE
+              END-IF
+
               IF CREATEDBY OF W-LPETM006 = SPACES
               OR CREATEDBY OF W-LPETM006 = LOW-VALUES
               OR UPDATEDBY OF W-LPETM006 = SPACES
@@ -246,6 +270,7 @@
                       ANIMALGENDER,
                       ANIMALAGE,
                       ANIMALCOUNT,
+                      CHILDFRIENDLY,
                       CREATEDBY,
                       CREATEDDATE,
                       UPDATEDBY,
@@ -259,6 +284,7 @@
                      :DCLTBPET006.ANIMALGENDER,
                      :DCLTBPET006.ANIMALAGE,
                      :DCLTBPET006.ANIMALCOUNT,
+                     :DCLTBPET006.CHILDFRIENDLY,
                      :DCLTBPET006.CREATEDBY,
                      CURRENT TIMESTAMP,
                      :DCLTBPET006.UPDATEDBY,
@@ -319,6 +345,7 @@
                      ANIMALGENDER,
                      ANIMALAGE,
                      ANIMALCOUNT,
+                     CHILDFRIENDLY,
                      CREATEDBY,
                      CREATEDDATE,
                      UPDATEDBY,
@@ -333,6 +360,7 @@
                      :DCLTBPET006.ANIMALGENDER,
                      :DCLTBPET006.ANIMALAGE,
                      :DCLTBPET006.ANIMALCOUNT,
+                     :DCLTBPET006.CHILDFRIENDLY,
                      :DCLTBPET006.CREATEDBY,
                      :DCLTBPET006.CREATEDDATE,
                      :DCLTBPET006.UPDATEDBY,
@@ -371,6 +399,8 @@
                    ANIMALAGE    OF W-LPETM006
               MOVE ANIMALCOUNT  OF DCLTBPET006 TO
                    ANIMALCOUNT  OF W-LPETM006
+              MOVE CHILDFRIENDLY OF DCLTBPET006 TO
+                   CHILDFRIENDLY OF W-LPETM006
               MOVE CREATEDBY    OF DCLTBPET006 TO
                    CREATEDBY    OF W-LPETM006
               MOVE CREATEDDATE  OF DCLTBPET006 TO
@@ -404,9 +434,11 @@
            PERFORM R210-COPY-TO-DCL
 
            EXEC SQL
-              SELECT CREATEDDATE,
+              SELECT CHILDFRIENDLY,
+                     CREATEDDATE,
                      UPDATEDDATE
-                INTO :DCLTBPET006.CREATEDDATE,
+                INTO :DCLTBPET006.CHILDFRIENDLY,
+                     :DCLTBPET006.CREATEDDATE,
                      :DCLTBPET006.UPDATEDDATE
                 FROM FINAL TABLE
                    (
@@ -420,6 +452,10 @@
                      ANIMALGENDER = :DCLTBPET006.ANIMALGENDER,
                      ANIMALAGE    = :DCLTBPET006.ANIMALAGE,
                      ANIMALCOUNT  = :DCLTBPET006.ANIMALCOUNT,
+                     CHILDFRIENDLY =
+                        COALESCE(:DCLTBPET006.CHILDFRIENDLY
+                                   :W-CHILDFRIENDLY-IND,
+                                 CHILDFRIENDLY),
                      UPDATEDBY    = :DCLTBPET006.UPDATEDBY,
                      UPDATEDDATE  = CURRENT TIMESTAMP
                WHERE ANIMALID = :DCLTBPET006.ANIMALID
@@ -430,6 +466,8 @@
 
            EVALUATE SQLCODE
            WHEN 0
+              MOVE CHILDFRIENDLY OF DCLTBPET006 TO
+                   CHILDFRIENDLY OF W-LPETM006
               MOVE CREATEDDATE OF DCLTBPET006 TO
                    CREATEDDATE OF W-LPETM006
               MOVE UPDATEDDATE OF DCLTBPET006 TO
@@ -516,6 +554,17 @@
                 ANIMALGENDER OF DCLTBPET006
            MOVE ANIMALAGE    OF W-LPETM006 TO ANIMALAGE   OF DCLTBPET006
            MOVE ANIMALCOUNT  OF W-LPETM006 TO ANIMALCOUNT OF DCLTBPET006
+      *    Spaces or LOW-VALUES only get here on an update (R002 sets
+      *    'N' on a create): NULL indicator, UPDATE keeps current value
+           IF CHILDFRIENDLY OF W-LPETM006 = SPACES
+           OR CHILDFRIENDLY OF W-LPETM006 = LOW-VALUES
+              MOVE -1 TO W-CHILDFRIENDLY-IND
+              MOVE SPACES TO CHILDFRIENDLY OF DCLTBPET006
+           ELSE
+              MOVE 0 TO W-CHILDFRIENDLY-IND
+              MOVE CHILDFRIENDLY OF W-LPETM006 TO
+                   CHILDFRIENDLY OF DCLTBPET006
+           END-IF
            MOVE CREATEDBY    OF W-LPETM006 TO CREATEDBY   OF DCLTBPET006
            MOVE FUNCTION DISPLAY-OF(CREATEDDATE OF W-LPETM006) TO
               CREATEDDATE OF DCLTBPET006

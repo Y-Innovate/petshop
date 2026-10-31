@@ -21,6 +21,7 @@
                 15 ANIMALGENDER            PIC N.
                 15 ANIMALAGE               PIC S9(9) USAGE COMP-5.
                 15 ANIMALCOUNT             PIC S9(9) USAGE COMP-5.
+                15 CHILDFRIENDLY           PIC N(01).
                 15 CREATEDBY               PIC N(08).
                 15 CREATEDDATE             PIC N(26).
                 15 UPDATEDBY               PIC N(08).
