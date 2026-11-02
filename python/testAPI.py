@@ -7,8 +7,8 @@ from Globals import Globals
 from MyRequests import MyRequests
 from pathlib import Path
 
-#Globals.myHost = "https://t01.yinhdisv.nl:8081"
-Globals.myHost = "https://mainframeyin:8092"
+Globals.myHost = "https://t01.yinhdisv.nl:8081"
+#Globals.myHost = "https://mainframeyin:8092"
 Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
 #Globals.myCreds = ('YBTKS','')
@@ -174,6 +174,16 @@ def doStuff():
             else:
                 raise Exception(f'status code {str(resppost.status_code)} {resppost.text}')
         else:
+            raise Exception(f'status code {str(respget.status_code)} {respget.text}')
+
+    for uri in [f"suppliers?storeID_filter={storeID}",
+                f"products?storeID_filter={storeID}",
+                "inventory",
+                "animals"]:
+        respget = MyRequests.get(f"{Globals.pathPrefix}/{uri}")
+        print(f"GET {uri}: {respget.status_code} {respget.text}")
+
+        if respget.status_code not in (200, 404):
             raise Exception(f'status code {str(respget.status_code)} {respget.text}')
 
     respget = MyRequests.get(f"{Globals.pathPrefix}/pricesAndDiscounts")

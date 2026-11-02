@@ -1,0 +1,974 @@
+openapi: 3.2.0
+info:
+  version: 3.0.1
+  title: LWW API
+  description: LWW API for managing APIs
+servers:
+  - url: /LWWAPI/API
+paths:
+  /API:
+    summary: Manage APIs
+    get:
+      summary: List APIs
+      operationId: listAPIs
+      tags:
+        - API
+      parameters:
+        - name: APIName_like
+          in: query
+          description: Filter APIs to start with this value
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIName"
+        - name: archived_filter
+          in: query
+          description: Filter APIs to contain only unarchived or archived ones
+          required: false
+          schema:
+            $ref: "#/components/schemas/flag"
+        - name: APIName_start
+          in: query
+          description: For pagination of APIName + APIVersion
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIName"
+        - name: APIVersion_start
+          in: query
+          description: For pagination of APIName + APIVersion
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIVersion"
+      responses:
+        '200':
+          description: Successful retrieval of APIs
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponseListLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    post:
+      summary: Insert API
+      operationId: newAPI
+      tags:
+        - API
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIRequest"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponseCRUDLong"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+  /API/{ID_API}:
+    get:
+      summary: Get existing API details
+      operationId: getAPIDetails
+      tags:
+        - API
+      parameters:
+        - name: ID_API
+          in: path
+          description: Unique ID of an API
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      responses:
+        '200':
+          description: Successful retrieval of an API
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    put:
+      summary: Update existing API
+      operationId: updateAPIDetails
+      tags:
+        - API
+      parameters:
+        - name: ID_API
+          in: path
+          description: Unique ID of an API
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIRequest"
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIResponseCRUDLong"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    delete:
+      summary: Delete existing API
+      operationId: deleteAPI
+      tags:
+        - API
+      parameters:
+        - name: ID_API
+          in: path
+          description: Unique ID of an API
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+  /APIPath:
+    summary: Manage an API's paths
+    get:
+      summary: List API paths
+      operationId: listAPIPaths
+      tags:
+        - APIPath
+      parameters:
+        - name: ID_API
+          in: query
+          description: The ID of the API of which paths are to be listed
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+        - name: APIPath_like
+          in: query
+          description: Filter paths to start with this value
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIPath"
+        - name: archived_filter
+          in: query
+          description: Filter paths to contain only unarchived or archived ones
+          required: false
+          schema:
+            $ref: "#/components/schemas/flag"
+        - name: APIPath_start
+          in: query
+          description: For pagination of APIPath
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIPath"
+      responses:
+        '200':
+          description: Successful retrieval of API paths
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIPathResponseListLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    post:
+      summary: Insert API Path
+      operationId: newAPIPath
+      tags:
+        - APIPath
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIPathRequest"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIPathResponseCRUDLong"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+  /APIPath/{ID_APIPath}:
+    get:
+      summary: Get existing API path details
+      operationId: getAPIPathDetails
+      tags:
+        - APIPath
+      parameters:
+        - name: ID_APIPath
+          in: path
+          description: Unique ID of an API path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      responses:
+        '200':
+          description: Successful retrieval of an API path
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIPathResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    put:
+      summary: Update existing API path
+      operationId: updateAPIPathDetails
+      tags:
+        - APIPath
+      parameters:
+        - name: ID_APIPath
+          in: path
+          description: Unique ID of an API path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIPathRequest"
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIPathResponseCRUDLong"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    delete:
+      summary: Delete existing API path
+      operationId: deleteAPIPath
+      tags:
+        - APIPath
+      parameters:
+        - name: ID_APIPath
+          in: path
+          description: Unique ID of an API path
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+  /APIMethod:
+    summary: Manage an API path's methods
+    get:
+      summary: List API path methods
+      operationId: listAPIMethods
+      tags:
+        - APIMethod
+      parameters:
+        - name: ID_APIPath
+          in: query
+          description: The ID of the APIPath of which methods are to be listed
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+        - name: APIMethod_like
+          in: query
+          description: Filter methods to start with this value
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIMethod"
+        - name: pathWithId_filter
+          in: query
+          description: Filter paths to either with or without an ID in the path
+          required: false
+          schema:
+            $ref: "#/components/schemas/flag"
+        - name: archived_filter
+          in: query
+          description: Filter paths to contain only unarchived or archived ones
+          required: false
+          schema:
+            $ref: "#/components/schemas/flag"
+        - name: APIMethod_start
+          in: query
+          description: For pagination of APIMethod
+          required: false
+          schema:
+            $ref: "#/components/schemas/APIMethod"
+      responses:
+        '200':
+          description: Successful retrieval of API path methods
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIMethodResponseListLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    post:
+      summary: Insert API Method
+      operationId: newAPIMethod
+      tags:
+        - APIMethod
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMethodRequest"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIMethodResponseCRUDLong"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+  /APIMethod/{ID_APIMethod}:
+    get:
+      summary: Get existing API method details
+      operationId: getAPIMethodDetails
+      tags:
+        - APIMethod
+      parameters:
+        - name: ID_APIMethod
+          in: path
+          description: Unique ID of an API path method
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      responses:
+        '200':
+          description: Successful retrieval of an API method
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIMethodResponseCRUDLong"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    put:
+      summary: Update existing API method
+      operationId: updateAPIMethodDetails
+      tags:
+        - APIMethod
+      parameters:
+        - name: ID_APIMethod
+          in: path
+          description: Unique ID of an API path method
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/APIMethodRequest"
+      responses:
+        '200':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIMethodResponseCRUDLong"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+    delete:
+      summary: Delete existing API method
+      operationId: deleteAPIMethod
+      tags:
+        - APIMethod
+      parameters:
+        - name: ID_APIMethod
+          in: path
+          description: Unique ID of an API path method
+          required: true
+          schema:
+            $ref: "#/components/schemas/ID_API"
+      responses:
+        '200':
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseShort"
+        default:
+          description: Unexpected error
+components:
+  schemas:
+    DefaultResponseShort:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+    APIResponseListLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+        API:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            properties:
+              ID_API:
+                $ref: "#/components/schemas/ID_API"
+              APIName:
+                $ref: "#/components/schemas/APIName"
+              archived:
+                $ref: "#/components/schemas/flag"
+              APIVersion:
+                $ref: "#/components/schemas/APIVersion"
+              shortDescription:
+                $ref: "#/components/schemas/shortDescription"
+              dateCreated:
+                $ref: "#/components/schemas/date"
+              createdBy:
+                $ref: "#/components/schemas/userid"
+              dateAltered:
+                $ref: "#/components/schemas/date"
+              alteredBy:
+                $ref: "#/components/schemas/userid"
+    APIRequest:
+      type: object
+      properties:
+        APIName:
+          $ref: "#/components/schemas/APIName"
+        archived:
+          $ref: "#/components/schemas/flag"
+        APIVersion:
+          $ref: "#/components/schemas/APIVersion"
+        shortDescription:
+          $ref: "#/components/schemas/shortDescription"
+        description:
+          $ref: "#/components/schemas/description"
+    APIResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+        ID_API:
+          $ref: "#/components/schemas/ID_API"
+        APIName:
+          $ref: "#/components/schemas/APIName"
+        archived:
+          $ref: "#/components/schemas/flag"
+        APIVersion:
+          $ref: "#/components/schemas/APIVersion"
+        shortDescription:
+          $ref: "#/components/schemas/shortDescription"
+        description:
+          $ref: "#/components/schemas/description"
+        dateCreated:
+          $ref: "#/components/schemas/date"
+        createdBy:
+          $ref: "#/components/schemas/userid"
+        dateAltered:
+          $ref: "#/components/schemas/date"
+        alteredBy:
+          $ref: "#/components/schemas/userid"
+    APIPathResponseListLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+        APIPath:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            properties:
+              ID_APIPath:
+                $ref: "#/components/schemas/ID_API"
+              APIPath:
+                $ref: "#/components/schemas/APIPath"
+              archived:
+                $ref: "#/components/schemas/flag"
+              shortDescription:
+                $ref: "#/components/schemas/shortDescription"
+              dateCreated:
+                $ref: "#/components/schemas/date"
+              createdBy:
+                $ref: "#/components/schemas/userid"
+              dateAltered:
+                $ref: "#/components/schemas/date"
+              alteredBy:
+                $ref: "#/components/schemas/userid"
+    APIPathRequest:
+      type: object
+      properties:
+        ID_API:
+          $ref: "#/components/schemas/ID_API"
+        APIPath:
+          $ref: "#/components/schemas/APIPath"
+        archived:
+          $ref: "#/components/schemas/flag"
+        shortDescription:
+          $ref: "#/components/schemas/shortDescription"
+        description:
+          $ref: "#/components/schemas/description"
+    APIPathResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+        ID_APIPath:
+          $ref: "#/components/schemas/ID_API"
+        ID_API:
+          $ref: "#/components/schemas/ID_API"
+        APIPath:
+          $ref: "#/components/schemas/APIPath"
+        archived:
+          $ref: "#/components/schemas/flag"
+        shortDescription:
+          $ref: "#/components/schemas/shortDescription"
+        description:
+          $ref: "#/components/schemas/description"
+        dateCreated:
+          $ref: "#/components/schemas/date"
+        createdBy:
+          $ref: "#/components/schemas/userid"
+        dateAltered:
+          $ref: "#/components/schemas/date"
+        alteredBy:
+          $ref: "#/components/schemas/userid"
+    APIMethodResponseListLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+        APIMethod:
+          type: array
+          maxItems: 20
+          items:
+            type: object
+            properties:
+              ID_APIMethod:
+                $ref: "#/components/schemas/ID_API"
+              APIMethod:
+                $ref: "#/components/schemas/APIMethod"
+              archived:
+                $ref: "#/components/schemas/flag"
+              methodVersion:
+                $ref: "#/components/schemas/versionNumber"
+              pathWithId:
+                $ref: "#/components/schemas/flag"
+              shortDescription:
+                $ref: "#/components/schemas/shortDescription"
+              dateCreated:
+                $ref: "#/components/schemas/date"
+              createdBy:
+                $ref: "#/components/schemas/userid"
+              dateAltered:
+                $ref: "#/components/schemas/date"
+              alteredBy:
+                $ref: "#/components/schemas/userid"
+              dateAlteredIST:
+                $ref: "#/components/schemas/date"
+              alteredByIST:
+                $ref: "#/components/schemas/userid"
+    APIMethodRequest:
+      type: object
+      properties:
+        ID_APIPath:
+          $ref: "#/components/schemas/ID_API"
+        APIMethod:
+          $ref: "#/components/schemas/APIMethod"
+        archived:
+          $ref: "#/components/schemas/flag"
+        methodVersion:
+          $ref: "#/components/schemas/versionNumber"
+        pathWithId:
+          $ref: "#/components/schemas/flag"
+        shortDescription:
+          $ref: "#/components/schemas/shortDescription"
+        description:
+          $ref: "#/components/schemas/description"
+    APIMethodResponseCRUDLong:
+      type: object
+      properties:
+        retCode:
+          $ref: "#/components/schemas/retCode"
+        retMessage:
+          $ref: "#/components/schemas/retMessage"
+        ID_APIMethod:
+          $ref: "#/components/schemas/ID_API"
+        ID_APIPath:
+          $ref: "#/components/schemas/ID_API"
+        APIMethod:
+          $ref: "#/components/schemas/APIMethod"
+        archived:
+          $ref: "#/components/schemas/flag"
+        methodVersion:
+          $ref: "#/components/schemas/versionNumber"
+        pathWithId:
+          $ref: "#/components/schemas/flag"
+        shortDescription:
+          $ref: "#/components/schemas/shortDescription"
+        description:
+          $ref: "#/components/schemas/description"
+        dateCreated:
+          $ref: "#/components/schemas/date"
+        createdBy:
+          $ref: "#/components/schemas/userid"
+        dateAltered:
+          $ref: "#/components/schemas/date"
+        alteredBy:
+          $ref: "#/components/schemas/userid"
+    retCode:
+      type: string
+      minLength: 2
+      maxLength: 2
+      example: '00'
+    retMessage:
+      type: string
+      minLength: 0
+      maxLength: 71
+      example: API not found
+    shortDescription:
+      type: string
+      minLength: 0
+      maxLength: 128
+      example: Description of some object
+    description:
+      type: string
+      minLength: 0
+      maxLength: 1024
+      example: Long description of some object
+    date:
+      type: string
+      minLength: 16
+      maxLength: 16
+      example: 2027123123595999
+    userid:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: USER01
+    flag:
+      type: string
+      minLength: 1
+      maxLength: 1
+      example: N
+    versionNumber:
+      type: integer
+      minimum: 1
+      example: 3
+    ID_API:
+      type: integer
+      minimum: 1
+      example: 12345
+    APIName:
+      type: string
+      minLength: 1
+      maxLength: 48
+      example: LWW API
+    APIVersion:
+      type: string
+      minLength: 1
+      maxLength: 32
+      example: 3.0.1
+    APIPath:
+      type: string
+      minLength: 1
+      maxLength: 255
+      example: /some/specific/path
+    APIMethod:
+      type: string
+      minLength: 1
+      maxLength: 8
+      example: POST

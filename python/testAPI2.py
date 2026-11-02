@@ -7,14 +7,14 @@ from Globals import Globals
 from MyRequests import MyRequests
 from pathlib import Path
 
-#Globals.myHost = "https://t02.yinhdisv.nl:8082"
-Globals.myHost = "https://mainframeyin:8092"
+Globals.myHost = "https://t01.yinhdisv.nl:8081"
+#Globals.myHost = "https://mainframeyin:8092"
 Globals.myAuthHost = "https://login.microsoftonline.com/d7c088c2-6aa0-4e91-bbba-6d611f3c1bf1/oauth2/v2.0/token"
 Globals.myBasepath = ""
-#Globals.myCreds = ('','')
+#Globals.myCreds = ('YBTKS','')
 with open(f"{Path.home()}/.creds", "r") as credfile:
     Globals.myCreds = json.load(credfile)
-Globals.pathPrefix = "/LWWAPI/API"
+Globals.pathPrefix = "/petshop/API/v1"
 Globals.s = requests.sessions.Session()
 
 if isinstance(Globals.myCreds, tuple):
@@ -32,7 +32,7 @@ MyRequests.getBearerToken(Globals.myAuthHost)
 #MyRequests.getBearerToken(f"{Globals.pathPrefix}/token")
 
 def doStuff():
-    respget = MyRequests.get(f"{Globals.pathPrefix}/API")
+    respget = MyRequests.get(f"{Globals.pathPrefix}/animals")
 
     if (respget.status_code == 200):
         print(f"{respget.status_code} {respget.text}")

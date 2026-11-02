@@ -5,7 +5,7 @@ info:
 x-LWWProcessingSteps:
   - AllocateIOArea:
       name: LTEST01
-      size: 1234
+      size: 76
       from: container
       containerName: LTEST01-IN
       fields:

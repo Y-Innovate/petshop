@@ -504,6 +504,8 @@ if respget.status_code == 404:
     data['path'] = f"/petshop"
     data['generateId'] = "N"
     data['defaultTran'] = "PE01"
+    data['defaultWebpageId'] = "PE000001"
+    data['loginRedirectWebpageId'] = "PE000005"
 
     if Globals.myDebug > 0:
         print(f"{data['folderId']} {data['folderName']}")
